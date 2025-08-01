@@ -1,0 +1,16 @@
+﻿
+<td colspan="5">
+    <form asp-controller="Comment" asp-action="ReplyComment" data-ajax="true" data-ajax-method="post" data-ajax-success="AppendComment(data,@ViewBag.commentId)">
+        <textarea class="form-control" name="commentText" style="resize: none;height: 100px;padding: 15px;" placeholder="لطفا پاسخ خود را بنویسید..."></textarea>
+
+        <input type="hidden" name="CommentId" value="@ViewBag.commentId" />
+        <input type="hidden" name="ProductId" value="@ViewBag.productId" />
+
+
+        <button class="btn btn-primary" style="float: left;margin-top: 10px;" type="submit"><i class="fa fa-check-square-o" aria-hidden="true" style="float: right;margin-top: 2px;margin-left: 5px;"></i> ثبت نظر</button>
+
+        <button class="btn btn-danger" style="float: left;margin-top: 10px; margin-left:10px;" type="button" onclick="CloseReplyForm(@ViewBag.commentId)"><i class="fa fa-window-close" aria-hidden="true" style="float: right;margin-top: 2px;margin-left: 5px;"></i> بستن</button>
+
+
+    </form>
+</td>

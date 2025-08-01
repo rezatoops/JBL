@@ -1,0 +1,80 @@
+﻿@using Core.ViewModel;
+@using Datalayer.Entities;
+@using Core.Services.Interfaces
+
+@{
+    ViewBag.Title = "پیشخوان | اسلایدر ها";
+}
+
+@model List<Slider>
+
+@inject IMediaService _mediaService
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>لیست اسلایدر ها</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Admin" asp-action="index">مدیریت</a>
+            </li>
+            <li class="active">
+                <strong>اسلایدر ها</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+@{
+    int numberItemInPage = 10;
+
+    int allPage = (Model.Count() % numberItemInPage == 0) ? (Model.Count() / numberItemInPage) : (Model.Count() / numberItemInPage) + 1;
+
+    SliderViewModel sliderTable = new SliderViewModel
+            {
+                Sliders = _mediaService.GetSpecificSliders(1, numberItemInPage, ViewBag.Type),
+                CurrentPage = 1,
+                CountPerPage = numberItemInPage,
+                AllPage = allPage,
+                Type = ViewBag.Type,
+            };
+
+}
+
+<div id="SliderTable" class="wrapper animated fadeInRight">
+    @await Html.PartialAsync("_sliderTable", sliderTable)
+</div>
+
+@section scripts {
+    <script src="~/admin/plugin/sweetalert/sweetalert2.all.min.js"></script>
+    <script>
+        function DeleteSlider(id) {
+            Swal.fire({
+                title: "آیا مطمئنید؟",
+                text: "با این کار این اسلایدر حذف می شود و قابل بازیابی نخواهد بود؟!",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonText: "پاک کن",
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Admin/Media/DeleteSlider',
+                        type: "POST",
+                        data: { id: id },
+                        success: function (result) {
+                            Swal.fire("حذف شد!", "اسلایدر با موفقیت حذف شد", "success");
+                            $("#slider_" + id).remove();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            Swal.fire("خطا", "عملیات با خطا مواجه شد!", "error");
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('انجام نشد!', '', 'info')
+                }
+            })
+        }
+
+    </script>
+}

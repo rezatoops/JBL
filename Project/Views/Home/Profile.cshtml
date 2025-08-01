@@ -1,0 +1,54 @@
+﻿@using Datalayer.Entities;
+
+@model User
+@{
+    ViewData["Title"] = "پروفایل";
+}
+<div class="ProfileSection">
+    @{
+        if (User.Identity.IsAuthenticated)
+        {
+            <div class="rightSection">
+                <partial name="_profileMenu" model="Model" />
+            </div>
+            <div class="leftSection">
+                <h2>پروفایل</h2>
+                @{
+                    if (ViewBag.Message != null)
+                    {
+                        <p class="success">@ViewBag.Message</p>
+                    }
+                }
+                <form asp-controller="Home" asp-action="Profile" method="post">
+                    <div class="form-group">
+                        <label>نام</label>
+                        <input name="firstName" value="@Model.FirstName" />
+                    </div>
+                    <div class="form-group">
+                        <label>نام خانوادگی</label>
+                        <input name="lastName" value="@Model.LastName" />
+                    </div>
+                    <div class="form-group">
+                        <label>موبایل (غیر قابل تغییر)</label>
+                        <input name="mobile" value="@Model.PhoneNumber" disabled style="text-align:center;" />
+                    </div>
+                    <div class="form-group">
+                        <label>رمز عبور جدید</label>
+                        <input name="Password" type="password" autocomplete="new-password" />
+                    </div>
+                    <div class="clear"></div>
+                    <p class="warning">در صورت عدم نیاز به تغییر رمز فیلد رمز عبور را خالی بگذارید</p>
+
+                    <button type="submit" class="ActionButton" style="margin: 20px auto;width: 150px;display: block;">ثبت</button>
+                </form>
+            </div>
+            <div class="clear"></div>
+        }
+        else
+        {
+            <p>برای دیدن پروفایل باید ابتدا در سایت وارد شوید </p>
+            <a onclick="OpenLoginModal()" class="ActionButton">ورود به سایت</a>
+        }
+    }
+
+</div>

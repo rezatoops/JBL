@@ -1,0 +1,840 @@
+﻿@using Core.Services.Interfaces;
+@using Core.ViewModel;
+@using Datalayer.Entities
+@using System.Globalization
+
+@model Product
+
+@inject IMediaService _mediaService
+@inject IUserService _userService;
+@inject ICategoryService _categoryService;
+@inject IProductService _productService;
+
+
+@{
+    ViewBag.Title = "ویرایش محصول " + Model.Title;
+
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    @using (Html.BeginForm("Edit", "Product", FormMethod.Post, new { @class = "form-horizontal MainForm" }))
+    {
+        <input type="hidden" name="ProductId" value="@Model.Id" />
+        <div class="row">
+            <div class="col-sm-9 no-padding">
+                <div class="col-sm-12">
+                    @Html.ValidationSummary(true, "لطفا خطاهای زیر را برطرف نمایید:", new { @class = "text-danger alert alert-danger" })
+                </div>
+                <div class="col-sm-12">
+                    @{
+                        if (ViewBag.Message != null)
+                        {
+                            <div class="col-sm-12 alert alert-success">
+                                <span>@ViewBag.Message</span>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>محتوای اصلی</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">نام محصول</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">نام انگلیسی محصول (اختیاری)</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.EnglishTitle, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.EnglishTitle, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">پیوند یکتا</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Slug, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Slug, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">متا (اختیاری)</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.MetaDescription, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.MetaDescription, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">محصول مخفی شود؟</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.IsHidden, new { htmlAttributes = new { @class = "" } })
+                                    @Html.ValidationMessageFor(model => model.IsHidden, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label style="text-align:right; padding:18px;" class="col-sm-10 control-label">متن کامل</label>
+                                <button data-target="#Gallery" id="btn_Gallery" data-toggle="modal" style="width:138px;" class="btn btn-primary col-sm-2" type="button"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;<span class="bold">گالری</span></button>
+                                <div class="col-sm-12">
+                                    @Html.TextAreaFor(model => model.Review, new { @class = "form-control summerNoteArea", id = "mainText" })
+                                    @Html.ValidationMessageFor(model => model.Review, "", new { @class = "text-danger" })
+                                </div>
+                                @*<div id="AutoSaveResult">
+                            @Html.Partial("_AutoSaveResult", -1)
+                            </div>*@
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>ویژگی های شاخص</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">ویژگی مهم اول</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Spec1, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Spec1, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">ویژگی مهم دوم</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Spec2, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Spec2, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">ویژگی مهم سوم</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Spec3, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Spec3, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">توضیح کوتاه</label>
+
+                                <div class="col-sm-10">
+                                    @Html.TextAreaFor(model => model.ExtraDescription, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ExtraDescription, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>تنظیمات محصول</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            قیمت گذاری محصول
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="ComplexPriceWrapper">
+                                                <div id="PriceRows">
+                                                    @{
+                                                        if (ViewBag.varTitle != null)
+                                                        {
+                                                            var titles = (string[])ViewBag.varTitle;
+                                                            var Descriptions = (string[])ViewBag.varDescription;
+                                                            var Prices = (string[])ViewBag.varPrice;
+                                                            var SalePrices = (string[])ViewBag.varSalePrice;
+                                                            var NumberStocks = (string[])ViewBag.varNumberStock;
+
+                                                            for (int i = 0; i < ((string[])ViewBag.varTitle).Length; i++)
+                                                            {
+                                                                var cmp = new ComplexPriceViewModel()
+                        {
+                            Title = titles[i],
+                            Description = Descriptions[i],
+                            Price = Prices[i],
+                            SalePrice = SalePrices[i],
+                            NumberStock = NumberStocks[i]
+                        };
+
+                                                                <partial name="_complexPriceRow" model="cmp" />
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            var variables = _productService.GetProductVariables(Model.Id);
+                                                            for (int i = 0; i < variables.Count(); i++)
+                                                            {
+                                                                var cmp = new ComplexPriceViewModel()
+                        {
+                            Title = variables[i].Title,
+                            Description = variables[i].Description,
+                            Price = variables[i].Price.ToString(),
+                            SalePrice = variables[i].SalePrice.ToString(),
+                            NumberStock = variables[i].NumberInStock.ToString(),
+                        };
+
+                                                                <partial name="_complexPriceRow" model="cmp" />
+                                                            }
+
+                                                        }
+                                                    }
+                                                </div>
+
+                                                <button class="btn btn-danger" type="button" onclick="AddOneVariable()" style="width:145px;display: block;margin: 15px auto 0px;">
+                                                    <i class="fad fa-plus-square" style="font-size: 19px;float: right;"></i><p style="margin-bottom: 0px;">متغیر جدید</p>
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>مشخصات فنی</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div id="AttItems" class="AttItems">
+                                    @{
+                                        if (ViewBag.AttSelected != null)
+                                        {
+                                            string[] Attributes = (string[])ViewBag.AttSelected;
+                                            string[] AttValues = (string[])ViewBag.attributeValues;
+                                            for (int i = 0; i < Attributes.Length; i++)
+                                            {
+                                                var attVm = new AttributeViewModel()
+                        {
+                            AttKey = Attributes[i],
+                            AttValue = AttValues[i],
+                        };
+                                                <partial name="_productAttributeRow" model="attVm" />
+                                            }
+                                        }
+                                        else
+                                        {
+                                            List<Datalayer.Entities.Attribute> PAs = _productService.GetAttributeProduct(Model.Id);
+                                            for (int i = 0; i < PAs.Count(); i++)
+                                            {
+                                                var attVm = new AttributeViewModel()
+                        {
+                            AttKey = PAs[i].AttributeKey,
+                            AttValue = PAs[i].AttributeValue,
+                        };
+                                                <partial name="_productAttributeRow" model="attVm" />
+                                            }
+                                        }
+                                    }
+                                </div>
+
+                                <button class="btn btn-danger" type="button" onclick="AddOneAttribute()" style="width:145px;display: block;margin: 15px auto 0px;">
+                                    <i class="fad fa-plus-square" style="font-size: 19px;float: right;"></i><p style="margin-bottom: 0px;">ویژگی جدید</p>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>برچسب</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p>با خط تیره "-" جدا کنید</p>
+                                    @{
+                                        string concatTags;
+
+                                        if (@ViewBag.Tags != null)
+                                        {
+                                            concatTags = string.Join("-", ViewBag.Tags);
+
+                                        }
+                                        else
+                                        {
+                                            concatTags = string.Join("-", _productService.GetProductTags(Model.Id).Select(x => x.Tag.Name));
+
+                                        }
+
+                                        <input name="tags" class="form-control" value="@concatTags" />
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>تصاویر محصول</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <button class="btn btn-primary btn_product_gallery" id="btn_product_gallery" type="button" data-target="#Gallery" data-toggle="modal" style="width:175px;display: block;margin: 0px auto 5px;"><i class="fad fa-image"></i>&nbsp;اضافه کردن عکس جدید</button>
+                                    <div class="productImageGalleries" id="sortable">
+                                        @{
+                                            if (ViewBag.ProductImageGallery != null)
+                                            {
+                                                string[] images = ViewBag.ProductImageGallery;
+                                                foreach (var item in images)
+                                                {
+                                                    int imageID = int.Parse(item.Replace("image_", string.Empty));
+                                                    var image = _mediaService.GetMediaByID(imageID);
+                                                    if (image != null)
+                                                    {
+                                                        string Gallery = image.Url;
+                                                        <div class="productImageGallery" style="background-image:url('/@Gallery')">
+                                                            <input type="hidden" name="ProductImageGallery" value="@imageID" />
+                                                            <a class="delGalleryImgBtn" id="@imageID">
+                                                                <i class="fad fa-trash-alt"></i>
+                                                            </a>
+                                                        </div>
+                                                    }
+
+                                                }
+                                            }
+                                            else if (!string.IsNullOrEmpty(Model.Gallery))
+                                            {
+                                                string[] images = Model.Gallery.Split(',');
+                                                foreach (var item in images)
+                                                {
+                                                    int imageID = int.Parse(item.Replace("image_", string.Empty));
+                                                    var image = _mediaService.GetMediaByID(imageID);
+                                                    if (image != null)
+                                                    {
+                                                        string background = image.Url;
+                                                        <div class="productImageGallery" style="background-image:url('/@background')">
+                                                            <input type="hidden" name="ProductImageGallery" value="@imageID" />
+                                                            <a class="delGalleryImgBtn" id="@imageID">
+                                                                <i class="fad fa-trash-alt"></i>
+                                                            </a>
+                                                        </div>
+                                                    }
+
+                                                }
+                                            }
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-sm-3 no-padding">
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>دسته بندی</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content" style="padding:10px 5px;">
+                            <div class="scroll_content_cat">
+                                <div class="form-group">
+
+                                    @{
+                                        string[] selectedCats = null;
+                                        if (ViewBag.SelectedCategory != null)
+                                        {
+                                            selectedCats = (string[])ViewBag.SelectedCategory;
+                                        }
+                                        else
+                                        {
+                                            selectedCats = _productService.GetProductCategories(Model.Id).ToArray();
+                                        }
+                                        var HeadCategories = _categoryService.GetCategoriesByParentId(false);
+                                        foreach (var cat in HeadCategories)
+                                        {
+                                            <ul class="columnCat">
+                                                @{
+                                                    if (selectedCats == null)
+                                                    {
+                                                        <li class="checkbox i-checks Category">
+                                                            <label class="checkboxLabel"> <input type="checkbox" style="float:right;" name="SelectedCategory" value="@cat.Id"> <i></i><span>@cat.Title</span></label>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="checkbox i-checks Category">
+                                                            <label class="checkboxLabel">
+                                                                <input type="checkbox" @(
+                                                   (selectedCats.Any(a => a == cat.Id.ToString())) ? "checked" : ""
+                                                    ) style="float:right;" name="SelectedCategory" value="@cat.Id"> <i></i><span>@cat.Title</span>
+                                                            </label>
+                                                        </li>
+                                                    }
+
+
+                                                    foreach (var subcat in _categoryService.GetCategoriesByParentId(false, cat.Id))
+                                                    {
+                                                        <li>
+                                                            <ul class="columnCat">
+                                                                @if (selectedCats == null)
+                                                                {
+                                                                    <li class="checkbox i-checks Category">
+                                                                        <label> <input type="checkbox" name="SelectedCategory" value="@subcat.Id"> <i></i><span>@subcat.Title</span></label>
+                                                                    </li>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <li class="checkbox i-checks Category">
+                                                                        <label>
+                                                                            <input type="checkbox" @(
+                                                           (selectedCats.Any(a => a == subcat.Id.ToString())) ? "checked" : ""
+                                                                ) name="SelectedCategory" value="@subcat.Id"> <i></i><span>@subcat.Title</span>
+                                                                        </label>
+                                                                    </li>
+                                                                }
+
+                                                                @foreach (var subcat2 in _categoryService.GetCategoriesByParentId(false, subcat.Id))
+                                                                {
+                                                                    <li>
+                                                                        <ul class="columnCat">
+                                                                            @if (selectedCats == null)
+                                                                            {
+                                                                                <li class="checkbox i-checks Category">
+                                                                                    <label class="checkboxLabel2"> <input type="checkbox" name="SelectedCategory" value="@subcat2.Id"> <i></i><span>@subcat2.Title</span></label>
+                                                                                </li>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <li class="checkbox i-checks Category">
+                                                                                    <label class="checkboxLabel2">
+                                                                                        <input type="checkbox" @(
+                                                                    (selectedCats.Any(a => a == subcat2.Id.ToString())) ? "checked" : ""
+                                                                            ) name="SelectedCategory" value="@subcat2.Id"> <i></i><span>@subcat2.Title</span>
+                                                                                    </label>
+                                                                                </li>
+                                                                            }
+                                                                        </ul>
+                                                                    </li>
+
+                                                                }
+                                                            </ul>
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        }
+                                    }
+
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>تصویر شاخص</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+
+
+                            @{
+                                if (!string.IsNullOrEmpty(ViewBag.Thumb))
+                                {
+                                    string background = _mediaService.GetMediaByID(int.Parse(ViewBag.Thumb.Replace("image_", string.Empty))).Url;
+                                    <div id="Show_Thmub" style="border:1px solid #efefef; width:100%; background-image:url('/@background'); padding-top:100%;background-position: center !important; background-size: cover !important;">
+                                    </div>
+                                    <button class="btn btn-primary" id="btn_Gallery_thumb" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر شاخص</button>
+                                    <input type="hidden" name="thumbUrl" id="thumb_url" value="@ViewBag.Thumb" />
+                                }
+                                else if (Model.Photo != null)
+                                {
+                                    <div id="Show_Thmub" style="border:1px solid #efefef; width:100%; background-image:url('/@Model.Photo.Url'); padding-top:100%;background-position: center !important; background-size: cover !important;">
+                                    </div>
+                                    <button class="btn btn-primary" id="btn_Gallery_thumb" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر شاخص</button>
+                                    <input type="hidden" name="thumbUrl" id="thumb_url" value="image_@Model.PhotoId" />
+                                }
+                                else
+                                {
+                                    <div id="Show_Thmub" style="border:1px solid #efefef; width:100%; padding-top:100%;background-position: center !important; background-size: cover !important;">
+                                    </div>
+                                    <button class="btn btn-primary" id="btn_Gallery_thumb" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر شاخص</button>
+                                    <input type="hidden" name="thumbUrl" id="thumb_url" value="" />
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>تخفیف شگفت انگیز</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <ul style="float: right;margin-left: 30px;">
+                                        <li class="checkbox i-checks Category">
+                                            @{
+                                                bool isWonder = false;
+                                                if (ViewBag.isWonder != null)
+                                                {
+                                                    isWonder = (ViewBag.isWonder == true);
+                                                }
+                                                else
+                                                {
+                                                    isWonder = Model.IsWonderProduct;
+                                                }
+                                                if (isWonder)
+                                                {
+                                                    <label class="checkboxLabel"> <input type="checkbox" checked style="float:right;" name="IsWonder" value="wonder"> <i></i><span>تخفیف شگفت انگیز؟</span></label>
+
+                                                }
+                                                else
+                                                {
+                                                    <label class="checkboxLabel"> <input type="checkbox" style="float:right;" name="IsWonder" value="wonder"> <i></i><span>تخفیف شگفت انگیز؟</span></label>
+
+                                                }
+                                            }
+                                        </li>
+                                    </ul>
+                                    @{
+                                        PersianCalendar pc = new PersianCalendar();
+                                        string year = "1404", month = "01", day = "01", hour = "12", minute = "00";
+                                        if (Model != null && Model.WonderTime.HasValue)
+                                        {
+                                            year = pc.GetYear(Model.WonderTime.Value).ToString();
+                                            month = pc.GetMonth(Model.WonderTime.Value).ToString();
+                                            day = pc.GetDayOfMonth(Model.WonderTime.Value).ToString();
+                                            hour = pc.GetHour(Model.WonderTime.Value).ToString();
+                                            minute = pc.GetMinute(Model.WonderTime.Value).ToString();
+                                        }
+
+                                    }
+                                    <input class="form-control" data-jdp data-jdp-only-date name="WonderDate" type="text"
+                                           value="@((Model!=null)?((Model.WonderTime.HasValue)? year + "/" + month + "/" + day:null):null)"
+                                           style="text-align:center;float:right;" placeholder="تاریخ" />
+
+                                    <input class="form-control" data-jdp data-jdp-only-time type="text" name="WonderTime"
+                                           value="@((Model!=null)?((Model.WonderTime.HasValue)? (hour + ":" + minute):null):null)"
+                                           style="text-align:center; float:right;" placeholder="ساعت" />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>عملیات</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content" style="padding:15px 10px 20px 10px;">
+                            @{
+                                if (Model.Status == "Publish")
+                                {
+                                    <button class="btn btn-primary" style="width:145px;display: block;margin: 0px auto 5px;" type="submit" name="submittype" value="Edit"><i class="fa fa-check"></i>&nbsp;ذخیره محصول</button>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-primary" style="width:145px;display: block;margin:0px auto 5px;" type="submit" name="submittype" value="Edit"><i class="fa fa-check"></i>&nbsp;ذخیره و انتشار</button>
+                                    <button class="btn btn-primary" style="width:145px;display: block;margin:0px auto 5px;background:#0984e3;border-color:#0984e3;font-size:13px;" type="submit" name="submittype" value="SaveDraft"><i class="fal fa-save" style="font-size: 18px;float: right;margin-left: 5px;"></i>&nbsp;ذخیره پیش نویس</button>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
+
+<partial name="_GalleryModal" />
+
+
+@section Styles {
+    <link href="~/Admin/plugin/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/plugin/select2/select2.min.css" rel="stylesheet" />
+    <link href="~/admin/plugin/icheck/custom.css" rel="stylesheet" />
+    <link href="~/plugin/datepicker/jalalidatepicker.min.css" rel="stylesheet" />
+}
+@section scripts {
+
+    <script src="~/Admin/plugin/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/plugin/select2/select2.full.min.js"></script>
+    <script src="~/admin/plugin/summernote/summernote.min.js"></script>
+    <script src="~/admin/plugin/summernote/summernote-image-title.js"></script>
+    <script src="~/admin/plugin/summernote/summernote-fa-ir.min.js"></script>
+    <script src="~/admin/plugin/icheck/icheck.min.js"></script>
+    <script src="~/plugin/datepicker/jalalidatepicker.min.js"></script>
+    <script src="~/js/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#mainText').summernote({
+                lang: 'fa-ir',
+                height: 500,
+                imageTitle: {
+                    specificAltField: true,
+                },
+                popover: {
+                    image: [
+                        ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone']],
+                        ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                        ['remove', ['removeMedia']],
+                        ['custom', ['imageTitle']],
+                    ],
+                },
+                callbacks: {
+                    onImageUpload: function (files) {
+                        for (let i = 0; i < files.length; i++) {
+                            UploadImage(files[i]);
+                        }
+                    }
+                },
+            });
+
+
+        });
+
+
+    </script>
+
+    <script>
+        function UploadImage(file) {
+            var url = "@Url.Action("UploadFile", "Product")";
+
+            formData = new FormData();
+            formData.append("aUploadedFile", file);
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (FileUrl) {
+                    // alert(FileUrl);
+                    var imgNode = document.createElement("img");
+                    imgNode.src = FileUrl;
+                    $("#mainText").summernote("insertNode", imgNode);
+                },
+                error: function (data) {
+                    alert(data.responseText);
+                }
+            });
+        }
+    </script>
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+        });
+    </script>
+
+    <script>
+        function AddOneVariable() {
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Admin/Product/AddVariableRow",
+
+                    success:
+
+                        function (result) {
+                            $("#PriceRows").append(result);
+                        },
+                    error: function (req, status, error) {
+                        window.alert("Error!");
+                    }
+                });
+        };
+    </script>
+    <script>
+        function AddOneAttribute() {
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Admin/Product/AddProductAttributeRow",
+
+                    success:
+
+                        function (result) {
+                            $("#AttItems").append(result);
+                        },
+                    error: function (req, status, error) {
+                        window.alert("Error!");
+                    }
+                });
+        };
+    </script>
+
+    <script>
+
+        $('.productImageGalleries').on('click', 'a.delGalleryImgBtn', function () {
+
+            $(this).parent().remove();
+
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            jalaliDatepicker.startWatch({ hasSecond: false, minDate: "today" });
+
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(window).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $("#sortable").sortable();
+        });
+    </script>
+
+
+
+}
+

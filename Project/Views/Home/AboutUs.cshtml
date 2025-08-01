@@ -1,0 +1,41 @@
+﻿@using Core.Services.Interfaces
+
+@inject ISettingService _settingService
+
+@{
+    ViewData["Title"] = "درباره ما";
+}
+
+<div class="Waypart section">
+    <a href="/">صفحه اصلی</a>
+    <label>/</label>
+    <span>درباره ما</span>
+</div>
+
+<div class="PageImg PageImgDesktop" style="background-image: url('/assets/aboutus.jpg');">
+    <div class="sectionTitle">
+        <img src="~/assets/backtitle.svg" />
+        <h3>
+            درباره ما
+        </h3>
+    </div>
+</div>
+
+<div class="PageImg PageImgMobile" style="background-image: url('/assets/aboutusmobile.jpg');">
+    <div class="sectionTitle">
+        <img src="~/assets/backtitle.svg" />
+        <h3>
+            درباره ما
+        </h3>
+    </div>
+</div>
+
+<div class="PageContent section">
+
+
+    <div class="PageText">
+        @Html.Raw(_settingService.GetSettingValue("AboutusText"))
+    </div>
+
+    <a class="ActionButton" href="/ContactUs">تماس با ما</a>
+</div>

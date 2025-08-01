@@ -1,0 +1,213 @@
+﻿@using Core.Services.Interfaces
+
+@inject ISettingService _settingService
+
+@{
+    ViewBag.Title = "پیشخوان | تنظیمات فروشگاه";
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>تنظیمات فروشگاه</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="index" asp-area="Admin">مدیریت</a>
+            </li>
+            <li class="active">
+                <strong>تنظیمات فروشگاه</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight settingWrapper">
+    @using (Html.BeginForm("WonderSettings", "Setting", FormMethod.Post, new { @class = "form-horizontal MainForm", enctype = "multipart/form-data" }))
+    {
+
+        <div class="row">
+            <div class="col-sm-12 no-padding">
+                <div class="col-sm-12">
+                    @Html.ValidationSummary(true, "لطفا خطاهای زیر را برطرف نمایید:", new { @class = "text-danger alert alert-danger" })
+                </div>
+                <div class="col-sm-12">
+                    @{
+                        if (ViewBag.Message != null)
+                        {
+                            <div class="col-sm-12 alert alert-success">
+                                <span>@ViewBag.Message</span>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>تنظیمات تخفیف شگفت انگیز</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">تخفیف شگفت انگیز</h2>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">ویجت تخفیف شگفت انگیز نمایش داده شود؟</label>
+
+                                <div class="col-sm-9">
+                                    <input type="checkbox" value="wonder" @((@_settingService.GetSettingValue("ShowWonderful") == "true") ? "checked" : "") name="WonderStatus" class="form-control">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">بنر تخفیف شگفت انگیز دسکتاپ <span style="color:red;">فقط پسوند jpg (سایز 500 در 500)</span></label>
+
+                                <div class="col-sm-3">
+                                    <input type="file" id="WBannerInput" name="WBanner" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="LogoImg">
+                                        @{
+                                            var random = new Random();
+                                        }
+                                        <img style="width: 200px;" id="WBannerShower" src="/assets/wBanner.jpg?xxx=@random.Next(10000,20000)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">بنر تخفیف شگفت انگیز موبایل <span style="color:red;">فقط پسوند jpg (سایز 760 در 260)</span></label>
+
+                                <div class="col-sm-3">
+                                    <input type="file" id="WBannerMobileInput" name="WBannerMobile" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="LogoImg">
+                                        <img style="width: 200px;" id="WBannerMobileShower" src="/assets/wBannerMobile.jpg?xxx=@random.Next(10000,20000)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک بنر</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("WonderBannerLink")" name="WonderBannerLink" class="form-control">
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+
+                            <div class="seperate"></div>
+
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">صفحه محصول</h2>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">توضیحات کنار دکمه سبد خرید (کوتاه)</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="ProductInformation" class="form-control">@_settingService.GetSettingValue("ProductInformation")</textarea>
+                                </div>
+                            </div>
+
+
+                            <div class="seperate"></div>
+
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">متن پیامک ها</h2>
+                            <span style="margin-bottom: 25px;display: block;">از [Name]، [OrderNumber] و [TrackCode] میتوانید در متن پیامک برای نام و نام خانوادگی کاربر،شماره سفارش کاربر و کد رهگیری پست استفاده کنید</span>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن ارسالی پیامک بعد از سفارش موفق</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="SMSText" class="form-control">@_settingService.GetSettingValue("SMSText")</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن ارسالی پیامک بعد از ارسال سفارش</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="SMSTextCompleted" class="form-control">@_settingService.GetSettingValue("SMSTextCompleted")</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن ارسالی پیامک بعد از لغو سفارش</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="SMSTextCanceled" class="form-control">@_settingService.GetSettingValue("SMSTextCanceled")</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن ارسالی پیامک بعد از مرجوع کردن سفارش</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="SMSTextRefund" class="form-control">@_settingService.GetSettingValue("SMSTextRefund")</textarea>
+                                </div>
+                            </div>
+
+                            <div class="seperate"></div>
+                            <button class="btn btn-primary" style="width:145px;display: block;margin: 0px auto 5px;" type="submit"><i class="fa fa-check"></i>ذخیره</button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+
+</div>
+
+@section scripts {
+    <script>
+        var myReader = new FileReader();
+        $("#WBannerInput").on('change', function () {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#WBannerShower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#WBannerShower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        });
+
+        $("#WBannerMobileInput").on('change', function () {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#WBannerMobileShower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#WBannerMobileShower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        });
+
+    </script>
+
+}

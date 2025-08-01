@@ -1,0 +1,1333 @@
+@media only screen and (max-width: 1400px) {
+
+    .ProductListAreaType2 .rightSection {
+        width: 400px;
+    }
+
+    .ProductListAreaType2 .leftSection {
+        width: calc(100% - 410px);
+    }
+
+    .ProductListAreaType2 .ActionLink {
+        margin-top: 30px;
+    }
+
+    .ProductListWrapper {
+        flex-wrap: wrap;
+    }
+
+    .ProductList3Wrapper {
+        width: 49%;
+        margin-bottom: 20px;
+    }
+
+    .ProductItem2 .ProductImg2 {
+        padding-top: 0px;
+        height: 80px;
+    }
+
+
+
+    .MainProduct {
+        flex-wrap: wrap;
+    }
+
+    .pSlider, .pMeta {
+        width: 50%;
+    }
+
+    .pCart {
+        width: 100%;
+        padding-right: 20px;
+    }
+
+    .specItems {
+        border-bottom: none;
+    }
+
+    .VariableArea {
+        padding: 20px 0px;
+        justify-content: center;
+    }
+
+    .CartArea {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .AddToCartArea {
+        max-width: 480px;
+    }
+
+    .ProductListWrapper .backSection {
+        padding-bottom: 0px;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .ProductListAreaType2 .ProductList2 .ProductItem {
+        width: 31.33%;
+    }
+
+    .item_4 {
+        display: none;
+    }
+
+    .ProductListAreaType3 .ProductItem {
+        width: 18%;
+    }
+
+    .social {
+        margin-left: 5px;
+        width: 45px;
+        height: 45px
+    }
+
+    .ArchiveProducts > a {
+        width: 19%;
+    }
+
+    .ProfileSection .rightSection {
+        width: 250px;
+    }
+
+    .ProfileSection .leftSection {
+        width: calc(100% - 270px);
+    }
+
+    .ProfileSection {
+        width: 95%;
+    }
+
+        .ProfileSection .form-group {
+            width: 100%;
+        }
+
+
+
+    .shopCartDetails, .WidgetChekout {
+        width: 250px;
+        margin-right: 10px;
+    }
+
+    .shop_cart .shopCartTable, .mainCheckout {
+        width: calc(100% - 260px);
+    }
+
+    .shop_cart .cartRow {
+        height: 290px;
+    }
+
+        .shop_cart .cartRow .cartPrDetails h3 {
+            height: 45px;
+            font-size: 16px;
+        }
+
+    .CheckoutTable .cartRow {
+        height: unset;
+    }
+
+    .IProducts a:nth-child(6) {
+        display: none;
+    }
+
+    .IProducts a {
+        width: 19%;
+    }
+
+    .pMeta .englishTitle {
+        height: unset;
+    }
+
+    .IMainFooter .rightSection {
+        width: 100%;
+        padding: 20px 0px;
+    }
+
+    .IMainFooter .leftSection {
+        width: 100%;
+        padding: 20px 0px;
+    }
+
+    .IFooter .socials {
+        display: flex;
+        justify-content: center;
+        margin-top:20px;
+    }
+
+    .IFooterLogo {
+        align-self: center;
+    }
+
+    .PageImg .sectionTitle img {
+        height: 25px;
+        top: 12px;
+    }
+
+    .PageImg .sectionTitle h3 {
+        margin-top: 19px;
+    }
+
+    .BlogArticle .ArticleItem {
+        width: 24%;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+
+    .section, .PageImg {
+        width: calc(100% - 50px);
+    }
+
+    /*    .ProductList {
+        width: calc(95% - 50px);
+    }*/
+
+    .ProductSlider.owl-theme .owl-nav .owl-next, .CategoryWrapper.owl-theme .owl-nav .owl-next, .BlogWrapper.owl-theme .owl-nav .owl-next {
+        left: -23px;
+    }
+
+    .ProductSlider.owl-theme .owl-nav .owl-prev, .CategoryWrapper.owl-theme .owl-nav .owl-prev, .BlogWrapper.owl-theme .owl-nav .owl-prev {
+        right: -23px;
+    }
+
+    .ProductSlider.owl-theme .owl-nav .owl-next {
+        left: -43px;
+    }
+
+    .ProductSlider.owl-theme .owl-nav .owl-prev {
+        right: -43px;
+    }
+
+    .ProductListArea {
+        padding: 0px 15px;
+    }
+
+    .ProductSlider.owl-theme .owl-nav span, .CategoryWrapper.owl-theme .owl-nav span, .BlogWrapper.owl-theme .owl-nav span {
+        width: 20px;
+        height: 20px;
+        font-size: 21px;
+        line-height: 22px;
+    }
+
+
+    .header {
+        padding-top: 20px;
+    }
+
+        .header > .leftSection {
+            width: 135px;
+        }
+
+        .header > .rightSection {
+            width: calc(100% - 170px);
+        }
+
+    .loginArea {
+        width: 53px;
+    }
+
+        .loginArea span {
+            display: none;
+        }
+
+    .menubar .rightSection > a, .menubar .MenuHead {
+        font-size: 14px;
+        padding-left: 10px;
+        margin-left: 10px;
+        margin-top: 9px;
+    }
+
+    .menubar .MenuHead {
+        padding-left: 0px;
+    }
+
+        .menubar .MenuHead > a {
+            height: 22px;
+            padding-left: 10px;
+        }
+
+    .ProductListAreaType2 .rightSection {
+        width: 200px;
+    }
+
+    .ProductListAreaType2 .leftSection {
+        width: calc(100% - 210px);
+    }
+
+    .ProductListAreaType2 .BannerImg {
+        padding-top: 180%;
+    }
+
+    .ProductListAreaType3 .ProductItem {
+        width: 23%;
+    }
+
+
+
+    .specItem {
+        flex-direction: column;
+    }
+
+        .specItem:first-child img {
+            width: 40px;
+        }
+
+        .specItem img {
+            width: 50px;
+            height: unset;
+            margin-left: 0px;
+        }
+
+        .specItem span {
+            text-align: center;
+            font-size: 12px;
+        }
+
+    .MainFooter .rightSection {
+        padding: 0px 10px;
+    }
+
+    .MainFooter .leftSection {
+        margin: 0 auto;
+    }
+
+
+    .ExtraFooter {
+        flex-wrap: wrap;
+    }
+
+    .ExtraPart.BigPart {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .ExtraPart.SmallPart {
+        width: 50%;
+    }
+
+    .pSlider {
+        width: 100%;
+    }
+
+    .pCart, .pMeta {
+        width: 50%;
+    }
+
+    .pCart {
+        padding-right: 20px;
+    }
+
+    .specItems {
+        width: 300px;
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+
+    .specItemWrapper {
+        width: 75px;
+    }
+
+    .CommentProduct .rightSection {
+        width: 100%;
+        order: 2;
+    }
+
+    .CommentProduct .leftSection {
+        width: 100%;
+        order: 1;
+    }
+
+    .ArchiveProducts > a {
+        width: 24%;
+    }
+
+    .PageContent .rightSection {
+        width: 100%;
+    }
+
+    .PageContent .leftSection {
+        width: 100%;
+        margin-top: 30px;
+    }
+
+    .BSColumn1 {
+        width: 59%;
+    }
+
+    .BSColumn2 {
+        width: 39.5%;
+        margin-right: 0px;
+    }
+
+    .BSColumn3 {
+        display: none;
+    }
+
+    .TopNewItem1 h2 {
+        padding-left: 20px;
+        font-size: 19px;
+        right: 20px;
+    }
+
+    .ProfileSection .rightSection {
+        width: 100%;
+        /*max-width: 400px;*/
+        margin: 20px auto;
+        float: unset;
+    }
+
+    .ProfileSection .leftSection {
+        width: 100%;
+    }
+
+    .ProfileSection .leftSection {
+        margin-top: 20px;
+    }
+
+    .programDetail {
+        width: 50%;
+    }
+
+    .MyProgram {
+        height: unset;
+        padding-bottom: 15px;
+    }
+
+
+    .ProgramActions.programDetail {
+        width: 100%;
+    }
+
+        .ProgramActions.programDetail .ActionButton {
+            width: 97%;
+        }
+
+    .WonderfulArea {
+        width: calc(100% - 50px);
+    }
+
+
+
+        .WonderBanner {
+        display: none;
+    }
+
+    .WonderfulSection {
+        width: 100%;
+        margin-left: 0px;
+    }
+
+    .shop_cart .shopCartTable {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .shopCartDetails, .WidgetChekout {
+        width: 100%;
+        margin-right: 0px;
+        margin-bottom: 20px;
+    }
+
+    .shop_cart .cartRow .cartPrMedia {
+        width: 100%;
+        float: unset;
+    }
+
+    .shop_cart .cartRow {
+        height: unset;
+        padding-bottom: 10px;
+        width: 48%;
+        float: right;
+        margin: 10px 1%;
+    }
+
+    .CheckoutTable .cartRow {
+        width: 100%;
+        margin: 10px 0px;
+    }
+
+    .shop_cart .cartRow .cartPrDetails {
+        width: 90%;
+        margin: 0 auto;
+        float: unset;
+        border: unset;
+    }
+
+    .shop_cart .cartRow .cartPrAction {
+        width: 100%;
+        height: 90px;
+        float: unset;
+    }
+
+        .shop_cart .cartRow .cartPrAction a {
+            left: 20px;
+            top: 49px;
+            right: unset;
+        }
+
+        .shop_cart .cartRow .cartPrAction .cartPrTotalPrice {
+            right: 80px;
+            top: 5px;
+        }
+
+    .shop_cart .cartRow .cartPrDetails h3 {
+        text-align: center;
+        float: unset;
+        width: max-content;
+        margin: 0 auto;
+        max-width: 90%;
+        padding: 5px 0px;
+    }
+
+    .shop_cart .cartRow .cartPrDetails .numberProduct {
+        margin-right: 94px;
+    }
+
+    .shop_checkout .mainCheckout {
+        width: 100%;
+    }
+
+    .shop_checkout .WidgetChekout {
+        margin-top: 20px !important;
+    }
+
+    .IMenu .ILogo img {
+        width: 150px;
+    }
+
+    .ICategoryDetail {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .ICategoryDescription {
+        width: 100%;
+    }
+
+    .IProducts a:nth-child(5) {
+        display: none;
+    }
+
+    .IProducts a {
+        width: 24%;
+    }
+
+    .owl-dots {
+        bottom: -13px;
+    }
+
+    .MetaFooter {
+        flex-wrap: wrap;
+        height: unset;
+        padding: 10px 0px;
+    }
+
+        .MetaFooter .BigPart, .MetaFooter .SmallPart {
+            width: 100%;
+            border: none;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+    .MainFooter .rightSection .footerLogo {
+        display: none;
+    }
+
+    .MainFooter .rightSection p {
+        width: 100%;
+        margin-right: 0px;
+    }
+
+    .IProductHeads {
+        width: calc(100% - 100px);
+    }
+
+    .importSpec {
+        padding: 10px 0px;
+    }
+
+    .pMeta h1 {
+        width: 100%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .BlogArticle .ArticleItem {
+        width: 32.33%;
+    }
+    .WonderfulArea {
+        margin: 70px auto 10px auto;
+    }
+    .WBannerMobile {
+        display: block;
+        width: calc(100% - 50px);
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .mobile_menu {
+        display: block;
+    }
+
+    .header > .leftSection {
+        display: none;
+    }
+
+    .header > .rightSection {
+        width: 100%;
+    }
+
+    .logo {
+        width: 120px;
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+
+    .searchArea {
+        width: calc(100% - 130px);
+        max-width: unset;
+    }
+
+    .menubar .rightSection {
+        display: none;
+    }
+
+    .menubar {
+        margin-top: 15px;
+    }
+
+    .categoryArea {
+        margin-top: 30px;
+    }
+
+    .ProductListAreaType2 .rightSection {
+        display: none;
+    }
+
+    .ProductListAreaType2 .leftSection {
+        width: 100%;
+        margin-right: 0px;
+    }
+
+    .ProductListAreaType2, .ProductListAreaType3, .ProductListAreaType4, .ArticleArea {
+        margin-top: 50px;
+    }
+
+    .AdsArea {
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .AdsArea {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+        .AdsArea .Ads {
+            width: 100%;
+        }
+
+    .ProductListAreaType3 .ProductItem {
+        width: 31.33%;
+    }
+
+    .ProductItem2 .ProductImg2 {
+        height: 60px;
+        width: 70px;
+    }
+
+
+    .ExtraPart p {
+        font-size: 14px;
+    }
+
+    .pCart, .pMeta {
+        width: 100%;
+    }
+
+    .pMeta {
+        align-items: center;
+    }
+
+        .pMeta .englishTitle {
+            text-align: center;
+        }
+
+    .favoritSpec {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-bottom: 1px solid #D6D6D6;
+    }
+
+        .favoritSpec p {
+            text-align: center;
+        }
+
+    .pMeta h1 {
+        font-size: 21px;
+        margin-bottom: 3px;
+        margin-top: 15px;
+    }
+
+    .pMeta .englishTitle {
+        font-size: 13px;
+    }
+
+    .importSpec {
+        padding: 20px 0px;
+        align-items:center;
+    }
+
+    .ProductDescription {
+        padding: 20px 10px 40px 10px;
+    }
+
+    .AddToCartArea {
+        width: 95%;
+    }
+
+    .ArchiveProducts > a {
+        width: 32.33%;
+    }
+
+
+    .TopNewItem1 {
+        height: 170px;
+        margin-bottom: 10px;
+    }
+
+        .TopNewItem1 h2 {
+            font-size: 15px;
+            right: 15px;
+            line-height: 26px;
+        }
+
+    .BlogSlider {
+        flex-wrap: wrap;
+    }
+
+    .BSColumn1, .BSColumn2, .BSColumn3 {
+        width: 100%;
+        margin-right: 0px;
+    }
+
+    .ProductList3Wrapper {
+        width: 99%;
+    }
+
+    .WonderImgWrapper, .WonderfulImg {
+        width: 160px;
+        height: 160px;
+    }
+
+    .WonderfulArea {
+        height: unset;
+        width: 95%;
+    }
+
+    .WBannerMobile{
+        width:95%;
+    }
+
+    .WonderItem .rightSection {
+        width: 200px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .WonderItem .leftSection {
+        width: calc(100% - 210px)
+    }
+
+    .WonderfulImg span {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+        left: 12px;
+    }
+
+    .WonderItem h3 {
+        margin-top: 23px;
+        font-size: 16px;
+    }
+
+    .WonderPrice {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .WSepcs{
+        margin-top:15px;
+    }
+        .WSepcs span {
+            font-size: 13px;
+            margin-bottom: 2px
+        }
+
+        .WonderItem {
+            padding-bottom: 5px;
+        }
+
+    .WonderLine{
+        display:none;
+    }
+
+    .WBackTitle {
+        right: -67px;
+        width: 147px;
+    }
+
+    .WTimer .ActionLink {
+        width: 85px;
+    }
+
+    .shop_cart .cartRow {
+        width: 100%;
+        margin: 10px 0px;
+    }
+
+    .shop_checkout .mainCheckout {
+        width: 100%;
+    }
+
+    .shop_checkout .WidgetChekout {
+        margin-top: 20px !important;
+    }
+
+    .mainCheckout .CheckoutTable .customerDetailMain .Address .form-group {
+        font-size: 13px;
+    }
+
+    .mainCheckout .CheckoutTable .shipping .shippingItem {
+        width: 100%;
+        margin: 5px 0px;
+    }
+
+    .mainCheckout .CheckoutTable .payment .paymentItem img {
+        float: unset;
+        display: block;
+        margin: 10px auto 0px auto;
+        width: 150px;
+    }
+
+    .mainCheckout .CheckoutTable .payment .paymentItem .paymantDetails {
+        width: 100%;
+    }
+
+        .mainCheckout .CheckoutTable .payment .paymentItem .paymantDetails p {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .mainCheckout .CheckoutTable .payment .paymentItem .paymantDetails span {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+    .CheckoutTable .customerDetail {
+        width: 100%;
+    }
+
+    .IMenuItem {
+        display: none;
+    }
+
+    .IAboutUs p {
+        padding: 30px;
+    }
+
+    .ICategoryDescription {
+        padding: 10px;
+    }
+
+    .IProducts a:nth-child(4) {
+        display: none;
+    }
+
+    .IProducts a {
+        width: 32.33%;
+    }
+
+    .owl-theme .owl-dots .owl-dot span {
+        margin: 5px 4px !important;
+    }
+
+    .FloatButtonV2 {
+        bottom: 75px;
+    }
+
+    .sliderArea {
+        width: calc(100% - 50px);
+        margin: 30px auto 0px auto;
+    }
+
+    .IMenu .ILogo img {
+        width: 120px;
+    }
+
+    .pMeta h1 {
+        text-align: center;
+    }
+
+    .IFooter, .footerArea {
+        padding-bottom: 60px;
+    }
+
+    .PageImg .sectionTitle img {
+        height: 15px;
+        top: 22px;
+    }
+
+    .PageImg .sectionTitle h3 {
+        margin-top: 25px;
+        font-size: 16px;
+    }
+
+    .BlogArticle .ArticleItem {
+        width: 49%;
+    }
+
+    .MainFooter {
+        flex-direction: column;
+    }
+
+        .MainFooter .rightSection {
+            width: 95%;
+        }
+
+    .IFooter .leftSection {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .IContactUs {
+        width: 100%;
+    }
+
+    .FloatButtonV2 {
+        display: none;
+    }
+
+    .MainFooter .rightSection {
+        flex-direction: column;
+        margin-top: 5px;
+    }
+
+        .MainFooter .rightSection .footerLogo {
+            display: block;
+            margin-bottom: 20px;
+        }
+
+    .BlogSlider, .AticleLine {
+        display: none;
+    }
+
+
+}
+
+@media only screen and (max-width: 550px) {
+    .WonderItem .rightSection{
+        width:100%;
+    }
+
+    .WonderItem .leftSection {
+        width: 100%;
+        padding:0px 20px;
+    }
+
+    .WonderItem h3{
+        margin-top:0px;
+        text-align:center;
+        height:unset;
+    }
+
+    .WonderPrice{
+        text-align:center;
+        margin-top:5px;
+    }
+
+    .WSepcs{
+        text-align:center;
+        font-size:15px;
+        display:none;
+    }
+
+    .WTimer{
+        margin-top:10px;
+    }
+
+}
+
+@media only screen and (max-width: 480px) {
+    .header.section {
+        width: calc(100% - 10px);
+    }
+
+    .PageImg {
+        width: 100%;
+        border-radius: 0px;
+    }
+
+    .logo {
+        margin-left: 0px;
+        width: 140px;
+    }
+
+    .searchArea {
+        width: calc(100% - 120px);
+    }
+
+        .searchArea input {
+            padding-right: 10px;
+            font-size: 14px;
+        }
+
+    /*    .searchArea .searchIcon{
+        left:-60px;
+    }*/
+
+    .menubar .leftSection p {
+        display: none;
+    }
+
+    .ProductListAreaType2 .ProductList2 .ProductItem {
+        width: 48%;
+    }
+
+    .item_3 {
+        display: none;
+    }
+
+    .sectionTitle span {
+        font-size: 36px;
+    }
+
+    .sectionTitle.blackTitle span {
+        top: -9px;
+    }
+
+    .sectionTitle span {
+        top: 23px;
+    }
+
+    .ProductListAreaType3 .ProductItem {
+        width: 48%;
+    }
+
+    .ProductList3Wrapper {
+        width: 98%;
+        margin: 0px 1% 20px 1%;
+    }
+
+    .ProductItem2 .ProductImg2 {
+        height: 77px;
+        width: 88px;
+    }
+
+
+    .specItem item_3 {
+        display: none;
+    }
+
+    .specItem {
+        width: 25%;
+    }
+
+
+
+
+    .ExtraPart.SmallPart {
+        width: 100%;
+    }
+
+    .ExtraPart h5 {
+        width: 100%;
+        text-align: center;
+    }
+
+    .ExtraPart p {
+        width: 100%;
+        text-align: center;
+    }
+
+    .socials {
+        width: 220px;
+        margin: 0px auto;
+    }
+
+    .ExtraPart a {
+        width: 50%;
+        text-align: center;
+    }
+
+    .copyRight p {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0px;
+        padding: 5px 0px;
+    }
+
+    .pCart {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
+
+    .descItem span {
+        width: 100px;
+        font-size: 12px;
+        padding: 7px 5px;
+    }
+
+    .descItem .spec_value {
+        width: calc(100% - 105px);
+        margin-right: 5px;
+        text-align: center;
+    }
+
+    .CommentProduct .rightSection, .CommentProduct .leftSection {
+        padding: 20px 15px;
+    }
+
+    .Descripton p {
+        line-height: 33px;
+        font-size: 14px;
+    }
+
+    .ArchiveProducts > a {
+        width: 49%;
+    }
+
+    .ArticleMeta span {
+        display: block;
+        text-align: center;
+        width: 100%;
+    }
+
+    .ProfileSection .form-group label, .ProfileSection .form-group input {
+        width: 100%;
+    }
+
+    .ProfileSection .form-group label {
+        margin-bottom: 10px;
+    }
+
+    .HlineTitle.section, .ArchiveProducts.section {
+        width: 95%;
+    }
+
+    .AddToCartArea .BottomSection {
+        flex-wrap: wrap;
+    }
+
+        .AddToCartArea .BottomSection > span {
+            display: block;
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+    .AddToCartArea {
+        height: 120px;
+    }
+
+    .specItems {
+        width: 100%;
+    }
+
+    .specItemWrapper {
+        width: 50%;
+        margin-bottom: 10px;
+    }
+
+/*    .WTimer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+        .WTimer .ActionLink {
+            margin: 20px auto 0px auto;
+        }*/
+
+    .WonderItem .leftSection{
+        padding:0px 10px;
+    }
+
+    .WonderItem h3 {
+        padding: 0px 10px 0px 0px;
+    }
+
+    .sectionTitle img {
+        height: 27px;
+    }
+
+    .sectionTitle h3 {
+        font-size: 16px;
+    }
+
+    .PageImg .sectionTitle {
+        height: 23px;
+    }
+
+        .PageImg .sectionTitle img {
+            height: 15px;
+            top: 9px;
+        }
+
+        .PageImg .sectionTitle h3 {
+            margin-top: 11px;
+        }
+
+    .shop_cart .cartRow .cartPrDetails {
+        width: 100%;
+    }
+
+    .IAboutUs p {
+        padding: 15px;
+    }
+
+    .IProductHeads span {
+        font-size: 13px;
+    }
+
+    .IProducts a:nth-child(3) {
+        display: none;
+    }
+
+    .IProducts a {
+        width: 49%;
+    }
+
+    .sliderItem {
+        /*        clip-path: unset;
+        -webkit-clip-path: unset;*/
+    }
+
+    .sliderArea .owl-dots {
+        bottom: -13px;
+    }
+
+    .ISlider .owl-dots {
+        bottom: -13px;
+    }
+
+    .desktopSliderItem {
+        display: none;
+    }
+
+    .sliderArea {
+        width: calc(100% - 20px);
+        margin: 30px auto 0px auto;
+        border-radius: 20px;
+    }
+
+    .mobileSliderItem {
+        display: block;
+    }
+
+    .IProductHeads {
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
+
+    .ArticleItem h2 {
+        font-size: 14px;
+        padding: 0px 5px;
+    }
+
+    .IProductHeads .IProductHead {
+        font-size: 14px;
+    }
+
+    .IProductHeads {
+        width: calc(100% - 80px);
+    }
+
+    .menubar {
+        display: none;
+    }
+
+    .header {
+        padding-top: 10px;
+    }
+
+        .header > .rightSection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .header .searchArea {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+    .searchArea input {
+        height: 38px;
+    }
+
+    .searchArea .searchIcon {
+        width: 38px;
+        height: 38px;
+        padding: 8px;
+    }
+
+    .menubarMobile {
+        display: block;
+        width: calc(100% - 150px);
+        background: none;
+        border: none;
+    }
+
+    .menubar .leftSection a {
+        color: black;
+    }
+
+    .menubar .leftSection p {
+        display: block;
+    }
+
+    .menubar .leftSection img {
+        margin-left: 15px;
+    }
+
+
+
+    .MajorForm .formGroup {
+        width: 100%;
+    }
+
+    .PageImgDesktop {
+        display: none;
+    }
+
+    .PageImgMobile {
+        display: block;
+    }
+
+    .BlogArticle .ArticleItem {
+        width: 100%;
+        margin: 10px 0px;
+    }
+
+    .bigImg {
+        margin: 10px auto;
+        display: block;
+    }
+
+
+    .MainFooter {
+        width: 100%;
+    }
+
+    .WTimer{
+        width:95%;
+    }
+
+    .ExtraPart p{
+        padding-right:0px;
+    }
+}

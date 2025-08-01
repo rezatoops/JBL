@@ -1,0 +1,35 @@
+﻿@using Datalayer.Entities
+@using Core.Services.Interfaces
+
+@model BlogCategory
+
+@inject IPostService _postService
+
+<td style="vertical-align: middle;text-align: center;">@Model.Title</td>
+<td style="vertical-align: middle;text-align: center;">@_postService.GetPostByCategoryId(Model.Id).Count</td>
+
+
+<td style="vertical-align: middle;">
+    <div class="center-block" style="width:163px;">
+
+
+        <a class="btn btn-info confirmbtn" href="~/Admin/Blog/EditCategory/@Model.Id"
+           id="@Model.Id" style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 10px;"><i style="font-size: 18px;" class="fa fa-pen"></i></a>
+
+@*         <a class="btn btn-warning confirmbtn" href="~/Category/@Model.Slug" target="_blank"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 8px;"><i style="font-size: 18px;" class="fa fa-link"></i></a> *@
+
+       <a class="btn btn-danger TableDeletebtn" onclick="DeleteCategory(@Model.Id)"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 10px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+
+
+    </div>
+
+
+</td>
+
+
+
+
+
+

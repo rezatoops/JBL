@@ -1,0 +1,32 @@
+﻿@using Core.Extensions
+@using Core.Services.Interfaces 
+@using Core.ViewModel;
+@using Datalayer.Entities
+
+@model ShopDesign
+
+@inject ISettingService _settingService
+
+<td style="vertical-align: middle;text-align: center;">@Model.Sort</td>
+<td style="vertical-align: middle;text-align: center;">@Model.Name</td>
+<td style="vertical-align: middle;text-align: center;">@Model.Title</td>
+<td style="vertical-align: middle;text-align: center;">@Model.Type.GetDisplayName()</td>
+<td style="vertical-align: middle;text-align: center;">@Model.Category?.Title</td>
+
+<td style="vertical-align: middle;">
+    <div class="center-block" style="width:122px;">
+
+
+        <a class="btn btn-primary confirmbtn" asp-controller="Setting"  asp-action="EditShopDesign" asp-route-id="@Model.Id"
+           id="@Model.Id" style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 10px;"><i style="font-size: 18px;" class="fa fa-pen"></i></a>
+
+        <a class="btn btn-danger TableDeletebtn" onclick="DeleteShopDesign(@Model.Id)"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 10px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+    </div>
+</td>
+
+
+
+
+
+

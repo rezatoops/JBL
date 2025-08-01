@@ -1,0 +1,104 @@
+﻿@using Core.Services.Interfaces
+@using Datalayer.Entities;
+
+@inject IToolsService _toolsService
+@model List<Post>
+
+@{
+    ViewData["Title"] = "مقالات";
+
+
+}
+
+<div class="Waypart section">
+    <a href="/">صفحه اصلی</a>
+    <label>/</label>
+    <span>مقالات</span>
+</div>
+
+@{
+    if(Model.Count >= 5)
+    {
+        var BlogSliders = Model.Take(5).ToList();
+
+        <div class="BlogSlider section">
+            <div class="BSColumn1">
+                <a href="/Article/@BlogSliders[0].Slug">
+                    <div class="TopNewItem1" style="background-image: url('/@BlogSliders[0].Media.Url');">
+                        <h2>@BlogSliders[0].Title</h2>
+                    </div>
+                </a>
+            </div>
+            <div class="BSColumn2">
+                <a href="/Article/@BlogSliders[1].Slug">
+                    <div class="TopNewItem2" style="background-image: url('/@BlogSliders[1].Media.Url'); margin-bottom:10px;">
+                        <h2>@BlogSliders[1].Title</h2>
+                    </div>
+                </a>
+                <a href="/Article/@BlogSliders[2].Slug">
+                    <div class="TopNewItem2" style="background-image: url('/@BlogSliders[2].Media.Url');">
+                        <h2>@BlogSliders[2].Title</h2>
+                    </div>
+                </a>
+            </div>
+            <div class="BSColumn3">
+                <a href="/Article/@BlogSliders[3].Slug">
+                    <div class="TopNewItem2" style="background-image: url('/@BlogSliders[3].Media.Url'); margin-bottom:10px;">
+                        <h2>@BlogSliders[3].Title</h2>
+                    </div>
+                </a>
+                <a href="/Article/@BlogSliders[4].Slug">
+                    <div class="TopNewItem2" style="background-image: url('/@BlogSliders[4].Media.Url');">
+                        <h2>@BlogSliders[4].Title</h2>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="HLine Type2 AticleLine"></div>
+    }
+}
+
+
+
+<div class="ArticleList section BlogArticle">
+    @{
+        foreach (var post in Model)
+        {
+            <a class="ArticleItem" href="/Article/@post.Slug">
+                <div class="ArticleImg" style="background-image: url('/@post.Media.Url');"></div>
+                <h2>@post.Title</h2>
+            </a>
+        }
+    }
+</div>
+
+@{
+    var numbers = _toolsService.GetNavNumbers((int)ViewBag.CurrentPage, (int)ViewBag.AllNumber);
+}
+
+<div class="navigatePage">
+    @{
+
+        foreach (var item in numbers)
+        {
+            if (item == (int)ViewBag.CurrentPage)
+            {
+                <span>@item.ToString()</span>
+            }
+            else
+            {
+                if (item == 1)
+                {
+                    <a href="~/Articles">@item.ToString()</a>
+                }
+                else
+                {
+                    <a asp-controller="Home" asp-action="Blog" asp-route-id="@item">@item.ToString()</a>
+                }
+
+            }
+        }
+
+    }
+</div>

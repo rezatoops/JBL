@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "پیشخوان | محصولات";
+}
+
+@using Core.Services.Interfaces;
+@using Core.ViewModel;
+@using Datalayer.Entities
+
+@model List<Product>
+
+@inject IProductService _productService
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>لیست محصولات</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Admin" asp-action="index">مدیریت</a>
+            </li>
+            <li class="active">
+                <strong>محصولات</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-12">
+        <div class="col-sm-12">
+            @Html.ValidationSummary(true, "لطفا خطاهای زیر را برطرف نمایید:", new { @class = "text-danger alert alert-danger" })
+        </div>
+        @{
+            if (ViewBag.message != null)
+            {
+                <div class="message @ViewBag.style">
+                    <span>@ViewBag.message</span>
+                </div>
+            }
+        }
+
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+@{
+    int numberItemInPage = 10;
+
+    int allPage = (Model.Count() % numberItemInPage == 0) ? (Model.Count() / numberItemInPage) : (Model.Count() / numberItemInPage) + 1;
+
+    ProductViewModel productTable = new ProductViewModel
+            {
+                products = _productService.GetSpecificProduct(1, numberItemInPage, string.Empty),
+                CurrentPage = 1,
+                CountPerPage = numberItemInPage,
+                AllPage = allPage
+
+            };
+}
+
+<div id="ProductTable" class="wrapper animated fadeInRight">
+    @await Html.PartialAsync("_productTable", productTable)
+</div>
+
+@section scripts {
+    <script src="~/admin/plugin/sweetalert/sweetalert2.all.min.js"></script>
+
+    <script>
+        function DeleteProduct(id) {
+            Swal.fire({
+                title: "آیا مطمئنید؟",
+                text: "با این کار این محصول حذف می شود!",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonText: "پاک کن",
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Admin/Product/DeleteProduct',
+                        type: "POST",
+                        data: { id: id },
+                        success: function (result) {
+                            $("#product_" + id).remove();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            Swal.fire("خطا", "عملیات با خطا مواجه شد!", "error");
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('انجام نشد! چرا؟', '', 'info')
+                }
+            })
+
+        }
+
+    </script>
+}

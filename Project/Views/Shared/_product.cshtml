@@ -1,0 +1,38 @@
+﻿@using Datalayer.Entities
+@using Core.Services.Interfaces
+
+@model Product
+@inject IProductService _productServices
+@inject IToolsService _toolsServices
+
+<a href="~/Product/@Model.Slug">
+    <div class="ProductItem">
+        <div class="productImg" style="background-image: url('/@Model.Photo.Url');"></div>
+
+        <h2>@Model.Title</h2>
+        @{
+            var mainPrice = _productServices.GetMainVariable(Model.Id);
+            if (mainPrice != null)
+            {
+                <div class="priceSection">
+                    <span class="salePrice">@((mainPrice.SalePrice != null) ? mainPrice.Price.Value.ToString("#,0") + "تومان" : "")</span>
+                    <span class="regularPrice">@((mainPrice.SalePrice != null) ? mainPrice.SalePrice.Value.ToString("#,0") + "تومان" : mainPrice.Price.Value.ToString("#,0") + "تومان")</span>
+                    @{
+                        if (mainPrice.SalePrice != null)
+                        {
+                            <span class="percent">%@_toolsServices.CalculatePercent(mainPrice.Price.Value, mainPrice.SalePrice.Value)</span>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="priceSection">
+                    <span class="salePrice"></span>
+                    <span class="regularPrice" style="color:red; font-size:14px;">ناموجود</span>
+                </div>
+            }
+        }
+
+    </div>
+</a>

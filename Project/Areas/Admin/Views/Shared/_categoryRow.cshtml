@@ -1,0 +1,42 @@
+﻿@using Datalayer.Entities
+@using Core.Services.Interfaces
+
+@model Category
+
+@inject ICategoryService _categoryService
+
+<td style="vertical-align: middle;text-align: center;"><img style="height:40px;" src="/@Model.Media?.Url" /></td>
+<td style="vertical-align: middle;text-align: center;">@Model.Title</td>
+<td style="vertical-align: middle;text-align: center;">@Model.Sort</td>
+<td style="vertical-align: middle;text-align: center;">@((Model.IsHide)?"بله":"خیر")</td>
+<td style="vertical-align: middle;text-align: center;">@_categoryService.GetCategoriesByParentId(false,Model.Id).Count</td>
+<td style="vertical-align: middle;text-align: center;">@_categoryService.GetAllProdcutInCategory(Model.Id).Count</td>
+
+
+<td style="vertical-align: middle;">
+    <div class="center-block" style="width:163px;">
+
+
+        <a class="btn btn-info confirmbtn" href="~/Admin/Category/Edit/@Model.Id"
+           id="@Model.Id" style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 10px;"><i style="font-size: 18px;" class="fa fa-pen"></i></a>
+
+        <a class="btn btn-primary confirmbtn" href="/Admin/Category/Index?parentid=@Model.Id"
+           style="width: 38px;padding-top: 9px;padding-bottom: 3px;padding-right: 10px;height: 34px;"><i class="fa-solid fa-list"></i></a>
+
+        <a class="btn btn-warning confirmbtn" href="~/Category/@Model.Slug" target="_blank"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 8px;"><i style="font-size: 18px;" class="fa fa-link"></i></a>
+
+       <a class="btn btn-danger TableDeletebtn" onclick="DeleteCategory(@Model.Id)"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 10px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+
+
+    </div>
+
+
+</td>
+
+
+
+
+
+

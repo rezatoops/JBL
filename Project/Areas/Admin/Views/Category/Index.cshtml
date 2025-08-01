@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "پیشخوان | دسته بندی محصولات";
+}
+
+@using Core.Services.Interfaces;
+@using Core.ViewModel;
+@using Datalayer.Entities
+
+@model List<Category>
+
+@inject ICategoryService _categoryService
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>لیست دسته بندی محصولات</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Admin" asp-action="index">مدیریت</a>
+            </li>
+            <li class="active">
+                <strong>دسته بندی محصولات</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+@{
+    int numberItemInPage = 1000;
+
+    int allPage = (Model.Count() % numberItemInPage == 0) ? (Model.Count() / numberItemInPage) : (Model.Count() / numberItemInPage) + 1;
+
+    CategoryViewModel categoryTable = new CategoryViewModel
+            {
+                Categories = Model,
+                CurrentPage = 1,
+                CountPerPage = numberItemInPage,
+                AllPage = allPage,
+                ParentId = ViewBag.ParentId,
+                
+            };
+}
+
+@{
+    if (ViewBag.Message != null)
+    {
+        <div class="@ViewBag.Style" style="padding: 10px;margin-top: 10px;">
+            @ViewBag.Message
+        </div>
+    }
+}
+<div id="CategoryTable" class="wrapper animated fadeInRight">
+    @await Html.PartialAsync("_categoryTable", categoryTable)
+</div>
+
+
+
+@section scripts {
+    <script src="~/admin/plugin/sweetalert/sweetalert2.all.min.js"></script>
+    <script>
+        function DeleteCategory(id) {
+            Swal.fire({
+                title: "آیا مطمئنید؟",
+                text: "با این کار این دسته بندی حذف می شود؟!",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonText: "پاک کن",
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Admin/Category/DeleteCategory',
+                        type: "POST",
+                        data: { id: id },
+                        success: function (result) {
+                            Swal.fire("حذف شد!", "دسته بندی با موفقیت حذف شد", "success");
+                            $("#category_" + id).remove();
+                            GetRequestCount();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            Swal.fire("خطا", "عملیات با خطا مواجه شد!", "error");
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('انجام نشد! چرا؟', '', 'info')
+                }
+            })
+
+        }
+    </script>
+}

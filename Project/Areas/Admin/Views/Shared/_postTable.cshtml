@@ -1,0 +1,147 @@
+﻿@using Core.Services.Interfaces
+@using Core.ViewModel
+
+@model PostViewModel
+
+@inject IToolsService _toolsService
+
+<div id="LoadingPage">
+    <div class="sk-loading">
+        <div class="sk-spinner sk-spinner-double-bounce">
+            <div class="sk-double-bounce1"></div>
+            <div class="sk-double-bounce2"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 no-padding">
+        <div style="margin-top:20px">
+            <div class="ibox-content">
+                <div style="height:20px;">
+                    @{
+                        if (Model.CurrentPage > 3)
+                        {
+
+                            <a class="NavigateNumber bg-muted" asp-controller="Blog" asp-action="GetPosts" asp-route-pageNumber=1 asp-route-countPerPage=@Model.CountPerPage asp-route-allpage=@Model.AllPage data-ajax="true" data-ajax-method="POST" data-ajax-update="#PostTable" data-ajax-mode="replace">اولین</a>
+                            <span style="float:right;"> . . . </span>
+                        }
+
+                        foreach (var item in _toolsService.GetNavNumbers(Model.CurrentPage, Model.AllPage))
+                        {
+                            if (item == Model.CurrentPage)
+                            {
+                                <span class="NavigateNumber bg-primary">@item.ToString()</span>
+                            }
+                            else
+                            {
+                    //@Ajax.ActionLink(item.ToString(), "GetSpecificComments", "Comment", new { pageNumber = item }, new AjaxOptions { UpdateTargetId = "CommentTable", InsertionMode = InsertionMode.Replace, HttpMethod = "POST", LoadingElementId = "LoadingPage" }, new { @class = "NavigateNumber bg-muted" })
+                                <a class="NavigateNumber bg-muted"
+                                   asp-controller="Blog" asp-action="GetPosts" asp-route-pageNumber=@item asp-route-countPerPage=@Model.CountPerPage asp-route-allpage=@Model.AllPage data-ajax="true" data-ajax-method="POST" data-ajax-update="#PostTable" data-ajax-mode="replace">@item.ToString()</a>
+
+                            }
+                        }
+                        if (Model.CurrentPage < Model.AllPage - 2)
+                        {
+                            <span style="float:right;"> . . . </span>
+                            //@Ajax.ActionLink("آخرین", "GetSpecificComments", "Comment", new { pageNumber = lastPage }, new AjaxOptions { UpdateTargetId = "CommentTable", InsertionMode = InsertionMode.Replace, HttpMethod = "POST", LoadingElementId = "LoadingPage" }, new { @class = "NavigateNumber bg-muted" })
+                            <a class="NavigateNumber bg-muted" asp-controller="Blog" asp-action="GetPosts" asp-route-pageNumber=@Model.AllPage asp-route-countPerPage=@Model.CountPerPage asp-route-allpage=@Model.AllPage data-ajax="true" data-ajax-method="POST" data-ajax-update="#PostTable" data-ajax-mode="replace">آخرین</a>
+
+                        }
+                    }
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-lg-12 no-padding">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>مقالات</h5>
+                <div style="float:left;">
+                    <a class="btn btn-success" asp-controller="Blog" asp-action="Publish" type="button" style="margin: -10px 0px 0px 4px;"><i class="fa fa-plus" style="margin-top: 3px;float: right;margin-left: 5px;"></i> &nbsp;مقاله جدید</a>
+                </div>
+            </div>
+            <div class="ibox-content">
+
+                <table class="table table-striped table-bordered table-hover dataTables-user" style="table-layout: fixed;">
+                    <thead>
+                        <tr>
+                            <th class="col-lg-2">تصویر</th>
+                            <th class="col-lg-5">تیتر</th>
+                            <th class="col-lg-2">وضعیت</th>
+                            <th class="col-lg-3">عملیات</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            foreach (var item in Model.Posts)
+                            {
+                                string postClass = "post_" + item.Id;
+                                <tr id="@postClass" class="gradeX anyuser">
+
+                                    @await Html.PartialAsync("_postRow", item)
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th class="col-lg-2">تصویر</th>
+                            <th class="col-lg-5">تیتر</th>
+                            <th class="col-lg-2">وضعیت</th>
+                            <th class="col-lg-3">عملیات</th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 no-padding">
+        <div style="margin-top:-20px;margin-bottom: 60px;">
+            <div class="ibox-content">
+                <div style="height:20px;">
+                    @*                    @{
+                    if (currentPage > 3)
+                    {
+                    @Ajax.ActionLink("اولین", "GetSpecificComments", "Comment", new { pageNumber = 1 }, new AjaxOptions { UpdateTargetId = "CommentTable", InsertionMode = InsertionMode.Replace, HttpMethod = "POST", LoadingElementId = "LoadingPage" }, new { @class = "NavigateNumber bg-muted" })
+                    <span style="float:right;"> . . . </span>
+                    }
+
+                    foreach (var item in R_comment.GetNavNumbers())
+                    {
+                    if (item == currentPage)
+                    {
+                    <span class="NavigateNumber bg-primary">@item.ToString()</span>
+                    }
+                    else
+                    {
+                    @Ajax.ActionLink(item.ToString(), "GetSpecificComments", "Comment", new { pageNumber = item }, new AjaxOptions { UpdateTargetId = "CommentTable", InsertionMode = InsertionMode.Replace, HttpMethod = "POST", LoadingElementId = "LoadingPage" }, new { @class = "NavigateNumber bg-muted" })
+                    }
+                    }
+                    if (currentPage < lastPage - 2)
+                    {
+                    <span style="float:right;"> . . . </span>
+                    @Ajax.ActionLink("آخرین", "GetSpecificComments", "Comment", new { pageNumber = lastPage }, new AjaxOptions { UpdateTargetId = "CommentTable", InsertionMode = InsertionMode.Replace, HttpMethod = "POST", LoadingElementId = "LoadingPage" }, new { @class = "NavigateNumber bg-muted" })
+
+                    }
+                    }*@
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+

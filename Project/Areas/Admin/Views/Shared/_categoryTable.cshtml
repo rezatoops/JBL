@@ -1,0 +1,124 @@
+﻿@using Core.Services.Interfaces;
+@using Core.ViewModel
+
+@model CategoryViewModel
+
+@inject IToolsService _toolsService
+@inject ICategoryService _categoryService
+
+<div id="LoadingPage">
+    <div class="sk-loading">
+        <div class="sk-spinner sk-spinner-double-bounce">
+            <div class="sk-double-bounce1"></div>
+            <div class="sk-double-bounce2"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 no-padding">
+        <div style="margin-top:20px">
+            <div class="ibox-content">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-lg-12 no-padding">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                @{
+                    string TableTitle = string.Empty;
+                    if (Model.ParentId != null)
+                    {
+                        TableTitle = "زیر دسته بندی های <span style='color:red;'>" + _categoryService.GetCategory(Model.ParentId.Value).Title + "<span><a href='/Admin/Category/Index?parentid=null' class='btn btn-success' style='margin: -10px 10px 0px 4px;'>برگشت به منوی اصلی</a>";
+                    }
+                    else
+                    {
+                        TableTitle = "دسته بندی اصلی";
+
+                    }
+
+                }
+                <h5>@Html.Raw(TableTitle)</h5>
+
+                <div style="float:left;">
+                    <a class="btn btn-success" asp-controller="Category" asp-action="Publish" asp-route-ParentId="@Model.ParentId" style="margin: -10px 0px 0px 4px;"><i class="fa fa-plus" style="margin-top: 3px;float: right;margin-left: 5px;"></i> &nbsp;دسته بندی جدید</a>
+                </div>
+            </div>
+            <div class="ibox-content">
+
+                <table class="table table-striped table-bordered table-hover dataTables-user" style="table-layout: fixed;">
+                    <thead>
+                        <tr>
+                            <th class="col-lg-3">تصویر</th>
+                            <th class="col-lg-3">نام دسته بندی</th>
+                            <th class="col-lg-1">رتبه نمایش</th>
+                            <th class="col-lg-1">مخفی شود؟</th>
+                            <th class="col-lg-1">تعداد زیر دسته</th>
+                            <th class="col-lg-1">تعداد محصول</th>
+                            <th class="col-lg-2">عملیات</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            foreach (var item in Model.Categories)
+                            {
+                                string categoryClass = "category_" + item.Id;
+                                <tr id="@categoryClass" class="gradeX anyuser">
+                                    @await Html.PartialAsync("_categoryRow", item)
+                                </tr>
+                                // foreach (var subItem in Model.Categories.Where(a => a.ParentId == item.Id))
+                                // {
+                                //     string subCategoryClass = "category_" + subItem.Id;
+                                //     <tr id="@subCategoryClass" class="gradeX anyuser" style="background: #c8ffd5;color: black;">
+                                //         @await Html.PartialAsync("_categoryRow", subItem)
+
+                                //     </tr>
+                                //     foreach (var subItem2 in Model.Categories.Where(a => a.ParentId == subItem.Id))
+                                //     {
+                                //         string subCategoryClass2 = "category_" + subItem2.Id;
+                                //         <tr id="@subCategoryClass2" class="gradeX anyuser">
+                                //             @await Html.PartialAsync("_categoryRow", subItem2)
+
+                                //         </tr>
+                                //     }
+                                // }
+                            }
+                        }
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th class="col-lg-3">تصویر</th>
+                            <th class="col-lg-3">نام دسته بندی</th>
+                            <th class="col-lg-1">رتبه نمایش</th>
+                            <th class="col-lg-1">مخفی شود؟</th>
+                            <th class="col-lg-1">تعداد زیر دسته</th>
+                            <th class="col-lg-1">تعداد محصول</th>
+                            <th class="col-lg-2">عملیات</th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 no-padding">
+        <div style="margin-top:-20px;margin-bottom: 60px;">
+            <div class="ibox-content">
+                <div style="height:20px;">
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+

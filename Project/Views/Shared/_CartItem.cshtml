@@ -1,0 +1,75 @@
+﻿@using Datalayer.Entities;
+@model OrderProduct
+
+
+<div class="cartPrMedia">
+    <div class="cartPrImg" style="background-image: url('/@Model.Product.Photo.Url');"></div>
+</div>
+<div class="cartPrDetails">
+    <a href="~/Product/@Model.Product.Slug"><h3>@Model.Product.Title</h3></a>
+    <div class="clear"></div>
+
+    @{
+        int price = 0;
+        if (Model.Variable != null)
+        {
+            price = (Model.Variable.SalePrice != null) ? Model.Variable.SalePrice.Value : Model.Variable.Price.Value;
+            <ul>
+                @{
+                    if (!string.IsNullOrEmpty(Model.Variable.Title))
+                    {
+                        <li>
+                            <i class="fad fa-angle-left"></i><span>مدل @Model.Variable.Title</span>
+                        </li>
+                    }
+                }
+                
+
+                @{
+                    if (Model.Variable.SalePrice != null)
+                    {
+                        <li>
+                            <i class="fad fa-angle-left"></i>
+                            <span>قیمت واحد: @Model.Variable.Price.Value.ToString("#,0") تومان</span>
+                        </li>
+                        <li>
+                            <i class="fad fa-angle-left"></i>
+                            <span style="font-weight:bold;">قیمت بعد از تخفیف: @Model.Variable.SalePrice.Value.ToString("#,0") تومان</span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <i class="fad fa-angle-left"></i>
+                            <span style="font-weight:bold;">قیمت واحد: @Model.Variable.Price.Value.ToString("#,0") تومان</span>
+                        </li>
+                    }
+                }
+
+            </ul>
+        }
+    }
+
+
+    <div class="numberProduct">
+        <a class="btn btn-danger PrNumberCount" asp-controller="Shop" asp-action="ChangeProductNumberInCart" asp-route-OrderProductId="@Model.Id" asp-route-number="-1"
+           data-ajax="true" data-ajax-method="Post" data-ajax-mode="replace" data-ajax-update="#cart_@Model.Id" data-ajax-success="UpdateCheckoutWidget(@Model.OrderId)" data-ajax-loading="#loadingCircleShop" style="margin-right: 5px;">
+            <i style="font-size:12px" class="fa fa-minus"></i>
+        </a>
+        <span id="cartItemCountSection" style="font-family:IRANSans;">@Model.number</span>
+        <a class="btn btn-primary PrNumberCount" asp-controller="Shop" asp-action="ChangeProductNumberInCart" asp-route-OrderProductId="@Model.Id" asp-route-number="1"
+           data-ajax="true" data-ajax-method="Post" data-ajax-mode="replace" data-ajax-update="#cart_@Model.Id" data-ajax-success="UpdateCheckoutWidget(@Model.OrderId)" data-ajax-loading="#loadingCircleShop" style="margin-left: 5px;">
+            <i style="font-size:12px" class="fa fa-plus"></i>
+        </a>
+        <div class="clear"></div>
+    </div>
+</div>
+<div class="cartPrAction">
+    <a asp-controller="Shop" asp-action="DeleteProductFromOrder" asp-route-OrderProductId="@Model.Id"><i class="fad fa-trash-alt"></i></a>
+
+    <div class="cartPrTotalPrice">
+        <span>قیمت کل</span>
+        <span class="price">@((price * Model.number).ToString("#,0")) تومان</span>
+    </div>
+</div>
+<div class="clear"></div>

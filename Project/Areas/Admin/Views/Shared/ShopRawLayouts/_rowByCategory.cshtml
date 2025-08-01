@@ -1,0 +1,62 @@
+﻿@using Core.Extensions
+@using Core.Services.Interfaces
+@using Datalayer.Entities
+@using Datalayer.Enums
+@using System.ComponentModel.DataAnnotations
+
+@model ShopDesign
+
+@inject ICategoryService _categoryService
+
+<div class="ibox float-e-margins">
+    <div class="ibox-title">
+        <h5>تنظیمات</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+            <a class="close-link">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="ibox-content">
+
+        <div class="form-group">
+            <label style="text-align:right" class="col-sm-2 control-label">تیتر</label>
+
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+        <div class="form-group">
+            <label style="text-align:right" class="col-sm-2 control-label">دسته بندی</label>
+
+            <div class="col-sm-10">
+                <select id="CatSelect" asp-for="@Model.CategoryId" name="catSelected" class="select2_Cat form-control" style="width: 100%; height:40px; ">
+                    @{
+                        foreach (var cat in _categoryService.GetAllCategory())
+                        {
+                            <option value="@cat.Id">@cat.Title</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label style="text-align:right" class="col-sm-2 control-label">حداکثر تعداد محصول</label>
+
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.NumberOfProduct, new { htmlAttributes = new { @class = "form-control", type = "number" } })
+            </div>
+            <span class="col-sm-12" style="text-align:center; margin-top:10px; color:#a00;">برای نمایش همه محصولات عدد 0 وارد کنید، توجه کنید اگر تعداد محصولات زیاد باشد صفحه اصلی سنگین می شود، توصیه می شود حداکثر 10 عدد نمایش دهید </span>
+        </div>
+
+        <div class="form-group" style="display:flex; align-items:center">
+            <label style="text-align:right; padding-top:0px;padding-right:15px;" class="control-label">فقط نمایش کالای موجود؟</label>
+            <span style="margin-right: 10px;display: inline-block;">
+                @Html.CheckBoxFor(model => model.IsOnlyAvailable, new { htmlAttributes = new { @class = "form-control" } })
+            </span>
+        </div>
+    </div>
+</div>

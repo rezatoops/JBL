@@ -1,0 +1,20 @@
+﻿@using Core.Services.Interfaces
+
+@inject IProductService _productService
+
+@model int
+
+@{
+    var product = _productService.GetProduct(Model);
+}
+
+
+    <select id="VariableSelect" class="select2_Variable form-control" name="VariableSelected" style="height:50px">
+        @{
+            foreach (var vr in product.Variables)
+            {
+                <option value="@vr.Id">@((string.IsNullOrEmpty(vr.Title))?"بدون متغیر":vr.Title)</option>
+            }
+        }
+
+    </select>

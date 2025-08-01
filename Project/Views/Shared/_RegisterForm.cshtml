@@ -1,0 +1,14 @@
+﻿@model string
+
+<h2>ثبت نام</h2>
+<p>لطفا موارد زیر را وارد کنید</p>
+<form asp-controller="User" asp-action="Register" method="post" data-ajax=true data-ajax-mode="replace" data-ajax-update="#authenticationForm" data-ajax-loading="#loadingCircle" data-ajax-success="LoginCompleted(data)">
+    <input type="hidden" name="phoneNumber" value="@Model" />
+    <input type="tel" name="ActiveCode" placeholder="کد فعالسازی موبایل" />
+@*    <input type="text" name="IdenCode" placeholder="کد معرف" />*@
+    <input type="password" name="Password" placeholder="پسورد" />
+    <div class="errorMsg">
+        @Html.ValidationSummary(true)
+    </div>
+    <button type="submit">ورود</button>
+</form>

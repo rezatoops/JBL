@@ -1,0 +1,37 @@
+﻿@using Datalayer.Entities;
+@model User
+
+<div class="ProfileHead">
+    <span>@(Model.FirstName + " " + Model.LastName)</span>
+    <div class="clear"></div>
+</div>
+<div class="ProfileMenuWrapper">
+    <a href="/MyOrder">
+        <div class="ProfileMenu @((ViewBag.MenuSelected != null)?((ViewBag.MenuSelected == 1)?"active":""):"")">
+
+            <img src="~/assets/MyProgramIcon.svg" style="margin-top:6px;" />
+            <span>سفارش های من</span>
+
+            <div class="clear"></div>
+        </div>
+    </a>
+    <a href="/Profile">
+        <div class="ProfileMenu @((ViewBag.MenuSelected != null)?((ViewBag.MenuSelected == 2)?"active":""):"")">
+
+            <img src="~/assets/profileicon.svg" />
+            <span>پروفایل</span>
+
+            <div class="clear"></div>
+        </div>
+    </a>
+    <div class="seperateLine"></div>
+    <a href="/Logout">
+        <div class="ProfileMenu">
+
+            <img src="~/assets/LogoutIcon.svg" style="margin-top:11px;" />
+            <span>خروج</span>
+
+            <div class="clear"></div>
+        </div>
+    </a>
+</div>

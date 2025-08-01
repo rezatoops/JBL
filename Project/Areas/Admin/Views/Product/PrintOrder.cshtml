@@ -1,0 +1,95 @@
+﻿@using Core.Services.Interfaces;
+@using Datalayer.Entities;
+@using System.Globalization;
+
+@model List<OrderProduct>
+
+@inject IProductService _productService;
+
+@{
+    Layout = null;
+    var order = Model.FirstOrDefault().Order;
+    PersianCalendar pc = new PersianCalendar();
+    var dt = order.PaymentDate.Value;
+
+    var FinalShip = "رایگان";
+    if (order.ShippingPrice == -1)
+    {
+        FinalShip = "پس کرایه";
+    }
+    else if (order.ShippingPrice == 0)
+    {
+        FinalShip = "رایگان";
+    }
+    else
+    {
+        FinalShip = @order.ShippingPrice.ToString("#,0");
+    }
+}
+
+<html>
+<head>
+    <link href="~/css/printstyle.css" rel="stylesheet" />
+</head>
+<body style="width:95%; float:left;">
+    <div style="width:100%;">
+        @*<p style="text-align:center;">کباب خانه موسوی</p>*@
+        <img src="~/assets/logo.png" style="display:block;margin:0 auto;width:220px;" />
+        <div style="clear:both"></div>
+        <p style="float:right">شماره سفارش: @order.Id</p>
+        <p style="float:left">@(pc.GetYear(dt) + "/" + pc.GetMonth(dt) + "/" + pc.GetDayOfMonth(dt) + " - " + pc.GetHour(dt) + ":" + pc.GetMinute(dt))</p>
+        <div style="clear:both"></div>
+        <hr />
+        <p style="text-align:right;height: 19px;overflow: hidden;">نام: @order.Name</p>
+        <p style="text-align:right;height: 19px;overflow: hidden;">موبایل: @order.PhoneNumber</p>
+        <p style="text-align:right;line-height: 25px;height: 50px;overflow: hidden;">آدرس: @order.Address</p>
+
+    </div>
+
+    @{
+        <div style="width:100%;height:1cm;background:black;color:white;">
+            <span style="width:70%;float:right;text-align:right; padding-top: 8px; padding-right:5px; box-sizing:border-box;"> نام محصول </span>
+            <span style="width:10%;float:right;text-align:center; padding-top: 8px;">تعداد</span>
+            <span style="width:20%;float:right;text-align:left;padding-top: 8px; ">قیمت</span>
+            <div style="clear:both"></div>
+        </div>
+        foreach (var item in Model)
+        {
+            <div style="width:100%;height:1cm;border-bottom:1px solid black;">
+                <span style="width:70%;float:right;text-align:right; padding-top: 8px; text-overflow: ellipsis; white-space: nowrap; overflow:hidden;">@item.Product.Title</span>
+                <span style="width:10%;float:right;text-align:center; padding-top: 8px;">@item.number</span>
+                <span style="width:20%;float:right;text-align:left; padding-top: 8px;">@item.Price.ToString("#,0")</span>
+                <div style="clear:both"></div>
+            </div>
+        }
+        <div style="width:100%;height:1cm;border-bottom:1px solid black;">
+            <span style="width:70%;float:right;text-align:right;padding-top: 8px;">هزینه ارسال</span>
+            <span style="width:30%;float:right;text-align:left;padding-top: 8px;">@FinalShip</span>
+            <div style="clear:both"></div>
+        </div>
+
+
+        if (order.CouponOffValue > 0 || order.SudeShoma > 0)
+        {
+            <div style="width:100%;height:1cm;">
+                <span style="width:70%;float:right;text-align:right;padding-top: 8px;">سود شما از خرید</span>
+                <span style="width:30%;float:right;text-align:left;padding-top: 8px;">@((order.CouponOffValue + order.SudeShoma).ToString("#,0"))</span>
+                <div style="clear:both"></div>
+            </div>
+        }
+
+
+        <div style="width:100%;height:1cm;">
+            <span style="width:70%;float:right;text-align:right;font-weight:bold;padding-top: 8px;">مجموع</span>
+            <span style="width:30%;float:right;text-align:center;background:black;color:white;font-weight:bold;padding-top: 8px;padding-bottom:8px;">@((_productService.GetTotalPriceInOrder(order.Id)).ToString("#,0")) تومان</span>
+            <div style="clear:both"></div>
+        </div>
+        <hr />
+    }
+
+</body>
+</html>
+
+
+
+

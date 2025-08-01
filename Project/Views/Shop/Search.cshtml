@@ -1,0 +1,69 @@
+﻿@using Core.ViewModel
+@using Core.Services.Interfaces
+
+@model ProductsSearchViewModel
+
+@inject ICategoryService _categoryService
+@inject IToolsService _toolsService
+
+@{
+    ViewData["Title"] = "جستجوی " + Model.SearchText;
+}
+
+<div class="Waypart section">
+    <a href="/Shop">فروشگاه</a>
+    <label>/</label>
+    <span>جستجوی لغت @Model.SearchText</span>
+
+</div>
+
+<div class="HlineTitle section">
+    <h1>جستجوی "@Model.SearchText"</h1>
+    <div class="HLine"></div>
+</div>
+
+<div class="ArchiveProducts section">
+    @{
+        foreach (var product in Model.Products)
+        {
+            <partial name="_product" model="product" />
+        }
+    }
+
+
+    <div class="clear"></div>
+</div>
+
+
+
+<div class="navigatePage">
+    @{
+
+        if (Model.CurrentPage > 3)
+        {
+
+            <a href="/Shop/Search/?search=@(Model.SearchText)&page=1" style="width:53px;">اولین</a>
+            <span style="float:right;border:none;background:white;color:#EF394E"> . . . </span>
+        }
+        foreach (var item in _toolsService.GetNavNumbers(Model.CurrentPage, Model.AllPage))
+        {
+            if (item == Model.CurrentPage)
+            {
+                <span>@item.ToString()</span>
+            }
+            else
+            {
+                <a href="/Shop/Search/?search=@(Model.SearchText)&page=@item">@item.ToString()</a>
+            }
+        }
+        if (Model.CurrentPage < Model.AllPage - 2)
+        {
+            <span style="float:right;border:none;background:white;color:#EF394E"> . . . </span>
+            <a href="/Shop/Search/?search=@(Model.SearchText)&page=@Model.AllPage" style="width:53px;">آخرین</a>
+
+        }
+
+
+
+    }
+</div>

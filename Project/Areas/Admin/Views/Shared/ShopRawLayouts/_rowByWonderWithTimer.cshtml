@@ -1,0 +1,50 @@
+﻿@using Core.Extensions
+@using Core.Services.Interfaces
+@using Datalayer.Entities
+@using Datalayer.Enums
+@using System.ComponentModel.DataAnnotations
+
+@model ShopDesign
+
+@inject IMediaService _mediaService
+
+<div class="ibox float-e-margins">
+    <div class="ibox-title">
+        <h5>تنظیمات</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+            <a class="close-link">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div class="form-group">
+            <label style="text-align:right" class="col-sm-2 control-label">حداکثر تعداد محصول</label>
+
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.NumberOfProduct, new { htmlAttributes = new { @class = "form-control", type = "number" } })
+            </div>
+            <span class="col-sm-12" style="text-align:center; margin-top:10px; color:#a00;">برای نمایش همه محصولات عدد 0 وارد کنید، توجه کنید اگر تعداد محصولات زیاد باشد صفحه اصلی سنگین می شود، توصیه می شود حداکثر 10 عدد نمایش دهید </span>
+        </div>
+
+        <div class="form-group">
+            <label style="text-align:left" class="col-sm-2 control-label">لینک بنر</label>
+
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.BannerWonderLink, new { htmlAttributes = new { @class = "form-control", style="direction:ltr;" } })
+            </div>
+        </div>
+        
+        <div id="Show_bannerWonderImg" style="width:100%;text-align:center; position:relative">
+            <img src="/@Model?.BannerWonder?.Url" alt="" style="max-height:300px;max-width:100%;" />
+            <button onclick="RemoveBanner('Wonder')" class="btn btn-danger" style="position:absolute; top:0px; left:0px; display: block;float:left;" type="button">&nbsp; حذف بنر</button>
+        </div>
+
+
+        <button class="btn btn-primary" id="btn_Gallery_bannerWonderImg" onclick="OpenGallery('انتخاب عکس',8)" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر بنر</button>
+        <input type="hidden" name="bannerWonderImgUrl" id="bannerWonderImg_url" value="@((Model?.BannerWonderImgId != null)?"image_"+Model.BannerWonderImgId:null)" />
+    </div>
+</div>

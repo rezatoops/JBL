@@ -1,0 +1,160 @@
+﻿@using Core.ViewModel
+@using Core.Services.Interfaces
+
+@model ProductsCategoryViewModel
+
+@inject ICategoryService _categoryService
+@inject IToolsService _toolsService
+
+@{
+    ViewData["Title"] = "دسته بندی";
+    var Categories = _categoryService.GetCategoriesByParentId(true,Model.Cat.Id);
+}
+
+<div class="Waypart section">
+    <a href="/Shop">فروشگاه</a>
+
+    @{
+        bool isEnd = false;
+        var currentCat = Model.Cat;
+        while (!isEnd)
+        {
+            if (currentCat.ParentId != null)
+            {
+                <label>/</label>
+                <a href="~/Category/@currentCat.ParentCategory.Slug">@currentCat.ParentCategory.Title</a>
+                currentCat = currentCat.ParentCategory;
+            }
+            else
+            {
+                isEnd = true;
+                <label>/</label>
+                <span>@Model.Cat.Title</span>
+            }
+        }
+    }
+</div>
+
+@{
+    if(Categories.Count > 0)
+    {
+        <div class="categoryArea section categoryPage">
+            @{
+                <div class="CategoryWrapper owl-carousel owl-theme">
+                    @{
+                        foreach (var cat in Categories)
+                        {
+                            <div class="categoryItem">
+                                <a href="~/Category/@cat.Slug">
+                                    <div class="catitemImg" style="background-image: url('/@cat.Media?.Url');"></div>
+                                    <span>@cat.Title</span>
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+
+            }
+
+        </div>
+    }
+}
+
+
+<div class="HlineTitle section">
+    <h1>محصولات @Model.Cat.Title</h1>
+    <div class="HLine"></div>
+</div>
+
+<div class="ArchiveProducts section">
+    @{
+        foreach (var product in Model.Products)
+        {
+            <partial name="_product" model="product" />
+        }
+    }
+
+
+    <div class="clear"></div>
+</div>
+
+
+
+<div class="navigatePage">
+    @{
+
+        if (Model.CurrentPage > 3)
+        {
+
+            <a href="/Category/@Model.Cat.Slug/" style="width:53px;">اولین</a>
+            <span style="float:right;border:none;background:white;color:#EF394E"> . . . </span>
+        }
+        foreach (var item in _toolsService.GetNavNumbers(Model.CurrentPage, Model.AllPage))
+        {
+            if (item == Model.CurrentPage)
+            {
+                <span>@item.ToString()</span>
+            }
+            else
+            {
+                <a href="/Category/@Model.Cat.Slug/@((item > 1)?@item:"")">@item.ToString()</a>
+            }
+        }
+        if (Model.CurrentPage < Model.AllPage - 2)
+        {
+            <span style="float:right;border:none;background:white;color:#EF394E"> . . . </span>
+            <a href="/Category/@Model.Cat.Slug/@Model.AllPage" style="width:53px;">آخرین</a>
+
+        }
+
+
+
+    }
+</div>
+
+
+@section styles {
+    <link href="~/plugin/owlcarousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/plugin/owlcarousel/owl.theme.default.min.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/plugin/owlcarousel/owl.carousel.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $(".CategoryWrapper").owlCarousel({
+                rtl: true,
+                items: 6,
+                responsiveClass: true,
+                nav: true,
+                dots: false,
+                margin: 40,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 2,
+                        margin: 10,
+                    },
+                    380: {
+                        items: 3,
+                        margin: 10,
+                    },
+                    550: {
+                        items: 4,
+                        margin: 10,
+                    },
+
+                    700: {
+                        items: 5,
+                        margin: 20,
+                    },
+                    992: {
+                        items: 6,
+                        margin: 40,
+                    },
+                }
+            });
+        });
+    </script>
+}

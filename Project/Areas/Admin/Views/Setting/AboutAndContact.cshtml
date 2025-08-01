@@ -1,0 +1,268 @@
+﻿@using Core.Services.Interfaces
+
+@inject ISettingService _settingService
+@inject ICategoryService _categoryService
+
+@{
+    ViewBag.Title = "پیشخوان | درباره ما و تماس با ما";
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>درباره ما و تماس با ما</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="index" asp-area="Admin">مدیریت</a>
+            </li>
+            <li class="active">
+                <strong>درباره ما و تماس با ما</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight settingWrapper">
+    <form asp-controller="Setting" asp-action="AboutAndContact" enctype="multipart/form-data">
+
+        <div class="row">
+            <div class="col-sm-12 no-padding">
+                <div class="col-sm-12">
+                    @Html.ValidationSummary(true, "لطفا خطاهای زیر را برطرف نمایید:", new { @class = "text-danger alert alert-danger" })
+                </div>
+                <div class="col-sm-12">
+                    @{
+                        if (ViewBag.Message != null)
+                        {
+                            <div class="col-sm-12 alert alert-success">
+                                <span>@ViewBag.Message</span>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>درباره ما و تماس با ما</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <div id="ShopDesignWrapper">
+                                <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">درباره ما</h2>
+
+                                <div class="form-group">
+                                    <label style="text-align:right" class="col-sm-3 control-label">بنر نسخه دسکتاپ <span style="color:red;">فقط پسوند jpg</span></label>
+
+                                    <div class="col-sm-3">
+                                        <input type="file" id="AboutImgInput" name="AboutImg" onchange="changeAboutImg(this)" class="form-control">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="LogoImg">
+                                            @{
+                                                var random = new Random();
+                                            }
+                                            <img style="width: 100%;max-width:100%;border-radius: 10px;" id="AboutImgShower" src="/assets/aboutus.jpg?xxx=@random.Next(10000,20000)" />
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                
+                                <div class="form-group">
+                                    <label style="text-align:right" class="col-sm-3 control-label">بنر نسخه موبایل <span style="color:red;">فقط پسوند jpg</span></label>
+
+                                    <div class="col-sm-3">
+                                        <input type="file" id="AboutImgInputMobile" name="AboutImgMobile" onchange="changeAboutImgMobile(this)" class="form-control">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="LogoImg">
+                                            <img style="width: 100%;max-width:100%;border-radius: 10px;" id="AboutImgShowerMobile" src="/assets/aboutusmobile.jpg?xxx=@random.Next(10000,20000)" />
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="text-align:right" class="col-sm-3 control-label">متن درباره ما</label>
+                                    <div class="col-sm-9">
+                                        <div style="border:1px solid lightgray;padding:20px;">
+                                            <textarea id="AboutusText" name="AboutusText" class="form-control">
+                                                @_settingService.GetSettingValue("AboutusText")
+                                        </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <div class="seperate"></div>
+                                <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">تماس با ما</h2>
+
+                                <div class="form-group">
+                                    <label style="text-align:right" class="col-sm-3 control-label">آدرس</label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" value="@_settingService.GetSettingValue("ContactAddress")" name="ContactAddress" class="form-control">
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="text-align:right" class="col-sm-3 control-label">تلفن</label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" value="@_settingService.GetSettingValue("ContactusPhone")" name="ContactusPhone" class="form-control">
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label style="text-align:right" class="col-sm-3 control-label">فکس</label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" value="@_settingService.GetSettingValue("fax")" name="fax" class="form-control">
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label style="text-align:right" class="col-sm-3 control-label">ایمیل</label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" value="@_settingService.GetSettingValue("ContactusEmail")" name="ContactusEmail" class="form-control">
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="text-align:right" class="col-sm-3 control-label">کد نقشه گوگل</label>
+
+                                    <div class="col-sm-9">
+                                        <textarea type="text" name="GoogleMap" class="form-control">@_settingService.GetSettingValue("GoogleMap")</textarea>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="seperate"></div>
+                                
+                                <button class="btn btn-primary" style="display: block;margin: 0px auto 5px;" type="submit"><i class="fa fa-check"></i>&nbsp;ذخیره</button>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </form>
+
+
+</div>
+
+
+@section Styles {
+
+}
+@section scripts {
+    <script src="~/admin/plugin/summernote/summernote.min.js"></script>
+    <script src="~/admin/plugin/summernote/summernote-image-title.js"></script>
+    <script src="~/admin/plugin/summernote/summernote-fa-ir.min.js"></script>
+    <script>
+        var myReader = new FileReader();
+
+        function changeAboutImg(elem) {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#AboutImgShower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#AboutImgShower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(elem)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        }
+
+        function changeAboutImgMobile(elem) {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#AboutImgShowerMobile");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#AboutImgShowerMobile").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(elem)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        }
+
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#AboutusText').summernote({
+                lang: 'fa-ir',
+                height: 500,
+                callbacks: {
+                    onImageUpload: function (files) {
+                        for (let i = 0; i < files.length; i++) {
+                            UploadImage(files[i]);
+                        }
+                    }
+                },
+            });
+
+
+        });
+
+    </script>
+
+    <script>
+        function UploadImage(file) {
+            var url = "@Url.Action("UploadFile", "Media")";
+
+            formData = new FormData();
+            formData.append("aUploadedFile", file);
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (FileUrl) {
+                    // alert(FileUrl);
+                    var imgNode = document.createElement("img");
+                    imgNode.src = FileUrl;
+                    $("#AboutusText").summernote("insertNode", imgNode);
+                },
+                error: function (data) {
+                    alert(data.responseText);
+                }
+            });
+        }
+    </script>
+
+}

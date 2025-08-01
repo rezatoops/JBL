@@ -1,0 +1,614 @@
+﻿@using Core.Services.Interfaces
+
+@inject ISettingService _settingService
+
+@{
+    ViewBag.Title = "پیشخوان | تنظیمات صفحه اصلی";
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>تنظیمات صفحه اصلی</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="index" asp-area="Admin">مدیریت</a>
+            </li>
+            <li class="active">
+                <strong>تنظیمات صفحه اصلی</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight settingWrapper">
+    @using (Html.BeginForm("MainPageSetting", "Setting", FormMethod.Post, new { @class = "form-horizontal MainForm", enctype = "multipart/form-data" }))
+    {
+
+        <div class="row">
+            <div class="col-sm-12 no-padding">
+                <div class="col-sm-12">
+                    @Html.ValidationSummary(true, "لطفا خطاهای زیر را برطرف نمایید:", new { @class = "text-danger alert alert-danger" })
+                </div>
+                <div class="col-sm-12">
+                    @{
+                        if (ViewBag.Message != null)
+                        {
+                            <div class="col-sm-12 alert alert-success">
+                                <span>@ViewBag.Message</span>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>تنظیمات صفحه اصلی</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">درباره ما</h2>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن درباره ما</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="MainPageAboutText" class="form-control" style="height:250px;">@_settingService.GetSettingValue("MainPageAboutText")</textarea>
+                                </div>
+                            </div>
+                            <div class="seperate"></div>
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">محصولات نیش کافه</h2>
+                            <div class="seperate"></div>
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">بخش اول</h2>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">تصویر <span style="color:red;">فقط پسوند jpg سایز 500 در 500</span></label>
+
+                                <div class="col-sm-3">
+                                    <input type="file" id="Img1Input" name="Img1" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="LogoImg">
+                                        @{
+                                            var random = new Random();
+                                        }
+                                        <img style="width: 200px;" id="Img1Shower" src="/assets/CatImg1.jpg?xxx=@random.Next(10000,20000)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">عنوان</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part1Title")" name="Part1Title" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">توضیحات</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="Part1Text" class="form-control">@_settingService.GetSettingValue("Part1Text")</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part1Link")" name="Part1Link" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part1BtnText")" name="Part1BtnText" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="seperate"></div>
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">بخش دوم</h2>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">تصویر <span style="color:red;">فقط پسوند jpg سایز 500 در 500</span></label>
+
+                                <div class="col-sm-3">
+                                    <input type="file" id="Img2Input" name="Img2" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="LogoImg">
+                                        <img style="width: 200px;" id="Img2Shower" src="/assets/CatImg2.jpg?xxx=@random.Next(10000,20000)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">عنوان</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part2Title")" name="Part2Title" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">توضیحات</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="Part2Text" class="form-control">@_settingService.GetSettingValue("Part2Text")</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part2Link")" name="Part2Link" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part2BtnText")" name="Part2BtnText" class="form-control">
+                                </div>
+                            </div>
+                            <div class="seperate"></div>
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">بخش سوم</h2>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">تصویر <span style="color:red;">فقط پسوند jpg سایز 500 در 500</span></label>
+
+                                <div class="col-sm-3">
+                                    <input type="file" id="Img3Input" name="Img3" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="LogoImg">
+                                        <img style="width: 200px;" id="Img3Shower" src="/assets/CatImg3.jpg?xxx=@random.Next(10000,20000)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">عنوان</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part3Title")" name="Part3Title" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">توضیحات</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="Part3Text" class="form-control">@_settingService.GetSettingValue("Part3Text")</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part3Link")" name="Part3Link" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part3BtnText")" name="Part3BtnText" class="form-control">
+                                </div>
+                            </div>
+                            <div class="seperate"></div>
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">بخش چهارم</h2>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">تصویر <span style="color:red;">فقط پسوند jpg سایز 500 در 500</span></label>
+
+                                <div class="col-sm-3">
+                                    <input type="file" id="Img4Input" name="Img4" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="LogoImg">
+                                        <img style="width: 200px;" id="Img4Shower" src="/assets/CatImg4.jpg?xxx=@random.Next(10000,20000)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">عنوان</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part4Title")" name="Part4Title" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">توضیحات</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="Part4Text" class="form-control">@_settingService.GetSettingValue("Part4Text")</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part4Link")" name="Part4Link" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part4BtnText")" name="Part4BtnText" class="form-control">
+                                </div>
+                            </div>
+                            <div class="seperate"></div>
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">بخش پنجم</h2>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">تصویر <span style="color:red;">فقط پسوند jpg سایز 500 در 500</span></label>
+
+                                <div class="col-sm-3">
+                                    <input type="file" id="Img5Input" name="Img5" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="LogoImg">
+                                        <img style="width: 200px;" id="Img5Shower" src="/assets/CatImg5.jpg?xxx=@random.Next(10000,20000)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">عنوان</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part5Title")" name="Part5Title" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">توضیحات</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="Part5Text" class="form-control">@_settingService.GetSettingValue("Part5Text")</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part5Link")" name="Part5Link" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part5BtnText")" name="Part5BtnText" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="seperate"></div>
+
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">بخش ششم</h2>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">تصویر <span style="color:red;">فقط پسوند jpg سایز 500 در 500</span></label>
+
+                                <div class="col-sm-3">
+                                    <input type="file" id="Img6Input" name="Img6" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="LogoImg">
+                                        <img style="width: 200px;" id="Img6Shower" src="/assets/CatImg6.jpg?xxx=@random.Next(10000,20000)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">عنوان</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part6Title")" name="Part6Title" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">توضیحات</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="Part6Text" class="form-control">@_settingService.GetSettingValue("Part6Text")</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part6Link")" name="Part6Link" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part6BtnText")" name="Part6BtnText" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="seperate"></div>
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">بخش هفتم</h2>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">تصویر <span style="color:red;">فقط پسوند jpg سایز 500 در 500</span></label>
+
+                                <div class="col-sm-3">
+                                    <input type="file" id="Img7Input" name="Img7" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="LogoImg">
+                                        <img style="width: 200px;" id="Img7Shower" src="/assets/CatImg7.jpg?xxx=@random.Next(10000,20000)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">عنوان</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part7Title")" name="Part7Title" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">توضیحات</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="Part7Text" class="form-control">@_settingService.GetSettingValue("Part7Text")</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part7Link")" name="Part7Link" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Part7BtnText")" name="Part7BtnText" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="seperate"></div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">تصویر <span style="color:red;">فقط پسوند jpg سایز 550 در 1520</span></label>
+
+                                <div class="col-sm-3">
+                                    <input type="file" id="MainPageBlogInput" name="MainPageBlog" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="LogoImg">
+                                        <img style="width: 200px;" id="MainPageBlogShower" src="/assets/MainPageBlog.jpg?xxx=@random.Next(10000,20000)" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">تیتر</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("MainPageBlogTitle")" name="MainPageBlogTitle" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">توضیحات</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="MainPageBlogText" class="form-control">@_settingService.GetSettingValue("MainPageBlogText")</textarea>
+                                </div>
+                            </div>
+
+@*                             <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("MainPageBlogLink")" name="MainPageBlogLink" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن دکمه</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("MainPageBlogBtnText")" name="MainPageBlogBtnText" class="form-control">
+                                </div>
+                            </div> *@
+
+                          
+                            <button class="btn btn-primary" style="width:145px;display: block;margin: 0px auto 5px;" type="submit"><i class="fa fa-check"></i>ذخیره</button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+
+</div>
+
+@section scripts{
+    <script>
+        var myReader = new FileReader();
+        $("#Img1Input").on('change', function () {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#Img1Shower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#Img1Shower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        });
+
+        $("#Img2Input").on('change', function () {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#Img2Shower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#Img2Shower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        });
+
+        $("#Img3Input").on('change', function () {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#Img3Shower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#Img3Shower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        });
+
+        $("#Img4Input").on('change', function () {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#Img4Shower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#Img4Shower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        });
+
+        $("#Img5Input").on('change', function () {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#Img5Shower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#Img5Shower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        });
+
+        $("#Img6Input").on('change', function () {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#Img6Shower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#Img6Shower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        });
+
+        $("#Img7Input").on('change', function () {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#Img7Shower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#Img7Shower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        });
+
+
+
+        $("#MainPageBlogInput").on('change', function () {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#MainPageBlogShower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#MainPageBlogShower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        });
+
+
+    </script>
+}

@@ -1,0 +1,78 @@
+﻿@using Core.ViewModel;
+@using Datalayer.Entities;
+@using Core.Services.Interfaces
+
+@{
+    ViewBag.Title = "پیشخوان | کاربران";
+}
+
+@model List<User>
+@inject IUserService _userService
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>لیست کاربران</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="index">پیشخوان</a>
+            </li>
+            <li class="active">
+                <strong>کاربران</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+@{
+    int numberItemInPage = 10;
+
+    int allPage = (Model.Count() % numberItemInPage == 0) ? (Model.Count() / numberItemInPage) : (Model.Count() / numberItemInPage) + 1;
+
+    UserViewModel userTable = new UserViewModel
+            {
+                Users = _userService.GetSpecificUsers(1, numberItemInPage),
+                CurrentPage = 1,
+                CountPerPage = numberItemInPage,
+                AllPage = allPage
+
+            };
+}
+
+<div id="UserTable" class="wrapper animated fadeInRight">
+    @await Html.PartialAsync("_userTable", userTable)
+</div>
+
+@section scripts {
+    <script src="~/admin/plugin/sweetalert/sweetalert2.all.min.js"></script>
+    <script>
+        function DeleteUser(id) {
+            Swal.fire({
+                title: "آیا مطمئنید؟",
+                text: "با این کار این کاربر حذف می شود و قابل بازیابی نخواهد بود؟!",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonText: "پاک کن",
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Admin/Home/DeleteUser',
+                        type: "POST",
+                        data: { id: id },
+                        success: function (result) {
+                            Swal.fire("حذف شد!", "کاربر با موفقیت حذف شد", "success");
+                            $("#user_" + id).remove();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            Swal.fire("خطا", "عملیات با خطا مواجه شد!", "error");
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('انجام نشد!', '', 'info')
+                }
+            })
+        }
+
+    </script>
+}

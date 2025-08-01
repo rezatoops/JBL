@@ -1,0 +1,11 @@
+﻿<h2>ورود | ثبت نام</h2>
+<p>لطفا شماره موبایل خود را وارد کنید</p>
+<form asp-controller="User" asp-action="ShowLoginOrRegister" method="post" data-ajax=true data-ajax-mode="replace" data-ajax-update="#authenticationForm" data-ajax-loading="#loadingCircle">
+    <input type="hidden" id="productIdLogin" name="ProductId" value="0" />
+    <input type="tel" name="phoneNumber" placeholder="مثلا 09123456789" />
+
+    <div class="errorMsg">
+        @Html.ValidationSummary(true)
+    </div>
+    <button type="submit">ورود یا ثبت نام</button>
+</form>

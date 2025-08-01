@@ -1,0 +1,127 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html lang="fa" dir="rtl">
+<head>
+    <link href="~/css/site.css" rel="stylesheet" rel="stylesheet" />
+    <link href="~/css/responsive.css" rel="stylesheet" rel="stylesheet" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>فروشگاه Nish Coffee | ورود</title>
+</head>
+<body>
+    <div class="loginPage loginBox">
+
+        <div id="loadingCircle" class="loadingio-spinner-ball-rd8liqklqbg">
+            <div class="ldio-c3e11cu2eq9">
+                <div></div>
+            </div>
+        </div>
+        <img src="~/assets/logo.png" />
+
+        <h2>ورود به پیشخوان</h2>
+        <div id="authenticationForm">
+            <partial name="_loginModalForm" />
+        </div>
+
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.js"></script>
+</body>
+</html>
+
+<script>
+    function LoginCompleted(data) {
+        if (data.result == "Success") {
+
+            $("#loginWrapper").hide();
+
+            location.reload();
+        }
+    }
+</script>
+
+<script>
+
+    var minutes = 1;
+
+    var seconds = 59;
+
+    var set_inteval;
+
+    function otp_timer() {
+
+        seconds -= 1;
+
+        $('#secondsInput').val(String(seconds).padStart(2, '0'));
+        $('#seconds').text(String(seconds).padStart(2, '0'));
+
+        $('#minutesInput').val(String(minutes).padStart(2, '0'));
+        $('#minutes').text(String(minutes).padStart(2, '0'));
+
+        $(".infoText .timer").show();
+        $(".infoText a").hide();
+
+        if (seconds == 0) {
+
+            if (minutes > 0) {
+
+                seconds = 59;
+
+                minutes -= 1;
+
+            } else {
+
+                clearInterval(set_inteval);
+
+                minutes = 0;
+
+                seconds = 0;
+
+                $('#secondsInput').val('00');
+                $('#seconds').text('00');
+
+                $('#minutesInput').val('00');
+                $('#minutes').text('00');
+
+
+                $(".infoText .timer").hide();
+                $(".infoText a").show();
+
+            }
+
+        }
+
+    }
+
+    function startTimer(inputMinute, inputSecond) {
+        if (inputMinute != -1) {
+            minutes = inputMinute;
+
+        }
+
+        if (inputSecond != -1) {
+            seconds = inputSecond;
+
+        }
+
+        $('#secondsInput').val(String(seconds).padStart(2, '0'));
+        $('#seconds').text(String(seconds).padStart(2, '0'));
+
+        $('#minutesInput').val(String(minutes).padStart(2, '0'));
+        $('#minutes').text(String(minutes).padStart(2, '0'));
+
+        if (minutes == 0 && seconds == 0) {
+            clearInterval(set_inteval);
+            $(".infoText .timer").hide();
+            $(".infoText a").show();
+        }
+        else {
+            set_inteval = setInterval('otp_timer()', 1000);
+        }
+
+    }
+
+</script>

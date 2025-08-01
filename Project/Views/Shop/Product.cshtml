@@ -1,0 +1,586 @@
+﻿@using Core.ViewModel
+@using Datalayer.Entities
+@using Core.Services.Interfaces
+@using System.Globalization
+
+@model Product
+
+@inject IProductService _productService
+@inject ICategoryService _categoryService
+@inject ICommentService _commentService
+@inject ISettingService _settingServices
+
+
+@{
+    List<Media> GalleryImages = new List<Media>();
+    ViewData["Title"] = @Model.Title;
+
+    if (!string.IsNullOrEmpty(Model.Gallery))
+    {
+        GalleryImages = _productService.GetGalleryPhotos(Model.Gallery);
+    }
+}
+
+<div id="loadingCircleShop" class="loadingio-spinner-ball-rd8liqklqbg">
+    <div class="ldio-c3e11cu2eq9">
+        <div></div>
+    </div>
+</div>
+
+<div class="Waypart section">
+    <a href="/Shop">فروشگاه</a>
+    <label>/</label>
+    <span>@Model.Title</span>
+</div>
+
+<div class="MainProduct section">
+    <div class="pSlider">
+        @{
+            string ImgUrl = "";
+            if (GalleryImages.Count > 0)
+            {
+                ImgUrl = GalleryImages[0].Url;
+            }
+        }
+        <img class="bigImg" src="/@ImgUrl" />
+
+        <div class="Thumbnails">
+            <div class="ThumbSlider owl-carousel owl-theme">
+                @{
+                    foreach (var item in GalleryImages)
+                    {
+                        <div class="tImg" id="thumb_@item.Id" data-url="/@item.Url" style="background-image: url('/@item.Url');"></div>
+
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="pMeta">
+        <h1>@Model.Title</h1>
+        <span class="englishTitle">@Model.EnglishTitle</span>
+        <div class="importSpec">
+
+        </div>
+
+        <div class="favoritSpec">
+            <p>ویژگی های اصلی محصول</p>
+            <ul>
+                @{
+                    if (!string.IsNullOrEmpty(Model.Spec1))
+                    {
+                        <li>@Model.Spec1</li>
+                    }
+                    if (!string.IsNullOrEmpty(Model.Spec2))
+                    {
+                        <li>@Model.Spec2</li>
+                    }
+                    if (!string.IsNullOrEmpty(Model.Spec3))
+                    {
+                        <li>@Model.Spec3</li>
+                    }
+                }
+
+            </ul>
+        </div>
+    </div>
+    <div class="pCart">
+        <div class="specItems">
+            <div class="specItemWrapper">
+                <div class="scpecItem">
+                    <img src="~/assets/clock.svg" />
+                </div>
+                <span>ارسال سریع سفارش</span>
+            </div>
+            <div class="specItemWrapper">
+                <div class="scpecItem">
+                    <img src="~/assets/price.svg" />
+                </div>
+                <span>تضمین قیمت</span>
+            </div>
+            <div class="specItemWrapper">
+                <div class="scpecItem">
+                    <img src="~/assets/shipping.svg" />
+                </div>
+                <span>ارسال به سراسر کشور</span>
+            </div>
+            <div class="specItemWrapper">
+                <div class="scpecItem">
+                    <img src="~/assets/gurrantee.svg" />
+                </div>
+                <span>تضمین کیفیت</span>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="VariableArea">
+            <div class="Variables">
+                @{
+                    var mainVariable = _productService.GetMainVariable(Model.Id);
+                    var variables = _productService.GetProductVariables(Model.Id);
+                    if (variables.Count > 1 || (variables.Count == 1 && !string.IsNullOrEmpty(variables[0].Title)))
+                    {
+                        <p>مدل: </p>
+                    }
+                }
+
+                @{
+
+                    foreach (var variable in variables)
+                    {
+                        if (variable.NumberInStock > 0 && !string.IsNullOrEmpty(variable.Title))
+                        {
+                            <div id="var_@variable.Id" class="ProductVariable VariableItemType2 @((variable.Id == mainVariable.Id)?"active":"")">
+                                <span>@variable.Title</span>
+                            </div>
+                        }
+
+                    }
+
+                }
+            </div>
+            @{
+                string ProductInformation = _settingServices.GetSettingValue("ProductInformation");
+                if (!string.IsNullOrEmpty(Model.ExtraDescription))
+                {
+                    <div class="ExtraDescrip">
+                        <span>@Html.Raw(Model.ExtraDescription.Replace("\n","<br/>"))</span>
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(ProductInformation))
+                {
+                    <div class="ExtraDescrip">
+                        <span>@Html.Raw(ProductInformation.Replace("\n", "<br/>"))</span>
+                    </div>
+                }
+            }
+
+        </div>
+        <div class="CartArea">
+            @{
+                DateTime? dt = null;
+
+                if (Model.WonderTime != null)
+                {
+                    dt = Model.WonderTime.Value;
+
+                    <div class="TimeArea" id="TimeArea" data-date="@dt" data-enabled="@Model.IsWonderProduct">
+                        @{
+                            if (dt > DateTime.Now && Model.IsWonderProduct)
+                            {
+                                <div class="time">
+                                    <p id="days">26</p>
+                                    <span>روز</span>
+                                </div>
+                                <div class="time">
+                                    <p id="hours">16</p>
+                                    <span>ساعت</span>
+                                </div>
+                                <div class="time">
+                                    <p id="minutes">10</p>
+                                    <span>دقیقه</span>
+                                </div>
+                                <div class="time">
+                                    <p id="seconds">56</p>
+                                    <span>ثانیه</span>
+                                </div>
+                                <span>زمان باقی مانده: </span>
+                            }
+                        }
+
+                        <div class="clear"></div>
+                    </div>
+                }
+                else{
+                    <div class="TimeArea"></div>
+                }
+            }
+
+            <div class="AddToCartArea" id="AddToCart">
+                @{
+                    var mainVariableVM = new VariableViewModel
+            {
+                Variable = mainVariable,
+                CurrentNumber = 1,
+            };
+                }
+                <partial name="_PriceShower" model="mainVariableVM" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="ProductDescription section">
+    <div class="TabControls">
+        <div id="Tab_1" class="TabItem active">
+            <span>توضیحات محصول</span>
+        </div>
+        <div id="Tab_2" class="TabItem">
+            <span>مشخصات</span>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="TabContent">
+        <div id="cTab_1" class="Descripton textDescribtion active" style="display:block;">
+            @Html.Raw(Model.Review)
+            @* <a class="expandableText" onclick="toggleDesription()">مطالعه بیشتر ...</a> *@
+        </div>
+        <div id="cTab_2" class="Descripton">
+            @{
+                var attributes = _productService.GetProductAttributes(Model.Id);
+                foreach (var attr in attributes)
+                {
+                    <div class="descItem">
+                        <span>@attr.AttributeKey</span>
+                        <span class="spec_value">@attr.AttributeValue</span>
+                        <div class="clear"></div>
+                    </div>
+                }
+            }
+            @* <a class="expandableText" onclick="toggleDesription()">مطالعه بیشتر ...</a> *@
+        </div>
+    </div>
+</div>
+
+<div class="CommentProduct section">
+    @{
+        var comments = _commentService.GetAllComments(Model.Id);
+
+    }
+    <div class="rightSection" id="commentList">
+
+        <partial name="_commentList" model="comments" />
+
+    </div>
+    <div class="leftSection">
+
+        <p>دیدگاه خود را بنویسید</p>
+        <span>نشانی ایمیل شما منتشر نخواهد شد. بخش‌های موردنیاز علامت‌گذاری شده‌اند <strong>*</strong></span>
+
+        <form id="commentForm" asp-controller="Shop" asp-action="insertComment" asp-route-productId="@Model.Id"
+              data-ajax="true" data-ajax-method="post" data-ajax-mode="replace" data-ajax-update="#commentList"
+              data-ajax-loading="#loadingCircleShop" data-ajax-success="resetForm()">
+
+            <div class="formGroup">
+                <label>دیدگاه شما<span>*</span></label>
+                <textarea name="message" placeholder="دیدگاه خود را در رابطه با این محصول بنویسید" required oninvalid="this.setCustomValidity('پر کردن این فیلد اجباری است')"></textarea>
+            </div>
+            <div class="formGroup">
+                <label>نام و نام خانوادگی<span>*</span></label>
+                <input name="fullName" placeholder="نام شما نمایش داده می شود" required oninvalid="this.setCustomValidity('پر کردن این فیلد اجباری است')" />
+            </div>
+            <div class="formGroup">
+                <label>ایمیل<span>*</span></label>
+                <input name="email" placeholder="ایمیل خود را به شکل صحیح بنویسید" required oninvalid="this.setCustomValidity('پر کردن این فیلد اجباری است')" />
+            </div>
+            <button class="ActionButton" type="submit">ثبت</button>
+
+        </form>
+    </div>
+</div>
+
+<div class="RelatedProducts section">
+    <div class="sectionTitle">
+        <img src="~/assets/backtitle.svg" />
+        <h3>
+            محصولات مشابه
+        </h3>
+    </div>
+    <div class="clear"></div>
+    <div class="ProductList">
+        <div class="ProductSlider owl-carousel owl-theme">
+            @{
+                var categorieId = _productService.GetProductCategories(Model.Id).FirstOrDefault();
+                var relatedProducts = _categoryService.GetAllProdcutInCategory(int.Parse(categorieId)).Except(new List<Product> { Model });
+
+                foreach (var product in relatedProducts.Take(10))
+                {
+                    <partial name="_product" model="product" />
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<div class="ProductListArea section">
+    <div class="sectionTitle">
+        <img src="~/assets/backtitle.svg" />
+        <h3>
+            برند ها
+        </h3>
+    </div>
+    <div class="clear"></div>
+    <div class="ProductList">
+        <div class="BrandSlider owl-carousel owl-theme">
+            @{
+                foreach (var brand in _productService.GetAllBrands())
+                {
+                    <a class="BrandItem" href="@brand.Link" style="background-image:url('/assets/brands/@(brand.Id).png')">
+                    </a>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+<div class="MessageModalWrpper" id="AddedToCartModalWrpper">
+    <div class="BackMessageModal AddedToCartBackModal"></div>
+    <div class="MessageModal">
+        <p id="AddToCartText" style="text-align:center;">این محصول به سبد خرید شما اضافه شد!</p>
+        <a href="~/Cart" style="background:#F00; color:white;">برو به سبد خرید</a>
+        <a onclick="CloseAddToCartModal()" style="margin-left:0px;color:white;">برگشت به فروشگاه</a>
+    </div>
+</div>
+
+
+@section styles {
+    <link href="~/plugin/owlcarousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/plugin/owlcarousel/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="~/plugin/imagezoom/image-zoom.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/plugin/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/plugin/imagezoom/image-zoom.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $(".ThumbSlider").owlCarousel({
+                rtl: true,
+                items: 3,
+                responsiveClass: true,
+                nav: true,
+                dots: false,
+                margin: 10,
+            });
+
+            CheckExpandLinkIsShow();
+        });
+
+
+
+    </script>
+    <script>
+
+        function CheckExpandLinkIsShow() {
+            if ($(".Descripton.active").height() < 350) {
+                $(".ProductDescription").addClass("Expand");
+                $(".expandableText").hide();
+            }
+            else {
+                $(".ProductDescription").removeClass("Expand");
+                $(".expandableText").show();
+            }
+        }
+
+    </script>
+
+
+    <script>
+        $(".ProductSlider").owlCarousel({
+            rtl: true,
+            items: 6,
+            responsiveClass: true,
+            nav: true,
+            dots: false,
+            margin: 10,
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 1,
+                    margin: 5,
+                },
+                380: {
+                    items: 2,
+                    margin: 5,
+                },
+                550: {
+                    items: 3,
+                    margin: 5,
+                },
+
+                700: {
+                    items: 4,
+                    margin: 10,
+                },
+                992: {
+                    items: 5,
+                },
+                1200: {
+                    items: 6,
+                }
+            }
+        });
+
+        $(".BrandSlider").owlCarousel({
+                rtl: true,
+                items: 6,
+                responsiveClass: true,
+                nav: true,
+                dots: false,
+                margin: 40,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 2,
+                        margin: 10,
+                    },
+                    380: {
+                        items: 3,
+                        margin: 10,
+                    },
+                    550: {
+                        items: 4,
+                        margin: 10,
+                    },
+
+                    700: {
+                        items: 5,
+                        margin: 20,
+                    },
+                    992: {
+                        items: 6,
+                    },
+                }
+            });
+    </script>
+
+    <script>
+        function toggleDesription() {
+            $(".ProductDescription").toggleClass("Expand");
+            if ($(".ProductDescription").hasClass("Expand")) {
+                $(".expandableText").text("بستن");
+            } else {
+                $(".expandableText").html("مطالعه بیشتر...");
+            }
+        }
+    </script>
+
+        <script>
+        $(".TabItem").click(function () {
+            $(".TabItem").removeClass("active");
+            $(this).addClass("active");
+
+            $(".Descripton").removeClass("active");
+            $(".Descripton").hide();
+            var id = $(this).attr("id").split("_")[1];
+            $("#cTab_" + id).addClass("active");
+            $("#cTab_" + id).show();
+
+            CheckExpandLinkIsShow();
+            $(".expandableText").html("مطالعه بیشتر...");
+
+        });
+    </script>
+
+    <script>
+        $(".tImg").click(function () {
+            var id = $(this).attr("id").split("_")[1];
+            var imgUrl = $(this).data("url");
+            $("#imageZoom").attr("src", imgUrl);
+            $(".containerZoom").css("background-image", "url('" + imgUrl + "')")
+            $(".bigImg").attr("src", imgUrl);
+        });
+    </script>
+
+    <script>
+        $(".ProductVariable").click(function () {
+            $(".ProductVariable").removeClass("active");
+            $(this).addClass("active");
+
+            var selectedVariable = $(this).attr("id").split("_")[1];
+
+            $("#loadingCircleShop").show();
+
+            $.ajax({
+                type: "POST",
+                url: "/Shop/GetVariable",
+                data: { varId: selectedVariable },
+                success:
+                    function (result) {
+                        $("#loadingCircleShop").hide();
+                        if (result == "false") {
+                            OpenMessageModal("قیمت یا موجودی این محصول تغییر کرده است لطفا صفحه را به روز رسانی کنید");
+                        } else {
+                            $("#AddToCart").html(result);
+                        }
+                    },
+                error: function (req, status, error) {
+                    window.alert("Error!");
+                }
+            });
+        });
+    </script>
+
+    <script>
+        var isEnabled = $("#TimeArea").data("enabled");
+        $(document).ready(function () {
+            makeTimer();
+        });
+        function makeTimer() {
+
+            var endTime = $("#TimeArea").data("date");
+
+            endTime = (Date.parse(endTime) / 1000);
+
+            var now = new Date();
+            now = (Date.parse(now) / 1000);
+
+            var timeLeft = endTime - now;
+
+            var days = Math.floor(timeLeft / 86400);
+            var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
+            var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600)) / 60);
+            var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
+
+            if (hours < "10") { hours = "0" + hours; }
+            if (minutes < "10") { minutes = "0" + minutes; }
+            if (seconds < "10") { seconds = "0" + seconds; }
+
+            $("#days").html(days);
+            $("#hours").html(hours);
+            $("#minutes").html(minutes);
+            $("#seconds").html(seconds);
+
+
+
+        }
+        if (isEnabled == "True") {
+            setInterval(function () { makeTimer(); }, 1000);
+        }
+    </script>
+
+    <script>
+
+        function OpenAddedToCartModal() {
+            $("#AddedToCartModalWrpper").show();
+        }
+
+        function CloseAddToCartModal() {
+            $("#AddedToCartModalWrpper").hide();
+        }
+
+        $(".AddedToCartBackModal").click(function () {
+            $("#AddedToCartModalWrpper").hide();
+        });
+    </script>
+    <script>
+        function resetForm() {
+            $("#commentForm").trigger("reset")
+        }
+    </script>
+
+    <script>
+        $(function () {
+            if ($(window).width() > 480){
+                $('.bigImg').imageZoom({
+                    zoom: 200,
+                });
+            }
+
+        });
+    </script>
+}

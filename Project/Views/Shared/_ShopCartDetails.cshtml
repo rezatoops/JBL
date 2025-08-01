@@ -1,0 +1,75 @@
+﻿@using Core.ViewModel;
+@model CheckoutWidgetViewModel
+
+@{
+    int FinalShipPrice = (Model.shippingPrice > 0) ? Model.shippingPrice : 0;
+}
+<div class="title">
+    <p>جزئیات سبد خرید</p>
+    <div class="clear"></div>
+</div>
+<div class="CartDetailsItem">
+    <span style="float:right">تعداد محصولات</span>
+    <span style="float:left">@Model.totalNumber عدد</span>
+</div>
+<div class="CartDetailsItem">
+    <span style="float:right">مجموع قیمت کالا ها</span>
+    <span style="float:left">@((Model.totalRegularPrice - FinalShipPrice).ToString("#,0")) تومان</span>
+</div>
+
+
+<div class="CartDetailsItem">
+    <span style="float:right">هزینه ارسال</span>
+    @{
+        if (Model.shippingPrice > 0)
+        {
+            <span id="shipPriceValue" style="float:left">@(Model.shippingPrice.ToString("#,0")) تومان</span>
+        }
+        else if(Model.shippingPrice == 0)
+        {
+            <span id="shipPriceValue" style="float:left">رایگان</span>
+
+        }
+        else if(Model.shippingPrice == -1){
+            <span id="shipPriceValue" style="float:left">پس کرایه</span>
+
+        }
+        else
+        {
+            <span id="shipPriceValue" style="float:left">مشخص نشده است</span>
+
+        }
+    }
+</div>
+
+@{
+    int totalOff = Model.totalRegularPrice - Model.totalPrice;
+
+    if(totalOff > 0)
+    {
+        <div class="CartDetailsItem" style="color:red;">
+            <span style="float:right">سود شما از خرید</span>
+            <span style="float:left">@totalOff.ToString("#,0") تومان</span>
+        </div>
+    }
+
+    if (Model.coupnPrice > 0)
+    {
+        <div class="CartDetailsItem" style="color:red;">
+            <span style="float:right">کد تخفیف</span>
+            <span style="float:left">@Model.coupnPrice.ToString("#,0") تومان</span>
+        </div>
+    }
+
+    
+}
+
+
+<div class="CartDetailsItem" style="font-weight:500; font-size:14px">
+    <span style="float:right">مبلغ قابل پرداخت</span>
+    <span style="float:left">@((Model.totalPrice - Model.coupnPrice).ToString("#,0")) تومان</span>
+</div>
+<div class="clear"></div>
+
+
+

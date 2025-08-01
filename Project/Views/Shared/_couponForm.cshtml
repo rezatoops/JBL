@@ -1,0 +1,20 @@
+﻿@model int
+
+<div class="title" style="margin-bottom:10px;">
+    <p>کد تخفیف</p>
+    <div class="clear"></div>
+</div>
+<input type="hidden" name="OrderId" value="@Model" />
+<input name="CouponCode" placeholder="کد تخفیف را وارد کنید" style="width: 90%;margin: 0 auto;display: block;font-family: IRANSans;border: 1px solid #ced4da;border-radius: 4px;height: 40px; font-size: 13px; padding-right: 10px;" />
+@{
+    if(ViewBag.error == "true")
+    {
+        <span class="messageCoupon errorCoupon">@ViewBag.message</span>
+    }
+    else if (ViewBag.error == "false")
+    {
+        <span class="messageCoupon successCoupon">@ViewBag.message</span>
+    }
+}
+
+<button type="submit" class="btn ProgressCartBtn">اعمال کد تخفیف</button>

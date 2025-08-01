@@ -1,0 +1,23 @@
+﻿@using Core.ViewModel
+
+@model AttributeViewModel
+<div class="AttRow">
+    <div class="MainArea">
+        <div class="form-group m-b" style="width: calc(100% - 30px);margin-bottom:1px;margin-right:15px;">
+            <input type="text" value="@Model.AttKey" name="attributeKeys" class="form-control KeyAtt">
+            <input type="text" value="@Model.AttValue" name="attributeValues" class="form-control ValueAtt">
+        </div>
+    </div>
+    <div class="ActionArea">
+        <button class="btn deletebtn" onclick="deleteAttribute(this)" type="button" style="margin-top: 3px;margin-right: 0px;"><i class="fa fa-trash"></i></button>
+    </div>
+    <div style="clear:both"></div>
+
+</div>
+
+<script>
+    function deleteAttribute(el) {
+
+        $(el).parent().parent().remove();
+    }
+</script>

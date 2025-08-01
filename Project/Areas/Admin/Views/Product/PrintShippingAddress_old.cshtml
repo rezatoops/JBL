@@ -1,0 +1,39 @@
+﻿@using Core.Services.Interfaces;
+@using Datalayer.Entities;
+
+@model Order
+
+@inject IProductService _productService;
+
+@{
+    Layout = null;
+}
+<html>
+<head>
+    <link href="~/css/printstyle.css" rel="stylesheet" />
+</head>
+<body style="width:94%; margin-left:4%; float:left; font-size:16px;">
+    <div style="width:100%;">
+        <img src="~/assets/logo.png" style="display:block;margin:10px auto;width:200px;" />
+        <div style="clear:both"></div>
+        <p style="text-align:right;height: 25px; font-weight:bold;">فرستنده: قهوه نیش</p>
+        <p style="text-align:right;height: 25px;">آدرس: تهران خیابان قائم مقام فرهانی میدان شعاع نبش خیابان خدری پلاک 1 واحد 8</p>
+        <p style="text-align:right;height: 25px;">کدپستی: 1585895354</p>
+
+        <p style="text-align:right;height: 25px; float:right; margin-top:0px;">شماره تماس: 02188327813</p>
+        <p style="text-align:right;height: 25px; float:left; margin-top:0px;">وب سایت: NishCoffee.ir</p>
+        <div class="clear"></div>
+        <hr />
+        <p style="text-align:right;height: 25px; font-weight:bold;">گیرنده: @Model.Name</p>
+        <p style="text-align:right;height: 25px;">آدرس: @_productService.GetCityById(_productService.GetStateOfCity(Model.CityId)).Name، @Model.City.Name، @Model.Address</p>
+        <p style="text-align:right;height: 25px;">کدپستی: @Model.PostalCode</p>
+        <p style="text-align:right;height: 25px;">شماره تماس: @Model.PhoneNumber</p>
+
+    </div>
+
+</body>
+</html>
+
+
+
+

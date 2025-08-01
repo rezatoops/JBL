@@ -1,0 +1,138 @@
+﻿@using Core.Services.Interfaces;
+@using Datalayer.Entities;
+@using System.Globalization;
+@inject IUserService _userService
+@inject IProductService _productService
+@model Order
+@{
+    ViewData["Title"] = "جزییات سفارش" + " " + @Model.Id;
+    PersianCalendar pc = new PersianCalendar();
+    var dt = Model.PaymentDate.Value;
+    string shamsiDate = pc.GetYear(dt) +"/" + pc.GetMonth(dt)+ "/" + pc.GetDayOfMonth(dt);
+}
+
+<div class="ProfileSection MyOrderSection">
+    @{
+        if (User.Identity.IsAuthenticated)
+        {
+            <div class="rightSection">
+                <partial name="_profileMenu" model="Model.User" />
+            </div>
+            <div class="leftSection">
+                <h2>جزییات سفارش @Model.Id (@shamsiDate)</h2>
+                @{
+                    if (Model.Status == "NoShipping")
+                    {
+                        <p class="shippingMsg">سفارش شما در حال انجام است و به زودی ارسال می شود</p>
+                    }
+                }
+                <div class="MyProgramTitle">
+                    <div class="TitleSection">
+                        <span>نام محصول</span>
+                    </div>
+                    <div class="TitleSection">
+                        <span>قیمت واحد</span>
+                    </div>
+                    <div class="TitleSection">
+                        <span>تعداد</span>
+                    </div>
+                    <div class="TitleSection">
+                        <span>مبلغ</span>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                @{
+
+                    foreach (var item in _productService.GetProductsInOrder(Model.Id))
+                    {
+                        <div class="MyProgram">
+                            <div class="programDetail">
+                                <span>@item.Product.Title</span>
+                            </div>
+                            <div class="programDetail">
+                                <span>@item.Price.ToString("#,0") تومان</span>
+                            </div>
+                            <div class="programDetail StartDate">
+                                <span>@item.number عدد</span>
+                            </div>
+                            <div class="programDetail no-border">
+                                <span>@((item.Price*item.number).ToString("#,0")) تومان</span>
+                            </div>
+                            <div class="clear"></div>
+
+                        </div>
+                    }
+
+                    <div class="MyProgram">
+                        <div class="programDetail no-border">
+                            <span>هزینه ارسال</span>
+                        </div>
+                        <div class="programDetail no-border">
+                            <span></span>
+                        </div>
+                        <div class="programDetail StartDate ">
+                            <span></span>
+                        </div>
+                        <div class="programDetail no-border">
+                            @{
+                                var shippingText = "رایگان";
+                                if (Model.ShippingPrice == -1)
+                                {
+                                    shippingText = "پس کرایه";
+                                }
+                                else if (Model.ShippingPrice > 0)
+                                {
+                                    shippingText = @Model.ShippingPrice.ToString("#,0") + "تومان";
+                                }
+                            }
+                            <span>@shippingText</span>
+                        </div>
+                        <div class="clear"></div>
+
+                    </div>
+                    // if(Model.CouponName != null)
+                    // {
+                    //     <div class="MyProgram">
+                    //         <div class="programDetail no-border">
+                    //             <span>تخفیف</span>
+                    //         </div>
+                    //         <div class="programDetail StartDate ">
+                    //             <span>@Model.CouponName (@Model.CouponPercent %)</span>
+                    //         </div>
+                    //         <div class="programDetail no-border">
+                    //             <span>@Model.CouponOffValue.ToString("#,0") تومان</span>
+                    //         </div>
+                    //         <div class="clear"></div>
+
+                    //     </div>
+                    // }
+
+                    <div class="MyProgram">
+                        <div class="programDetail no-border">
+                            <span>مجموع</span>
+                        </div>
+                        <div class="programDetail no-border">
+                            <span></span>
+                        </div>
+                        <div class="programDetail StartDate ">
+                            <span></span>
+                        </div>
+                        <div class="programDetail no-border">
+                            <span>@((_productService.GetTotalPriceInOrder(Model.Id)).ToString("#,0")) تومان</span>
+                        </div>
+                        <div class="clear"></div>
+
+                    </div>
+                }
+
+            </div>
+            <div class="clear"></div>
+        }
+        else
+        {
+            <p>برای دیدن جزییات باید ابتدا در سایت وارد شوید </p>
+            <a onclick="OpenLoginModal()" class="ActionButton">ورود به سایت</a>
+        }
+    }
+
+</div>

@@ -1,0 +1,155 @@
+﻿@using Core.Services.Interfaces;
+@using Core.ViewModel;
+@using Datalayer.Entities
+
+@model Shipping
+
+@inject IMediaService _mediaService
+@inject IUserService _userService;
+@inject ICategoryService _categoryService;
+@inject IProductService _productService;
+
+
+@{
+    ViewBag.Title = "ویرایش شیوه ارسال " + Model.Title;
+
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    @using (Html.BeginForm("EditShipping", "Product", FormMethod.Post, new { @class = "form-horizontal MainForm" }))
+    {
+        <input type="hidden" name="ShippingId" value="@Model.Id" />
+        <div class="row">
+            <div class="col-sm-9 no-padding">
+                <div class="col-sm-12">
+                    @Html.ValidationSummary(true, "لطفا خطاهای زیر را برطرف نمایید:", new { @class = "text-danger alert alert-danger" })
+                </div>
+                <div class="col-sm-12">
+                    @{
+                        if (ViewBag.Message != null)
+                        {
+                            <div class="col-sm-12 alert alert-success">
+                                <span>@ViewBag.Message</span>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>محتوای اصلی</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">عنوان</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">توضیح</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">هزینه ارسال</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.ShipPrice, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.ShipPrice, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <span>برای رایگان عدد 0 وارد کنید</span>
+                            <span>برای پس کرایه عدد -1 وارد کنید</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>وضعیت های فعال سازی این شیوه ارسال</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <span>در صورتی که این شیوه ارسال برای تهران است تیک بزنید و برای شهرستان تیک را بردارید</span>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">تهران؟</label>
+
+                                <div class="col-sm-10">
+                                    @Html.CheckBoxFor(model => model.IsTehran, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.IsTehran, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">حداقل مبلغ سبد خرید</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.MinPrice, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.MinPrice, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <span>اگر میخواهید برای تمام بازه های قیمتی فعال باشد و محدودیت مبلغی نداشته باشید 0 قرار دهید</span>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">حداکثر مبلغ سبد خرید</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.MaxPrice, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.MaxPrice, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 no-padding">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>عملیات</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content" style="padding:15px 10px 20px 10px;">
+                            <button class="btn btn-primary" style="width:145px;display: block;margin: 0px auto 5px;"><i class="fa fa-check"></i>&nbsp;ذخیره</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
+

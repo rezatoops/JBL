@@ -1,0 +1,32 @@
+﻿@using Datalayer.Entities
+@using System.Globalization
+@model Page
+
+
+<td style="vertical-align: middle;text-align: center;">@Model.Title</td>
+<td style="vertical-align: middle;text-align: center;">@Model.CreationDate.ToString("dd MMMM yyyy", new CultureInfo("fa-IR"))</td>
+
+@*background-color: @(Model.IsRead == false ? "rgba(255,255,107,0.3) !important;" : "")*@
+
+<td style="vertical-align: middle;">
+    <div class="center-block" style="width:125px;">
+
+        <a class="btn btn-primary deletebtn" href="/Admin/Page/Edit/@Model.Id"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;"><i style="font-size: 18px;" class="fa fa-pen"></i></a>
+
+        <a class="btn btn-danger deletebtn" onclick="DeletePage(@Model.Id)"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+
+        <a class="btn btn-warning deletebtn" href="/Page/@Model.Slug"
+           style="width: 38px;padding-top: 8px;padding-bottom: 3px;padding-right: 8px;height: 34px;"><i style="font-size: 16px;" class="fa fa-link"></i></a>
+
+    </div>
+
+
+</td>
+
+
+
+
+
+

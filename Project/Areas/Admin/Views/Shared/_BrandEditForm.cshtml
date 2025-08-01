@@ -1,0 +1,98 @@
+﻿@using Datalayer.Entities;
+
+@model Brand
+
+@{
+    if (ViewBag.Message != null)
+    {
+        <div class="col-sm-12 alert @ViewBag.Style">
+            <span>@ViewBag.Message</span>
+        </div>
+    }
+}
+
+<form class="form-horizontal" asp-controller="Home" asp-action="AddNewOrEditBrand" enctype="multipart/form-data">
+
+
+    <input type="hidden" name="BrandId" value="@Model.Id" />
+
+    <div class="form-group">
+        <label style="text-align:right" class="col-sm-3 control-label">نام برند</label>
+
+        <div class="col-sm-9">
+            <input class="form-control" name="BrandName" value="@Model.Name" />
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label style="text-align:right" class="col-sm-3 control-label">لینک</label>
+
+        <div class="col-sm-9">
+            <input class="form-control" name="BrandLink" value="@Model.Link" />
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label style="text-align:right" class="col-sm-3 control-label">لوگو</label>
+        <div class="col-sm-3">
+            <div class="catImg">
+                @{
+                    if (Model.Id == 0)
+                    {
+                        <img style="width:100%;" id="BrandImgShower" src="" />
+
+                    }
+                    else
+                    {
+                        var random = new Random();
+                        <img style="width:100%;" id="BrandImgShower" src="/assets/brands/@(Model.Id).png?xxx=@random.Next(10000,20000)" />
+
+                    }
+                }
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <input id="BrandIcon" name="BrandIcon" type="file" />
+        </div>
+    </div>
+    <div class="alrtMsg">
+        <p>فقط پسوند PNG مجاز است</p>
+@*        <p>سایز عکس باید 840 در 300 باشد تا در سایت درست نمایش داده شود</p>
+*@    </div>
+    @{
+        if (Model.Id == 0)
+        {
+            <button class="btn btn-primary" style="display: block;margin: 0px auto 5px;" type="submit"><i class="fa fa-check"></i>&nbsp;اضافه کن</button>
+        }
+        else
+        {
+            <button class="btn btn-primary" style="display: block;margin: 0px auto 5px;" type="submit"><i class="fa fa-check"></i>&nbsp;ذخیره</button>
+        }
+    }
+</form>
+
+
+<script>
+    var myReader = new FileReader();
+    $("#BrandIcon").on('change', function () {
+
+        if (typeof (FileReader) != "undefined") {
+
+            var image_holder = $("#BrandImgShower");
+            image_holder.empty();
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+
+                //e.target.result
+                $("#BrandImgShower").attr('src', e.target.result);
+
+            }
+            image_holder.show();
+            reader.readAsDataURL($(this)[0].files[0]);
+        } else {
+            alert("This browser does not support FileReader.");
+        }
+    });
+</script>
+

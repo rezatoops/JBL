@@ -1,0 +1,29 @@
+﻿@using Core.ViewModel;
+@model ComplexPriceViewModel
+
+
+<div class="ComplexPriceRow">
+    <div class="MainArea">
+        <input placeholder="عنوان متغیر" value="@Model?.Title" class="form-control bigPriceInput" style="margin-right:0px;" type="text" name="varTitle" id="varTitle" />
+        <input placeholder="توضیح متغیر" value="@Model?.Description" class="form-control bigPriceInput" type="text" name="varDescription" id="varDescription" />
+        <input placeholder="قیمت اصلی" value="@Model?.Price" class="form-control priceInput" style="margin-right:0px;" type="text" name="varPrice" id="varPrice" />
+        <input placeholder="قیمت با تخفیف" value="@Model?.SalePrice" class="form-control priceInput" type="text" name="varSalePrice" id="varSalePrice" />
+        <input placeholder="تعداد موجودی" value="@Model?.NumberStock" class="form-control priceInput" type="text" name="varNumberStock" id="varNumberStock" />
+        <div style="clear:both"></div>
+    </div>
+
+    <div class="ActionArea">
+        <button class="btn deletebtn" onclick="deleteVariable(this)" type="button"><i class="fa fa-trash"></i></button>
+    </div>
+    <div style="clear:both"></div>
+</div>
+
+
+
+
+<script>
+    function deleteVariable(el) {
+
+        $(el).parent().parent().remove();
+    }
+</script>

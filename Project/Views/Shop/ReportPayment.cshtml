@@ -1,0 +1,55 @@
+﻿@using Core.Services.Interfaces;
+@using Datalayer.Entities;
+@{
+    ViewData["Title"] = "نتیجه سفارش";
+}
+
+@model Order
+@inject IProductService _productService
+@inject IUserService _userService
+
+<div class="section ReportPayment">
+    <div class="successfulMessage">
+        <span>پرداخت شما موفقیت آمیز بود</span>
+    </div>
+
+    <p style="float:right;margin-bottom: 0px;margin-top: 9px;">سفارش شما به زودی ارسال می شود</p>
+    <a href="/myorder" class="ActionButton" style="width: 190px;float:left;margin-bottom: 20px;">مشاهده وضعیت سفارش</a>
+    <div class="clear"></div>
+    <div class="shopCartDetails">
+        <div class="title">
+            <p>سفارش شما</p>
+            <div class="clear"></div>
+        </div>
+        @{
+            int orderId = 0;
+
+            var orderFood = _productService.GetProductsInOrder(Model.Id);
+            foreach (var item in orderFood)
+            {
+                <div class="CartItem">
+                    <span>@item.Product.Title</span>
+                    <span style="text-align:center; border-right:1px solid lightgray;">@item.number عدد</span>
+                    <span style="text-align:left; border-right:1px solid lightgray;">@item.Price.ToString("#,0") تومان</span>
+                    <div class="clear"></div>
+                </div>
+            }
+        }
+
+    </div>
+    <div class="shopCartDetails">
+        <div class="title">
+            <p>آدرس شما</p>
+            <div class="clear"></div>
+        </div>
+        <div id="SelectedAddressItem">
+            <div class="AddressItem">
+                <i class="fa-solid fa-octagon-check" style="float: right;margin-top: 23px;margin-right: 20px;"></i>
+                <span style="display: block;float: right;padding: 20px 10px;">
+                    @Model.Address
+                </span>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,28 @@
+﻿@using Datalayer.Entities
+@model Slider
+
+
+<td style="vertical-align: middle;text-align: center;"><div style="background:url('/@Model.Media.Url'); width: 100px;height:50px; background-position: center !important; background-size: cover !important; margin:0 auto;"></div></td>
+<td style="vertical-align: middle;text-align: center;">@Model.Title</td>
+<td style="vertical-align: middle;text-align: center;">@Model.Link</td>
+
+@*background-color: @(Model.IsRead == false ? "rgba(255,255,107,0.3) !important;" : "")*@
+
+<td style="vertical-align: middle;">
+    <div class="center-block" style="width:125px;">
+
+        <a class="btn btn-primary deletebtn" href="/Admin/Media/EditSlider/@Model.Id"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;"><i style="font-size: 18px;" class="fa fa-pen"></i></a>
+
+        <a class="btn btn-danger deletebtn" onclick="DeleteSlider(@Model.Id)"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+    </div>
+
+
+</td>
+
+
+
+
+
+

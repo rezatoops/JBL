@@ -1,0 +1,117 @@
+﻿@{
+    ViewBag.Title = "پیشخوان | نظرات";
+}
+
+@using Core.Services.Interfaces;
+@using Core.ViewModel;
+@using Datalayer.Entities
+
+@model List<Comment>
+
+@inject ICommentService _CommentService
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>نظرات</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Admin" asp-action="index">مدیریت</a>
+            </li>
+            <li class="active">
+                <strong>نظرات</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+@{
+    int numberItemInPage = 10;
+
+    int allPage = (Model.Count() % numberItemInPage == 0) ? (Model.Count() / numberItemInPage) : (Model.Count() / numberItemInPage) + 1;
+
+    CommentViewModel commentTable = new CommentViewModel
+            {
+                Comments = _CommentService.GetSpecificComments(1, numberItemInPage),
+                CurrentPage = 1,
+                CountPerPage = numberItemInPage,
+                AllPage = allPage
+            };
+}
+
+<div id="CommentTable" class="wrapper animated fadeInRight">
+    @await Html.PartialAsync("_commentTable", commentTable)
+</div>
+
+@section scripts {
+    <script src="~/admin/plugin/sweetalert/sweetalert2.all.min.js"></script>
+
+    <script>
+        function DeleteComment(id) {
+            Swal.fire({
+                title: "آیا مطمئنید؟",
+                text: "با این کار این نظر حذف می شود!",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonText: "پاک کن",
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Admin/Comment/DeleteComment',
+                        type: "POST",
+                        data: { id: id },
+                        success: function (result) {
+                            // $("#comment_" + id).remove();
+                            location.reload();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            Swal.fire("خطا", "عملیات با خطا مواجه شد!", "error");
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('انجام نشد! چرا؟', '', 'info')
+                }
+            })
+
+        }
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "/Admin/Comment/DoUnreadAllComments",
+                type: "GET",
+            }).done(function () {
+                $("#unreadCommentElement").text('0');
+            });
+        });
+    </script>
+
+    <script>
+        function showReplyArea(element) {
+            var CommentId = $(element).attr('id').split('_')[1];
+            var ProductId = $(element).data('productid');
+            $.ajax({
+                url: "/Admin/Comment/ShowReplyView",
+                type: "GET",
+                data: { commentid: CommentId, productId: ProductId },
+            }).done(function (result) {
+                $("#replyCom_" + CommentId).html(result);
+
+            });
+        }
+
+        function AppendComment(result, commentId) {
+            $(result).insertAfter("#replyCom_" + commentId);
+            CloseReplyForm(commentId);
+        }
+
+        function CloseReplyForm(id) {
+            $("#replyCom_" + id).empty();
+        }
+    </script>
+
+}

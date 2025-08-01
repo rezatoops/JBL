@@ -1,0 +1,670 @@
+﻿@using Core.Services.Interfaces
+@inject IUserService _userService
+@inject IProductService _productService
+@inject ISettingService _settingService
+@inject ICategoryService _categoryService
+
+@{
+
+    int numberProductInCard = 0;
+    if (User.Identity.IsAuthenticated)
+    {
+        int orderId = _userService.IsOpenOrder(User.Identity.Name);
+        if (orderId > 0)
+        {
+            numberProductInCard = _productService.GetTotalNumberInOrder(orderId);
+        }
+    }
+
+    var AllSettings = _settingService.GetAllSettings();
+}
+
+<!DOCTYPE html>
+<style>
+    :root {
+        --mainColor: @AllSettings.FirstOrDefault(s => s.Key == "MainColor")?.Value;
+    }
+</style>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1" />
+    <title>@ViewData["Title"] - @AllSettings.FirstOrDefault(s => s.Key == "SiteTitle")?.Value</title>
+    <link rel="icon" type="image/x-icon" href="/assets/fav.png">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/responsive.css" asp-append-version="true" />
+    <link href="~/fonts/font-awesome/css/all.css" rel="stylesheet" />
+    @await RenderSectionAsync("Styles", required: false)
+
+    @Html.Raw(AllSettings.FirstOrDefault(s => s.Key == "Analytics")?.Value)
+
+    @Html.Raw(AllSettings.FirstOrDefault(s => s.Key == "Goftino")?.Value)
+
+</head>
+<body>
+    <div class="mobile_menu">
+        <div class="stick_bar">
+            <div class="btnSection">
+                <a href="tel:@AllSettings.FirstOrDefault(s => s.Key == "PhoneInMobile")?.Value">
+                    <div class="btnItem btnItem2">
+                        <i class="fa-thin fa-phone-volume"></i>
+                        <span>تماس</span>
+                    </div>
+                </a>
+                <a href="~/Cart">
+                    <div class="btnItem btnItem3">
+                        <i class="fa-thin fa-basket-shopping"></i>
+
+                        <span class="numberOrder @((numberProductInCard == 0) ? "hide" : "")">@numberProductInCard</span>
+                        <span>سبد خرید</span>
+                    </div>
+                </a>
+                @*                 <a href="~/Shop">
+                <div class="btnItem btnItem4">
+                <i class="fa-thin fa-shop"></i>
+                <span>فروشگاه</span>
+                </div>
+                </a> *@
+                <a href="~/">
+                    <div class="btnItem btnItem5">
+                        <i class="fa-thin fa-house"></i>
+                        <span>خانه</span>
+                    </div>
+                </a>
+            </div>
+            <div class="btnMenu">
+                <i class="fa-regular fa-bars" style="font-size: 29px;color: white;"></i>
+            </div>
+        </div>
+        <div class="stick_menu stick_menu1">
+            <a href="/"><img class="MobileMenuLogo" src="~/assets/logo white.png" /></a>
+
+            @{
+                if (User.Identity != null)
+                {
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        if (_userService.isExistUser(User.Identity.Name).Role == 1)
+                        {
+                            <a class="mobileButton" href="~/Admin">پیشخوان</a>
+                        }
+                        else
+                        {
+                            <a class="mobileButton" href="~/Profile">پروفایل</a>
+                        }
+
+                    }
+                    else
+                    {
+                        <a class="mobileButton" onclick="OpenLoginModal()">ورود / عضویت</a>
+                    }
+                }
+                else
+                {
+                    <a class="mobileButton" onclick="OpenLoginModal()">ورود / عضویت</a>
+                }
+
+            }
+            <ul>
+
+                @{
+                    if (ViewBag.HiddenMainHeader == null)
+                    {
+                        <li><a href="~/">فروشگاه</a></li>
+                        <li><a onclick="OpenCategoryMenu()">محصولات</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="~/">فروشگاه</a></li>
+                    }
+                }
+                <li><a href="/Blog">بلاگ</a></li>
+                <li><a href="/Aboutus">درباره ما</a></li>
+                <li><a href="/Contactus">تماس با ما</a></li>
+
+            </ul>
+        </div>
+        <div class="stick_menu stick_menu2">
+            <img class="BackMenuBtn" onclick="OpenMainMenu()" src="/assets/rightarrow.png" />
+            <ul>
+                @{
+                    foreach (var cat in _categoryService.GetCategoriesByParentId(true, null))
+                    {
+                        var subCats = _categoryService.GetCategoriesByParentId(true, cat.Id);
+                        if (subCats.Count > 0)
+                        {
+                            // <li><a onclick="OpenSubCatMenu(@cat.Id)">@cat.Title</a></li>
+                            <li>
+                                <a onclick="OpenSubCatMenu2(@cat.Id)">@cat.Title <img class="bArrow" id="bArrow_@cat.Id" src="/assets/arrow-bottom.png" /></a>
+                                <div class="SubMenu2" id="SubMenu2_@cat.Id">
+                                    @{
+                                        foreach (var sub in subCats)
+                                        {
+                                            <a href="~/Category/@sub.Slug">@sub.Title</a>
+                                        }
+                                    }
+                                </div>
+                            </li>
+
+                        }
+                        else
+                        {
+                            <li><a href="~/Category/@cat.Slug">@cat.Title</a></li>
+                        }
+                    }
+                }
+            </ul>
+        </div>
+        <div class="stick_menu stick_menu3" id="SubCatMenu">
+        </div>
+        <div class="stickWrapper">
+        </div>
+    </div>
+
+    @{
+        if (ViewBag.HiddenMainHeader == null)
+        {
+            <div class="header section">
+                <div class="rightSection">
+                    <a class="logo" href="/"><img src="~/assets/logo.png" /></a>
+                    <div class="menubar menubarMobile">
+                        <div class="leftSection">
+                            <img src="~/assets/phone.png" />
+                            <a href="tel:@AllSettings.FirstOrDefault(s => s.Key == "PhoneInMobile")?.Value"><p>سوالی دارید؟ تماس بگیرید</p></a>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="searchArea">
+                        <form asp-controller="Shop" asp-action="Search" method="get">
+                            <input name="search" placeholder="جستجو در بین محصولات ..." />
+                            <input name="page" type="hidden" value="1" />
+                            <button type="submit" class="searchIcon"><img src="~/assets/search.png" /></button>
+                        </form>
+                    </div>
+
+                </div>
+                <div class="leftSection">
+                    <div class="basketArea">
+                        <a href="/cart">
+                            <img src="~/assets/basket.png" />
+                            <span class="numberOrder @((numberProductInCard == 0) ? "hide" : "")">@numberProductInCard</span>
+                        </a>
+                    </div>
+                    <div class="vLine"></div>
+
+                    @{
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            if (_userService.isExistUser(User.Identity.Name).Role == 1)
+                            {
+                                <a href="/Admin">
+                                    <div class="loginArea">
+                                        <img src="~/assets/user.png" />
+                                        <span>پیشخوان</span>
+                                    </div>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="/Profile">
+                                    <div class="loginArea">
+                                        <img src="~/assets/user.png" />
+                                        <span>پروفایل</span>
+                                    </div>
+                                </a>
+
+                            }
+
+                        }
+                        else
+                        {
+                            <a onclick="OpenLoginModal()">
+                                <div class="loginArea">
+                                    <img src="~/assets/user.png" />
+                                    <span>ورود/ثبت نام</span>
+                                </div>
+                            </a>
+                        }
+                    }
+
+                </div>
+
+                <div class="clear"></div>
+                <div class="menubar">
+                    <div class="rightSection">
+                        <a href="/">صفحه اصلی</a>
+                        <div class="MenuHead">
+                            <a href="~/">محصولات</a>
+                            <ul>
+                                @{
+                                    foreach (var hcat in _categoryService.GetCategoriesByParentId(true, null))
+                                    {
+                                        <li>
+
+                                            @{
+                                                var subCats = _categoryService.GetCategoriesByParentId(true, hcat.Id);
+                                                if (subCats.Count > 0)
+                                                {
+                                                    <a href="/Category/@hcat.Slug">@hcat.Title <img src="/assets/larrow.png" /></a>
+
+                                                    <ul>
+                                                        @{
+                                                            foreach (var scat in subCats)
+                                                            {
+                                                                <li><a href="/Category/@scat.Slug">@scat.Title</a></li>
+                                                            }
+                                                        }
+
+                                                    </ul>
+                                                }
+                                                else
+                                                {
+                                                    <a href="/Category/@hcat.Slug">@hcat.Title</a>
+                                                }
+                                            }
+
+
+
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                        <a href="/Blog">بلاگ</a>
+                        <a href="/AboutUs">درباره ما</a>
+                        <a href="/ContactUs">تماس با ما</a>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="leftSection">
+
+                        <img src="~/assets/phone.png" />
+                        <span>@AllSettings.FirstOrDefault(s => s.Key == "PhoneInMobile")?.Value</span>
+                        <p>سوالی دارید؟ تماس بگیرید</p>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        }
+    }
+
+
+    @RenderBody()
+
+    @{
+        if (ViewBag.HiddenMainHeader == null)
+        {
+            <div class="footerArea">
+                <div class="specArea">
+                    <div class="specs section">
+                        <div class="specItem">
+                            <img src="/assets/mobilePayment.png" style="max-height: 60px;" />
+                            <span>پرداخت آنلاین</span>
+                        </div>
+                        <div class="specItem">
+                            <img src="/assets/money.png" />
+                            <span>تضمین بهترین قیمت</span>
+                        </div>
+                        <div class="specItem">
+                            <img src="/assets/refund.png" />
+                            <span>امکان مرجوع کالا</span>
+                        </div>
+                        <div class="specItem item_3">
+                            <img src="/assets/guarrantee.png" />
+                            <span>تضمین کیفیت و ضمانت</span>
+                        </div>
+                        <div class="specItem">
+                            <img src="/assets/shipping.png" />
+                            <span>ارسال سریع سفارشات</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="MainFooter section">
+                    <div class="rightSection">
+                        <a href="/" class="footerLogo"><img src="~/assets/logo.png" /></a>
+                        <p>
+                            @AllSettings.FirstOrDefault(s => s.Key == "footerText")?.Value
+                        </p>
+                    </div>
+                    <div class="leftSection">
+
+                        <div class="certificateItem">
+                            @Html.Raw(AllSettings.FirstOrDefault(s => s.Key == "Enamad")?.Value)
+                        </div>
+                        <div class="certificateItem">
+                            <img referrerpolicy='origin' id='rgvjjzpergvjfukzjxlzoeuk' style='cursor:pointer' onclick='window.open("https://logo.samandehi.ir/Verify.aspx?id=373618&p=xlaojyoexlaogvkarfthmcsi", "Popup","toolbar=no, scrollbars=no, location=no, statusbar=no, menubar=no, resizable=0, width=450, height=630, top=30")' alt='logo-samandehi' src='https://logo.samandehi.ir/logo.aspx?id=373618&p=qftiyndtqftiwlbqnbpdaqgw' />
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="MetaFooter">
+                    <span class="SmallPart">شماره تماس: @AllSettings.FirstOrDefault(s => s.Key == "FooterPhone")?.Value</span>
+                    <span class="SmallPart">ایمیل: @AllSettings.FirstOrDefault(s => s.Key == "FooterEmail")?.Value</span>
+                    <span class="BigPart">آدرس: @AllSettings.FirstOrDefault(s => s.Key == "Address")?.Value</span>
+                </div>
+                <div class="ExtraFooter section">
+                    <div class="HLine"></div>
+                    <div class="ExtraPart BigPart">
+                        <h5 style="margin-bottom:10px;padding-right:0px;">لینک های مهم</h5>
+                        <div class="clear"></div>
+                        <div class="links">
+                            <a href="@AllSettings.FirstOrDefault(s => s.Key == "FLink1")?.Value">@AllSettings.FirstOrDefault(s => s.Key == "FLinkText1")?.Value</a>
+                            <a href="@AllSettings.FirstOrDefault(s => s.Key == "FLink2")?.Value">@AllSettings.FirstOrDefault(s => s.Key == "FLinkText2")?.Value</a>
+                            <a href="@AllSettings.FirstOrDefault(s => s.Key == "FLink3")?.Value">@AllSettings.FirstOrDefault(s => s.Key == "FLinkText3")?.Value</a>
+                            <a href="@AllSettings.FirstOrDefault(s => s.Key == "FLink4")?.Value">@AllSettings.FirstOrDefault(s => s.Key == "FLinkText4")?.Value</a>
+                            <a href="@AllSettings.FirstOrDefault(s => s.Key == "FLink5")?.Value">@AllSettings.FirstOrDefault(s => s.Key == "FLinkText5")?.Value</a>
+                            <a href="@AllSettings.FirstOrDefault(s => s.Key == "FLink6")?.Value">@AllSettings.FirstOrDefault(s => s.Key == "FLinkText6")?.Value</a>
+                            <a href="@AllSettings.FirstOrDefault(s => s.Key == "FLink7")?.Value">@AllSettings.FirstOrDefault(s => s.Key == "FLinkText7")?.Value</a>
+                            <a href="@AllSettings.FirstOrDefault(s => s.Key == "FLink8")?.Value">@AllSettings.FirstOrDefault(s => s.Key == "FLinkText8")?.Value</a>
+                        </div>
+                    </div>
+                    <div class="ExtraPart SmallPart">
+                        <h5>زمان بندی فروشگاه</h5>
+                        <div class="clear"></div>
+                        <p>@AllSettings.FirstOrDefault(s => s.Key == "StoreTime1")?.Value</p>
+                        <p>@AllSettings.FirstOrDefault(s => s.Key == "StoreTime2")?.Value</p>
+                    </div>
+                    <div class="ExtraPart SmallPart">
+                        <h5>شبکه های اجتماعی</h5>
+                        <div class="clear"></div>
+                        <div class="socials">
+                            <a href="@AllSettings.FirstOrDefault(s => s.Key == "instagram")?.Value">
+                                <div class="social">
+                                    <img src="/assets/instagram.png" />
+                                </div>
+                            </a>
+                            <a href="https://wa.me/+98@(AllSettings.FirstOrDefault(s => s.Key == "whatsup")?.Value.Substring(1))">
+                                <div class="social">
+                                    <img src="/assets/whatsapp.png" />
+                                </div>
+                            </a>
+                            <a href="@AllSettings.FirstOrDefault(s => s.Key == "linkedin")?.Value">
+                                <div class="social">
+                                    <img src="/assets/linkedin.png" />
+                                </div>
+                            </a>
+                            <a href="@AllSettings.FirstOrDefault(s => s.Key == "youtube")?.Value">
+                                <div class="social">
+                                    <img src="/assets/youtube.png" />
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="copyRight section">
+                    <p style="float:right;">© کلیه حقوق سایت متعلق به این فروشگاه می باشد.</p>
+                    <p style="float:left;">ساخته شده با <span style="color:red;">❤</span> توسط تیم <a href="https://siteliner.ir">سایت لاینر</a></p>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        }
+    }
+
+
+    <div id="loginWrapper">
+        <div class="loginBackground">
+        </div>
+        <div class="loginBox">
+            <div id="loadingCircle" class="loadingio-spinner-ball-rd8liqklqbg">
+                <div class="ldio-c3e11cu2eq9">
+                    <div></div>
+                </div>
+            </div>
+
+            <img src="~/assets/logo.png" />
+            <div id="authenticationForm">
+                <partial name="_loginModalForm" />
+            </div>
+
+        </div>
+    </div>
+
+    <div class="MessageModalWrpper" id="MessageModalWrpper">
+        <div class="BackMessageModal"></div>
+        <div class="MessageModal">
+            <p id="MessageText"></p>
+            <button onclick="reloadPage()">به روز رسانی</button>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        function OpenLoginModal() {
+            $("#loginWrapper").show();
+        }
+
+        $('.loginBackground').click(function () {
+            $("#loginWrapper").hide();
+        });
+    </script>
+
+    <script>
+        function LoginCompleted(data) {
+            if (data.result == "Success") {
+
+                $("#loginWrapper").hide();
+
+                location.reload();
+            }
+        }
+    </script>
+
+    <script>
+
+        var minutes = 1;
+
+        var seconds = 59;
+
+        var set_inteval;
+
+        function otp_timer() {
+
+            seconds -= 1;
+
+            $('#secondsInput').val(String(seconds).padStart(2, '0'));
+            $('#seconds').text(String(seconds).padStart(2, '0'));
+
+            $('#minutesInput').val(String(minutes).padStart(2, '0'));
+            $('#minutes').text(String(minutes).padStart(2, '0'));
+
+            $(".infoText .timer").show();
+            $(".infoText a").hide();
+
+            if (seconds == 0) {
+
+                if (minutes > 0) {
+
+                    seconds = 59;
+
+                    minutes -= 1;
+
+                } else {
+
+                    clearInterval(set_inteval);
+
+                    minutes = 0;
+
+                    seconds = 0;
+
+                    $('#secondsInput').val('00');
+                    $('#seconds').text('00');
+
+                    $('#minutesInput').val('00');
+                    $('#minutes').text('00');
+
+
+                    $(".infoText .timer").hide();
+                    $(".infoText a").show();
+
+                }
+
+            }
+
+        }
+
+        function startTimer(inputMinute, inputSecond) {
+            if (inputMinute != -1) {
+                minutes = inputMinute;
+
+            }
+
+            if (inputSecond != -1) {
+                seconds = inputSecond;
+
+            }
+
+            $('#secondsInput').val(String(seconds).padStart(2, '0'));
+            $('#seconds').text(String(seconds).padStart(2, '0'));
+
+            $('#minutesInput').val(String(minutes).padStart(2, '0'));
+            $('#minutes').text(String(minutes).padStart(2, '0'));
+
+            if (minutes == 0 && seconds == 0) {
+                clearInterval(set_inteval);
+                $(".infoText .timer").hide();
+                $(".infoText a").show();
+            }
+            else {
+                set_inteval = setInterval('otp_timer()', 1000);
+            }
+
+        }
+
+    </script>
+    <script>
+
+        function OpenMessageModal(message) {
+            $("#MessageText").text(message);
+            $("#MessageModalWrpper").show();
+        }
+    </script>
+    <script>
+        function reloadPage() {
+            location.reload();
+        }
+    </script>
+
+    <script>
+        function UpdateNumberOrderCard() {
+            $.ajax({
+                type: "POST",
+                url: "/Shop/UpdateNumberOrderCard",
+                success:
+                    function (result) {
+
+                        $(".numberOrder").html(result);
+                        $(".numberOrder").removeClass("hide");
+
+                    },
+                error: function (req, status, error) {
+                    window.alert("Error!");
+                }
+            });
+        }
+    </script>
+
+    <script>
+        var isStickMenuOpened = false;
+        $(".btnMenu").click(function () {
+            if (isStickMenuOpened) {
+                CloseMenu();
+            }
+            else {
+                OpenMainMenu();
+            }
+
+        });
+
+        function OpenMainMenu() {
+            CloseCategoryMenu();
+            $(".stick_menu1").css('right', '0px');
+            $(".btnSection").css('width', 'calc(100% - 250px)');
+            $(".btnItem5").css('width', '100%');
+            $(".btnItem4").css('display', 'none');
+            $(".btnItem2").css('display', 'none');
+            $(".btnItem3").css('display', 'none');
+            isStickMenuOpened = true;
+            $(".stickWrapper").show();
+            $(".IMenu").fadeOut();
+        }
+
+        function OpenCategoryMenu() {
+            CloseCategorySubMenu();
+            $(".stick_menu2").css('right', '0px');
+        }
+
+        function CloseCategoryMenu() {
+            $(".stick_menu2").css('right', '-180px');
+        }
+
+        function OpenCategorySubMenu() {
+            $(".stick_menu3").css('right', '0px');
+        }
+
+        function CloseCategorySubMenu() {
+            $(".stick_menu3").css('right', '-180px');
+        }
+
+        function CloseMenu() {
+            $(".stick_menu1").css('right', '-180px');
+            $(".stick_menu2").css('right', '-180px');
+            $(".stick_menu3").css('right', '-180px');
+            $(".btnSection").css('width', 'calc(100% - 70px)');
+            $(".btnItem5").css('width', '33.33%');
+            $(".btnItem2").css('display', 'flex');
+            $(".btnItem3").css('display', 'flex');
+            $(".btnItem4").css('display', 'flex');
+            isStickMenuOpened = false;
+            $(".stickWrapper").hide();
+            $(".IMenu").fadeIn();
+        }
+    </script>
+
+    <script>
+        $('.stickWrapper').click(function () {
+            if (isStickMenuOpened) {
+                CloseMenu();
+            }
+        });
+
+    </script>
+
+    <script>
+        function OpenSubCatMenu(catId) {
+            $("#loadingCircle").show();
+            $.ajax({
+                type: "POST",
+                url: "/Shop/OpenSubCatMenu",
+                data: { catId: catId },
+                success:
+                    function (result) {
+                        $("#SubCatMenu").html(result);
+                        OpenCategorySubMenu();
+                        $("#loadingCircle").hide();
+                    },
+                error: function (req, status, error) {
+                    window.alert("Error!");
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function OpenSubCatMenu2(catId) {
+            //$(".SubMenu2").slideUp();
+            $("#SubMenu2_" + catId).slideToggle();
+            $("#bArrow_" + catId).toggleClass("rotate");
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+

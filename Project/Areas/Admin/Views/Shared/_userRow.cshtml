@@ -1,0 +1,59 @@
+﻿@using Datalayer.Entities
+@model User
+
+@{
+    string role = "";
+    string style = "";
+
+    if (Model.Role == 1)
+    {
+        role = "مدیر";
+        style = "background:#00C37A; padding:0px 5px;";
+    }
+    else if(Model.Role == 5)
+    {
+        role = "کاربر";
+        style = "background:unset;color:rgb(103, 106, 108);";
+    }
+
+}
+<td style="vertical-align: middle;text-align: center;">@Model.Id</td>
+<td style="vertical-align: middle;text-align: center;">@Model.PhoneNumber</td>
+<td style="vertical-align: middle;text-align: center;">@(Model.FirstName + " " + Model.LastName)</td>
+<td style="vertical-align: middle;text-align: center;">@((Model.IsActive) ? "فعال" : "غیر فعال")</td>
+<td style="vertical-align: middle;text-align: center;"><span class="ActionTable" style="@style">@role</span></td>
+
+<td style="vertical-align: middle;padding: 2px;">
+    <div class="center-block" style="width:122px;">
+        @{
+            <a class="btn btn-primary confirmbtn ControlButton" asp-controller="User" asp-action="Edit" asp-route-id="@Model.Id"
+               id="@Model.Id"><i class="fa fa-pen"></i></a>
+            if (Model.Role == 1)
+            {
+                <a class="btn btn-info ControlButton" asp-controller="User" asp-action="SetRole" asp-route-userId="@Model.Id" asp-route-roleId="5"
+               data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace" data-ajax-update="#user_@Model.Id"
+                   id="@Model.Id" style="color:yellow"><i class="fa-solid fa-star"></i></a>
+            }
+            else
+            {
+                <a class="btn btn-info ControlButton" asp-controller="User" asp-action="SetRole" asp-route-userId="@Model.Id" asp-route-roleId="1"
+               data-ajax="true" data-ajax-method="POST" data-ajax-mode="replace" data-ajax-update="#user_@Model.Id"
+                   id="@Model.Id" style="color:lightgray;"><i class="fa-solid fa-star"></i></a>
+            }
+
+            if (!Model.IsActive)
+            {
+                <a class="btn btn-danger ControlButton" onclick="DeleteUser(@Model.Id)" id="@Model.Id"><i style="font-size: 14px;" class="fa fa-trash"></i></a>
+            }
+        }
+
+
+
+    </div>
+</td>
+
+
+
+
+
+

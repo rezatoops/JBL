@@ -1,0 +1,81 @@
+﻿@using Core.ViewModel;
+@using Datalayer.Entities;
+@using Core.Services.Interfaces
+
+@{
+    ViewBag.Title = "پیشخوان | مقالات";
+}
+
+@model List<Post>
+
+@inject IPostService _postService
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>لیست مقالات</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Admin" asp-action="index">مدیریت</a>
+            </li>
+            <li class="active">
+                <strong>مقالات</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+@{
+    int numberItemInPage = 10;
+
+    int allPage = (Model.Count() % numberItemInPage == 0) ? (Model.Count() / numberItemInPage) : (Model.Count() / numberItemInPage) + 1;
+
+    PostViewModel postTable = new PostViewModel
+            {
+                Posts = _postService.GetSpecificPosts(1, numberItemInPage),
+                CurrentPage = 1,
+                CountPerPage = numberItemInPage,
+                AllPage = allPage
+            };
+}
+
+<div id="PostTable" class="wrapper animated fadeInRight">
+    @await Html.PartialAsync("_postTable", postTable)
+</div>
+
+@section scripts {
+    <script src="~/admin/plugin/sweetalert/sweetalert2.all.min.js"></script>
+    <script>
+        function DeletePost(id) {
+            Swal.fire({
+                title: "آیا مطمئنید؟",
+                text: "با این کار این مقاله حذف می شود و قابل بازیابی نخواهد بود؟!",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonText: "پاک کن",
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Admin/Blog/DeletePost',
+                        type: "POST",
+                        data: { id: id },
+                        success: function (result) {
+                            Swal.fire("حذف شد!", "مقاله با موفقیت حذف شد", "success");
+                            $("#post_" + id).remove();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            Swal.fire("خطا", "عملیات با خطا مواجه شد!", "error");
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('انجام نشد!', '', 'info')
+                }
+            })
+
+
+
+        }
+
+    </script>
+}

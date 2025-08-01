@@ -1,0 +1,35 @@
+﻿@using Core.ViewModel;
+
+@model CityViewModel
+
+
+<select id="varCitySelect2" class="select2_City form-control" name="City">
+    @{
+        foreach (var item in Model.Cities)
+        {
+            if (item.Id == Model.SelectedCity)
+            {
+                <option value="@item.Id" selected>@item.Name</option>
+
+            }
+            else
+            {
+                <option value="@item.Id">@item.Name</option>
+
+            }
+        }
+    }
+</select>
+
+<script>
+    $(document).ready(function () {
+        $(".select2_City").select2({
+            dir: "rtl",
+        });
+    });
+</script>
+<script>
+    $('#varCitySelect2').on('select2:select', function (e) {
+        RefreshShippingMethodes();
+    });
+</script>

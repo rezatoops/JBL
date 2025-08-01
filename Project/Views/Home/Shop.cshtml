@@ -1,0 +1,581 @@
+﻿@using Core.Services.Interfaces
+@using System.Globalization
+@using Datalayer.Entities
+@using Datalayer.Enums
+
+@inject ICategoryService _categoryServices
+@inject IProductService _productServices
+@inject IMediaService _mediaServices
+@inject ISettingService _settingServices
+@inject IPostService _postServices
+@inject IToolsService _toolsServices
+
+@{
+    ViewData["Title"] = "فروشگاه";
+}
+
+<div class="sliderArea desktopSliderItem">
+    @*     <div class="sectionTitle" style="position:absolute;bottom:0px;left: 50%;transform: translateX(-50%);z-index: 2;height: 34px;">
+    <img src="~/assets/backtitle2.svg"  />
+    <h3 style="margin-top: 10px;">NISH COFFEE</h3>
+    </div> *@
+    <div class="sliderWrapper owl-carousel owl-theme">
+        @{
+            foreach (var slider in _mediaServices.GetAllSliders("Shop"))
+            {
+                <a href="@slider.Link">
+                    <div class="sliderItem" style="background-image: url('/@slider.Media.Url');"></div>
+                </a>
+            }
+        }
+
+    </div>
+</div>
+
+<div class="sliderArea mobileSliderItem">
+    @*     <div class="sectionTitle" style="position:absolute;bottom:0px;left: 50%;transform: translateX(-50%);z-index: 2;height: 34px;">
+    <img src="~/assets/backtitle2.svg"  />
+    <h3 style="margin-top: 10px;">NISH COFFEE</h3>
+    </div> *@
+    <div class="sliderWrapper owl-carousel owl-theme">
+        @{
+            foreach (var slider in _mediaServices.GetAllSliders("Shop"))
+            {
+                <a href="@slider.Link">
+                    <div class="sliderItem" style="background-image: url('/@slider.MobileMedia.Url');"></div>
+                </a>
+            }
+        }
+
+    </div>
+</div>
+
+<div class="categoryArea section">
+    @{
+        var HeadCategories = _categoryServices.GetCategoriesByParentId(true, null);
+
+        <div class="CategoryWrapper owl-carousel owl-theme">
+            @{
+                foreach (var cat in HeadCategories)
+                {
+                    <div class="categoryItem">
+                        <a href="~/Category/@cat.Slug">
+                            <div class="catitemImg" style="background-image: url('/@cat.Media?.Url');"></div>
+                            <span>@cat.Title</span>
+                        </a>
+                    </div>
+
+                }
+            }
+        </div>
+
+    }
+
+</div>
+
+
+
+@{
+    var ShopRaws = _settingServices.GetAllShopDesigns();
+
+    foreach (var shopDesign in ShopRaws)
+    {
+        if (shopDesign.Type == ShopRawEnum.ProductSliderByNewst)
+        {
+            <div class="ProductListArea section">
+                <div class="sectionTitle">
+                    <img src="~/assets/backtitle.svg" />
+                    <h3>
+                        @shopDesign.Title
+                    </h3>
+                </div>
+                <div class="ProductList">
+                    <div class="ProductSlider owl-carousel owl-theme">
+                        @{
+                            var Products = _productServices.GetAllPublishedProduct(shopDesign.NumberOfProduct, shopDesign.IsOnlyAvailable);
+                            foreach (var product in Products)
+                            {
+                                <partial name="_product" model="product" />
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+
+        }
+        else if (shopDesign.Type == ShopRawEnum.ProductSliderByWonder)
+        {
+            <div class="ProductListArea section WonderArea">
+                <div class="sectionTitle">
+                    <img src="~/assets/backtitle.svg" />
+                    <h3>
+                        @shopDesign.Title
+                    </h3>
+                </div>
+                <div class="ProductList">
+                    <div class="ProductSlider owl-carousel owl-theme">
+                        @{
+                            foreach (var Product in _productServices.GetWonderProducts(shopDesign.NumberOfProduct))
+                            {
+                                <partial name="_product" model="Product" />
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        }
+        else if (shopDesign.Type == ShopRawEnum.SortingProduct)
+        {
+            Random random = new Random();
+            var categories = _categoryServices.GetCategoriesByParentId(false);
+
+            var rndCats = categories.OrderBy(x => random.Next()).Take(4);
+
+            <div class="ProductListAreaType4 fullSection">
+                <div class="ProductListWrapper section">
+                    <div class="backSection">
+                        <div class="sectionTitle">
+                            <img src="~/assets/backtitle.svg" />
+                            <h3>
+                                @shopDesign.Title
+                            </h3>
+                        </div>
+                        @{
+                            foreach (var catSection in rndCats)
+                            {
+                                <div class="ProductList3Wrapper">
+                                    <h3>@catSection.Title</h3>
+                                    <div class="ProductList3">
+                                        @{
+                                            foreach (var pr in _categoryServices.GetAllProdcutInCategory(catSection.Id, shopDesign.NumberOfProduct))
+                                            {
+                                                <a href="~/Product/@pr.Slug">
+                                                    <div class="ProductItem2">
+                                                        <div class="ProductImg2" style="background-image: url('/@pr.Photo.Url');"></div>
+                                                        <div class="ProductMeta">
+                                                            <h2>@pr.Title</h2>
+                                                            <div class="PriceSection2">
+                                                                @{
+                                                                    var mainPrice = _productServices.GetMainVariable(pr.Id);
+                                                                    if (mainPrice != null)
+                                                                    {
+                                                                        <span class="regularPrice">@((mainPrice.SalePrice != null) ? mainPrice.SalePrice.Value.ToString("#,0") + "تومان" : mainPrice.Price.Value.ToString("#,0") + "تومان")</span>
+                                                                        <span class="salePrice">@((mainPrice.SalePrice != null) ? mainPrice.Price.Value.ToString("#,0") + "تومان" : "")</span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="regularPrice" style="color:red;">ناموجود</span>
+                                                                        <span class="salePrice"></span>
+                                                                    }
+                                                                }
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="clear"></div>
+                                                    </div>
+                                                </a>
+                                            }
+                                        }
+
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+
+
+                </div>
+            </div>
+        }
+        else if (shopDesign.Type == ShopRawEnum.ProductSliderByCategory)
+        {
+            var category = shopDesign.Category;
+            <div class="ProductListArea section">
+                <div class="sectionTitle">
+                    <img src="~/assets/backtitle.svg" />
+                    <h3>
+                        @shopDesign.Title
+                    </h3>
+                </div>
+                <div class="ProductList">
+                    <div class="ProductSlider owl-carousel owl-theme">
+                        @{
+                            foreach (var Product in _categoryServices.GetAllProdcutInCategory(category.Id, shopDesign.NumberOfProduct, shopDesign.IsOnlyAvailable))
+                            {
+                                <partial name="_product" model="Product" />
+                            }
+                        }
+
+                    </div>
+                </div>
+            </div>
+        }
+        else if (shopDesign.Type == ShopRawEnum.Ads)
+        {
+            <div class="AdsArea section">
+                @{
+                    if (shopDesign.Banner1 != null)
+                    {
+                        <a class="Ads" href="@shopDesign.Banner1Link">
+                            <div class="AdsImg" style="background-image: url('/@shopDesign.Banner1.Url');"></div>
+                        </a>
+                    }
+
+                    if (shopDesign.Banner2 != null)
+                    {
+                        <a class="Ads" href="@shopDesign.Banner2Link">
+                            <div class="AdsImg" style="background-image: url('/@shopDesign.Banner2.Url');"></div>
+                        </a>
+                    }
+
+                    if (shopDesign.Banner3 != null)
+                    {
+                        <a class="Ads" href="@shopDesign.Banner3Link">
+                            <div class="AdsImg" style="background-image: url('/@shopDesign.Banner3.Url');"></div>
+                        </a>
+                    }
+
+                    if (shopDesign.Banner4 != null)
+                    {
+                        <a class="Ads" href="@shopDesign.Banner4Link">
+                            <div class="AdsImg" style="background-image: url('/@shopDesign.Banner4.Url');"></div>
+                        </a>
+                    }
+                }
+
+            </div>
+        }
+        else if(shopDesign.Type == ShopRawEnum.Wonderfull)
+        {
+            var wProducts = _productServices.GetWonderProducts(shopDesign.NumberOfProduct);
+            if (wProducts.Count() > 0)
+            {
+                <div class="WonderfulArea">
+                    <div class="WonderfulSection">
+                        <img class="WBackTitle" src="/assets/backTitle.svg" />
+                        <div class="WonderOwl owl-carousel owl-theme">
+                            @{
+                                int w = 0;
+                                foreach (var product in wProducts)
+                                {
+                                    var variable = _productServices.GetMainVariable(product.Id);
+
+                                    <div class="WonderItem">
+                                        <div class="rightSection">
+                                            <div class="WonderImgWrapper">
+                                                <div class="WonderfulImg" style="background:url('/@product.Photo.Url')">
+                                                    @{
+                                                        if (variable != null)
+                                                        {
+                                                            if (variable.SalePrice != null)
+                                                            {
+                                                                <span>%@_toolsServices.CalculatePercent(variable.Price.Value, variable.SalePrice.Value)</span>
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="leftSection">
+                                            <h3>@product.Title</h3>
+                                            <div class="WonderPrice">
+                                                @{
+                                                    if (variable != null)
+                                                    {
+                                                        <span class="WRegular">@variable.Price.Value.ToString("#,0") تومان</span>
+                                                        if (variable.SalePrice != null)
+                                                        {
+                                                            <span class="WSale">@variable.SalePrice.Value.ToString("#,0") تومان</span>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="WSale" style="color:red;">ناموجود</span>
+                                                    }
+                                                }
+
+                                            </div>
+                                            <div class="WSepcs">
+                                                <span>@product.Spec1</span>
+                                                <span>@product.Spec2</span>
+                                                <span>@product.Spec3</span>
+                                            </div>
+                                            <div class="WonderLine" style="display:none;"></div>
+                                        </div>
+                                        <div class="WTimer">
+                                            @{
+                                                DateTime dt = product.WonderTime.Value; ;
+                                            }
+                                            <div class="offtime" data-date="@dt" data-id="off_@w">
+                                                <div class="times">
+                                                    <div class="timeTile seconds_@w" style="margin-right:0px;">
+                                                        00
+                                                    </div>
+                                                    <div class="timeTile minutes_@w">
+                                                        00
+                                                    </div>
+
+                                                    <div class="timeTile hours_@w">
+                                                        00
+                                                    </div>
+                                                    <div class="timeTile days_@w">
+                                                        00
+                                                    </div>
+
+                                                    <p style="right:10px;">ثانیه</p>
+                                                    <p style="right:57px;">دقیقه</p>
+                                                    <p style="right:106px;">ساعت</p>
+                                                    <p style="right:163px;">روز</p>
+                                                </div>
+                                            </div>
+                                            <a class="ActionLink" href="~/Product/@product.Slug">خرید</a>
+                                        </div>
+                                    </div>
+
+                                    w++;
+                                }
+                            }
+
+                        </div>
+
+                    </div>
+                    <a href="@shopDesign.BannerWonderLink">
+                        <div class="WonderBanner" style="background-image: url('@shopDesign.BannerWonder?.Url');">
+                        </div>
+                    </a>
+                    <div class="clear"></div>
+                </div>
+                <a href="@shopDesign.BannerWonderLink"><img class="WBannerMobile" src="~/assets/wbannermobile.jpg" /></a>
+            }
+        }
+    }
+}
+
+
+@{
+    var Articles = _postServices.GetAllPosts();
+    if (Articles.Count > 0)
+    {
+        <div class="ArticleArea section">
+
+            <div class="sectionTitle blackTitle">
+                <h3>خواندنی ها</h3>
+            </div>
+            <div class="ArticleList">
+                <div class="BlogWrapper owl-carousel owl-theme">
+                    @{
+                        foreach (var article in Articles)
+                        {
+                            <a class="ArticleItem" href="~/Article/@article.Slug">
+                                <div class="ArticleImg" style="background-image: url('/@article.Media.Url');"></div>
+                                <h2>@article.Title</h2>
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+            <a class="ActionLink" href="/blog">مطالب بیشتر</a>
+        </div>
+    }
+}
+
+
+<svg width="0" height="0">
+    <defs>
+        <clipPath id="SliderPath" clipPathUnits="objectBoundingBox">
+            <path d="M0,0.966 V0.034 C0,0.015,0.005,0,0.012,0 H0.988 C0.995,0,1,0.015,1,0.034 V0.966 C1,0.985,0.995,1,0.988,1 L0.614,1 C0.61,1,0.606,0.998,0.603,0.993 L0.55,0.929 C0.546,0.925,0.542,0.922,0.538,0.922 H0.462 C0.458,0.922,0.454,0.925,0.451,0.929 L0.398,0.993 C0.394,0.998,0.39,1,0.386,1 H0.012 C0.005,1,0,0.985,0,0.966">
+            </path>
+        </clipPath>
+    </defs>
+</svg>
+
+@section styles {
+    <link href="~/plugin/owlcarousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/plugin/owlcarousel/owl.theme.default.min.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/plugin/owlcarousel/owl.carousel.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".sliderWrapper").owlCarousel({
+                rtl: true,
+                items: 1,
+                responsiveClass: true,
+                nav: false,
+                dots: true,
+                autoplay: true,
+                loop: true,
+                stagePadding: 70,
+                margin: 20,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        stagePadding: 0,
+                        margin: 0,
+                    },
+
+                    700: {
+                        stagePadding: 50,
+                        margin: 10,
+                    },
+                    992: {
+                        stagePadding: 70,
+                        margin: 20,
+                    },
+                }
+            });
+
+            $(".WonderOwl").owlCarousel({
+                rtl: true,
+                items: 1,
+                responsiveClass: true,
+                nav: false,
+                dots: false,
+                autoplay: true,
+                loop: true,
+            });
+
+            $(".CategoryWrapper").owlCarousel({
+                rtl: true,
+                items: 6,
+                responsiveClass: true,
+                nav: true,
+                dots: false,
+                margin: 40,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 2,
+                        margin: 10,
+                    },
+                    380: {
+                        items: 3,
+                        margin: 10,
+                    },
+                    550: {
+                        items: 4,
+                        margin: 10,
+                    },
+
+                    700: {
+                        items: 5,
+                        margin: 20,
+                    },
+                    992: {
+                        items: 6,
+                        margin: 40,
+                    },
+                }
+            });
+
+            $(".BlogWrapper").owlCarousel({
+                rtl: true,
+                items: 5,
+                responsiveClass: true,
+                nav: true,
+                dots: false,
+                margin: 10,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 2,
+                    },
+                    380: {
+                        items: 2,
+                    },
+                    620: {
+                        items: 3,
+                    },
+                    992: {
+                        items: 4,
+                    },
+                    1200: {
+                        items: 5,
+                    },
+                }
+            });
+
+            $(".ProductSlider").owlCarousel({
+                rtl: true,
+                items: 6,
+                responsiveClass: true,
+                nav: true,
+                dots: false,
+                margin: 10,
+                responsiveClass: true,
+                responsive: {
+                    0: {
+                        items: 1,
+                        margin: 5,
+                    },
+                    380: {
+                        items: 2,
+                        margin: 5,
+                    },
+                    550: {
+                        items: 3,
+                        margin: 5,
+                    },
+
+                    700: {
+                        items: 4,
+                        margin: 10,
+                    },
+                    992: {
+                        items: 5,
+                    },
+                    1200: {
+                        items: 6,
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            makeTimer();
+        });
+        function makeTimer() {
+
+            //		var endTime = new Date("29 April 2018 9:56:00 GMT+01:00");
+            var woderElem = $(".offtime");
+            $(woderElem).each(function () {
+                var id = $(this).data("id").split("_")[1];
+
+                var endTime = $(this).data("date");
+
+
+                endTime = (Date.parse(endTime) / 1000);
+
+                var now = new Date();
+                now = (Date.parse(now) / 1000);
+
+                var timeLeft = endTime - now;
+
+                var days = Math.floor(timeLeft / 86400);
+                var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
+                var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600)) / 60);
+                var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
+
+                if (hours < "10") { hours = "0" + hours; }
+                if (minutes < "10") { minutes = "0" + minutes; }
+                if (seconds < "10") { seconds = "0" + seconds; }
+
+                $(".days_" + id).html(days);
+                $(".hours_" + id).html(hours);
+                $(".minutes_" + id).html(minutes);
+                $(".seconds_" + id).html(seconds);
+            });
+
+
+        }
+
+        setInterval(function () { makeTimer(); }, 1000);
+    </script>
+}

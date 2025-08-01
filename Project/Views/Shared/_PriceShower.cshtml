@@ -1,0 +1,158 @@
+﻿@using Core.Services.Interfaces
+@using Core.ViewModel
+
+@inject IProductService _productService
+@inject IUserService _userService
+
+@model VariableViewModel
+@{
+    bool IsInCard = false;
+    int isOpenCard = -1;
+
+    if (User.Identity.IsAuthenticated)
+    {
+        isOpenCard = _userService.IsOpenOrder(User.Identity.Name);
+    }
+
+    if (isOpenCard > 0 && Model.Variable != null)
+        IsInCard = _productService.isVarProductExistInOrder(Model.Variable.Id, isOpenCard);
+
+
+    var variable = Model.Variable;
+
+    if (variable?.NumberInStock > 0)
+    {
+        <div class="PriceArea">
+            <p>قیمت محصول:</p>
+            <span class="regularPrice">@((variable.SalePrice != null) ? variable.SalePrice.Value.ToString("#,0") + "تومان" : variable.Price.Value.ToString("#,0") + "تومان")</span>
+            <span class="salePrice">@((variable.SalePrice != null) ? variable.Price.Value.ToString("#,0") + "تومان" : "")</span>
+            <div class="clear"></div>
+        </div>
+
+        if (IsInCard)
+        {
+            <div class="BottomSection">
+
+                <a class="AddToCartBtn" onclick="DeleteProductFromCart(@Model.Variable.Id)"><i class="fa-solid fa-trash-can" style="margin-left: 6px;font-size: 18px;"></i> حذف از سبد خرید</a>
+
+            </div>
+        }
+        else
+        {
+
+            <div class="BottomSection">
+                @{
+                    if (@variable.NumberInStock < 6)
+                    {
+                        <span>موجودی انبار @variable.NumberInStock عدد</span>
+                    }
+                }
+
+                <div class="ProductNumber">
+                    <a class="minus" onclick="ChangeNumber(-1)">-</a>
+                    <span id="ProductNumber">@Model.CurrentNumber</span>
+                    <a class="plus" onclick="ChangeNumber(1)">+</a>
+                </div>
+                @{
+                    if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="AddToCartBtn" onclick="AddToCart(1)">افزودن به سبد خرید</a>
+                    }
+                    else
+                    {
+                        <a class="AddToCartBtn" onclick="AddToCart(-1)">افزودن به سبد خرید</a>
+                    }
+                }
+            </div>
+        }
+
+    }
+    else
+    {
+        <div class="PriceArea Unavailable">
+            <p>این مدل متاسفانه موجود نیست</p>
+            <div class="clear"></div>
+        </div>
+        <div class="BottomSection Unavailable">
+            <span>ناموجود</span>
+        </div>
+    }
+}
+
+<script>
+    function ChangeNumber(value) {
+        $.ajax({
+            type: "POST",
+            url: "/Shop/ChangeNumber",
+            data: { selectedVariableId: @variable?.Id, value: @Model.CurrentNumber + value },
+            success:
+                function (result) {
+                    $("#loadingCircleShop").hide();
+                    if (result == "false") {
+                        OpenMessageModal("قیمت یا موجودی این محصول تغییر کرده است لطفا صفحه را به روز رسانی کنید");
+                    } else {
+                        $("#AddToCart").html(result);
+                    }
+
+                },
+            error: function (req, status, error) {
+                window.alert("Error!");
+            }
+        });
+    }
+
+    function AddToCart(isLogined) {
+        if (isLogined < 0) {
+            OpenLoginModal();
+        }
+        else {
+            $("#loadingCircleShop").show();
+            var productNumber = $("#ProductNumber").text();
+            $.ajax({
+                type: "POST",
+                url: "/Shop/AddVariableProductToOrder",
+                data: { varId: @variable?.Id , number: productNumber },
+                success:
+                    function (result) {
+                        $("#loadingCircleShop").hide();
+                        if (result == "NotValid") {
+                            OpenMessageModal("قیمت یا موجودی این محصول تغییر کرده است لطفا صفحه را به روز رسانی کنید");
+                        }
+                        else {
+                            OpenAddedToCartModal(@variable?.Id);
+                            $("#AddToCart").html(result);
+                            UpdateNumberOrderCard();
+                        }
+                    },
+                error: function (req, status, error) {
+                    window.alert("Error!");
+                }
+            });
+
+        }
+    }
+
+    function DeleteProductFromCart() {
+        $.ajax({
+            type: "POST",
+            url: "/Shop/DeleteProductFromCart",
+            data: { varId: @variable?.Id },
+            success:
+                function (result) {
+                    $("#loadingCircleShop").hide();
+
+                    if (result == "false") {
+                        OpenMessageModal("محصول از سبد خرید شما حذف شد ولی قیمت یا موجودی این محصول تغییر کرده است لطفا صفحه را به روز رسانی کنید");
+                    } else {
+                        $("#AddToCart").html(result);
+                        UpdateNumberOrderCard();
+                    }
+
+
+                },
+            error: function (req, status, error) {
+                window.alert("Error!");
+            }
+        });
+    }
+</script>

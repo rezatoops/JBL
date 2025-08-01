@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "خرید عمده";
+}
+
+<div class="Waypart section">
+    <a href="/">صفحه اصلی</a>
+    <label>/</label>
+    <span>درباره ما</span>
+</div>
+<div class="PageImg PageImgDesktop" style="background-image: url('/assets/major.jpg');">
+    <div class="sectionTitle">
+        <img src="~/assets/backtitle.svg" />
+        <h3>
+            خرید عمده
+        </h3>
+    </div>
+</div>
+
+<div class="PageImg PageImgMobile" style="background-image: url('/assets/majormobile.jpg');">
+    <div class="sectionTitle">
+        <img src="~/assets/backtitle.svg" />
+        <h3>
+            خرید عمده
+        </h3>
+    </div>
+</div>
+<div class="PageContent section">
+
+
+    <div class="PageText">
+        <p style="text-align:center; margin:50px 0px;">در صورت درخواست خرید عمده لطفا فرم زیر را پر کنید تا اسرع وقت همکاران ما با شما تماس بگیرند</p>
+        <div class="MajorForm" id="MajorForm">
+            @{
+                if (ViewBag.success != null)
+                {
+                    if(ViewBag.success == true)
+                    {
+                        <span class="formMessage" style="color:green;">فرم با موفقیت ارسال شد، به زودی کارشناسان نیش کافی با شما تماس خواهند گرفت</span>
+                    }
+                    else
+                    {
+                        <span class="formMessage" style="color:red;">لطفا تمامی فیلد ها را به درستی پر نمایید</span>
+                    }
+                }
+            }
+            <form asp-controller="Home" asp-action="MajorShopping">
+                <div class="formGroup">
+                    <label>نام<span>*</span></label>
+                    <input name="FirstName" value="@ViewBag.FirstName" />
+                </div>
+                <div class="formGroup">
+                    <label>نام خانوادگی<span>*</span></label>
+                    <input name="LastName"  value="@ViewBag.LastName"  />
+                </div>
+                <div class="formGroup">
+                    <label>شماره تماس<span>*</span></label>
+                    <input name="Number"  value="@ViewBag.Number"  />
+                </div>
+                <div class="formGroup">
+                    <label>ایمیل<span>*</span></label>
+                    <input name="Email" value="@ViewBag.Email"  />
+                </div>
+                <div class="formGroup" style="width:100%">
+                    <label>توضیحات<span>*</span></label>
+                    <textarea name="message" >@ViewBag.message</textarea>
+                </div>
+                <button class="ActionButton" type="submit">ثبت</button>
+            </form>
+        </div>
+
+    </div>
+
+</div>

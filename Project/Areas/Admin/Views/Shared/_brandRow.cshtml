@@ -1,0 +1,30 @@
+﻿@using Core.Services.Interfaces;
+@using Datalayer.Entities;
+
+@inject IProductService _productService
+@model Brand
+
+@{
+    var random = new Random();
+}
+<td style="vertical-align: middle;text-align: center;"><img style="max-height:80px;max-width: 90%;" src="/assets/brands/@(Model.Id).png?xxx=@random.Next(10000,20000)" /></td>
+<td style="vertical-align: middle;text-align: center;">@Model.Name </td>
+
+<td style="vertical-align: middle;">
+    <div class="center-block" style="width:110px;">
+
+        <a class="btn btn-primary deletebtn" onclick="OpenBrandForm(@Model.Id)"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;"><i style="font-size: 18px;" class="fa fa-pen"></i></a>
+
+        <a class="btn btn-danger deletebtn" onclick="DeleteBrand(@Model.Id)"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+    </div>
+
+
+</td>
+
+
+
+
+
+

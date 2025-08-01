@@ -1,0 +1,87 @@
+﻿@using Core.Services.Interfaces;
+@using Core.ViewModel
+
+@model BlogCategoryViewModel
+
+@inject IToolsService _toolsService
+@inject ICategoryService _categoryService
+
+<div id="LoadingPage">
+    <div class="sk-loading">
+        <div class="sk-spinner sk-spinner-double-bounce">
+            <div class="sk-double-bounce1"></div>
+            <div class="sk-double-bounce2"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 no-padding">
+        <div style="margin-top:20px">
+            <div class="ibox-content">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-lg-12 no-padding">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>دسته بندی مقالات</h5>
+                <div style="float:left;">
+                    <a class="btn btn-success" asp-controller="Blog" asp-action="PublishCategory" style="margin: -10px 0px 0px 4px;"><i class="fa fa-plus" style="margin-top: 3px;float: right;margin-left: 5px;"></i> &nbsp;دسته بندی جدید</a>
+                </div>
+            </div>
+            <div class="ibox-content">
+
+                <table class="table table-striped table-bordered table-hover dataTables-user" style="table-layout: fixed;">
+                    <thead>
+                        <tr>
+                            <th class="col-lg-9">نام دسته بندی</th>
+                            <th class="col-lg-1">تعداد مقاله</th>
+                            <th class="col-lg-2">عملیات</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            foreach (var item in Model.BlogCategories)
+                            {
+                                string categoryClass = "category_" + item.Id;
+                                <tr id="@categoryClass" class="gradeX anyuser">
+                                    @await Html.PartialAsync("_blogCategoryRow", item)
+                                </tr>
+
+                            }
+                        }
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th class="col-lg-9">نام دسته بندی</th>
+                            <th class="col-lg-1">تعداد مقاله</th>
+                            <th class="col-lg-2">عملیات</th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 no-padding">
+        <div style="margin-top:-20px;margin-bottom: 60px;">
+            <div class="ibox-content">
+                <div style="height:20px;">
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+

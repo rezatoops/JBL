@@ -1,0 +1,45 @@
+﻿
+@using Core.Services.Interfaces 
+@using Core.ViewModel;
+@using Datalayer.Entities
+@model Shipping
+
+@inject IProductService _productService
+
+@{
+    int shipPrice = Model.ShipPrice;
+    var FinalShip = "رایگان";
+    if (shipPrice == -1)
+    {
+        FinalShip = "پس کرایه";
+    }
+    else if (shipPrice > 0)
+    {
+        FinalShip = shipPrice.ToString("#,0") + "تومان";
+    }
+}
+
+<td style="vertical-align: middle;text-align: center;">@Model.Title</td>
+<td style="vertical-align: middle;text-align: center;">@FinalShip</td>
+<td style="vertical-align: middle;text-align: center;">@Model.MinPrice.ToString("#,0") تومان</td>
+<td style="vertical-align: middle;text-align: center;">@((Model.MaxPrice == 0) ? "بدون محدودیت" : Model.MaxPrice.ToString("#,0") + "تومان")</td>
+<td style="vertical-align: middle;text-align: center;">@((Model.IsTehran)?"تهران":"شهرستان")</td>
+
+
+<td style="vertical-align: middle;">
+    <div class="center-block" style="width:122px;">
+
+
+        <a class="btn btn-primary confirmbtn" asp-controller="Product"  asp-action="EditShipping" asp-route-id="@Model.Id"
+           id="@Model.Id" style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 10px;"><i style="font-size: 18px;" class="fa fa-pen"></i></a>
+
+@*         <a class="btn btn-danger TableDeletebtn" onclick="DeleteShipping(@Model.Id)"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 10px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a> *@
+    </div>
+</td>
+
+
+
+
+
+

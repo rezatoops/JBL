@@ -1,0 +1,80 @@
+﻿@using Datalayer.Entities
+@using System.Globalization;
+@model Order
+
+@{
+    string status = "";
+    string style = "";
+
+
+    switch (Model.IsFinal)
+    {
+        case true:
+            {
+                if (Model.Status == "NoShipping")
+                {
+                    status = "در حال انجام";
+                    style = "background:#BD00C3;";
+                }
+                else if (Model.Status == "Completed")
+                {
+                    status = "کامل شده";
+                    style = "background:#00C37A;";
+                }
+                else if (Model.Status == "NoPayment")
+                {
+                    status = "در انتظار پرداخت";
+                    style = "background:gray;";
+                }
+                else if (Model.Status == "Canceled")
+                {
+                    status = "لغو شده";
+                    style = "background:#C30000;";
+                }
+                else if (Model.Status == "Refund")
+                {
+                    status = "مرجوعی";
+                    style = "background:#FF7A51;";
+                }
+
+                break;
+            }
+        case false:
+            {
+                status = "در حال سفارش";
+                style = "background:#FFC500;";
+                break;
+            }
+    }
+}
+
+<td style="vertical-align: middle;text-align: center;">@Model.Id</td>
+<td style="vertical-align: middle;text-align: center;">@Model.Name</td>
+<td style="vertical-align: middle;text-align: center;">@Model.PhoneNumber</td>
+<td style="vertical-align: middle;text-align: center;">@Model.Address</td>
+<td style="vertical-align: middle;text-align: center;">@Model.CreationDate?.ToString("dddd dd MMMM yyyy HH:mm", new CultureInfo("fa-IR"))</td>
+<td style="vertical-align: middle;text-align: center;"><span class="ActionTable" style="@style">@status</span></td>
+
+<td style="vertical-align: middle;">
+    <div class="center-block" style="width:110px;">
+
+        <a class="btn btn-primary deletebtn" href="/Admin/Product/OrderDetails/@Model.Id"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;"><i style="font-size: 18px;" class="fa fa-eye"></i></a>
+
+        <a class="btn btn-danger deletebtn" onclick="DeleteOrder(@Model.Id)"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+
+        <a class="btn btn-info deletebtn" asp-controller="Product" asp-action="PrintOrder" asp-area="Admin" asp-route-orderId="@Model.Id"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-print"></i></a>
+
+        <a class="btn btn-warning deletebtn" asp-controller="Product" asp-action="PrintShippingAddress" asp-area="Admin" asp-route-orderId="@Model.Id"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;" id="@Model.Id"><i class="fa-regular fa-truck-fast"></i></a>
+       
+       </div>
+</td>
+
+
+
+
+
+

@@ -1,0 +1,86 @@
+﻿@using Datalayer.Entities
+@using Core.Services.Interfaces
+
+@inject IProductService _productService
+
+@model Order
+
+<table class="table table-bordered table-hover dataTables-user" style="table-layout: fixed;">
+    <thead>
+        <tr>
+            <th class="col-lg-2">تصویر</th>
+            <th class="col-lg-3">محصول</th>
+            <th class="col-lg-2">مدل</th>
+            <th class="col-lg-1">تعداد</th>
+            <th class="col-lg-2">قیمت واحد</th>
+            <th class="col-lg-2">عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var productOrders = _productService.GetProductsInOrder(Model.Id);
+            int TotalPrice = _productService.GetTotalPriceInOrder(Model.Id);
+            int shipPrice = Model.ShippingPrice;
+            var FinalShip = "رایگان";
+            if (shipPrice == -1)
+            {
+                FinalShip = "پس کرایه";
+            }
+            else if (shipPrice > 0)
+            {
+                FinalShip = @shipPrice.ToString("#,0") + "تومان";
+            }
+            TotalPrice -= Model.CouponOffValue;
+
+
+            foreach (var item in productOrders)
+            {
+                <tr id="pd_@item.Id" class="gradeX anyuser">
+                    @{
+                        Product product = item.Product;
+                    }
+
+                    <td style="vertical-align: middle"><div style="background:url('/@product.Photo.Url'); width: 90px;height:60px; background-position: center !important; background-size: cover !important; margin:0 auto;"></div></td>
+                    <td style="vertical-align: middle"><span>@product.Title</span></td>
+                    <td style="vertical-align: middle"><span>@item.VariableTitle</span></td>
+                    <td style="vertical-align: middle"><span>@item.number</span></td>
+                    <td style="vertical-align: middle">
+                        <span>@item.Price.ToString("#,0") تومان</span>
+                    </td>
+                    <td style="vertical-align: middle">
+                        <a class="btn btn-danger deletebtn" onclick="DeleteProductOrder(@item.Id,@Model.Id)"
+                            style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+            }
+        }
+        @{
+            if(Model.CouponName != null)
+            {
+                <tr class="gradeX anyuser">
+                    <td style="vertical-align: middle"><div style="background-image: url('/assets/ShipPrice.png');width: 50px;height: 50px;background-position: center !important;background-size: cover !important;margin: 0 auto;"></div></td>
+                    <td style="vertical-align: middle" colspan="3">کد تخفیف (@Model.CouponName)</td>
+                    <td style="vertical-align: middle">@(Model.CouponOffValue.ToString("#,0")) تومان (@Model.OffPercent%)</td>
+                    <td style="vertical-align: middle">
+                        <a class="btn btn-danger deletebtn" onclick="DeleteCouponOrder(@Model.Id)"
+                           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+            }
+        }
+
+        <tr class="gradeX anyuser">
+            <td style="vertical-align: middle"><div style="background-image: url('/assets/ShipPrice.png');width: 50px;height: 50px;background-position: center !important;background-size: cover !important;margin: 0 auto;"></div></td>
+            <td style="vertical-align: middle" colspan="3">هزینه ارسال</td>
+            <td style="vertical-align: middle">@FinalShip</td>
+        </tr>
+
+        <tr class="gradeX anyuser">
+            <td style="vertical-align: middle"><div style="background-image: url('/assets/TotalPrice.png');width: 50px;height: 50px;background-position: center !important;background-size: cover !important;margin: 0 auto;"></div></td>
+            <td style="vertical-align: middle" colspan="3">مجموع</td>
+            <td style="vertical-align: middle">@TotalPrice.ToString("#,0") تومان</td>
+        </tr>
+    </tbody>
+</table>
+
+

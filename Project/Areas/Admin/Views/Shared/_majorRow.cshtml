@@ -1,0 +1,33 @@
+﻿@using Core.Services.Interfaces
+@using Core.ViewModel;
+@using Datalayer.Entities
+@using System.Globalization;
+
+@model MajorShopping
+
+<tr id="comment_@Model.Id" class="gradeX anyuser @((!Model.IsRead)?"unreadComment":"")">
+
+    <td style="vertical-align: middle;text-align: center;">@Model.FirstName</td>
+    <td style="vertical-align: middle;text-align: center;">@Model.LastName</td>
+    <td style="vertical-align: middle;text-align: center;">@Model.Message</td>
+    <td style="vertical-align: middle;text-align: center;">@Model.Number</td>
+    <td style="vertical-align: middle;text-align: center;">@Model.Email</td>
+    <td style="vertical-align: middle;text-align: center;">@Model.CreationDate.ToString("dd MMMM yyyy HH:mm", new CultureInfo("fa-IR"))</td>
+
+    <td style="vertical-align: middle;">
+        <div class="center-block" style="width:122px;">
+
+            <a class="btn btn-danger TableDeletebtn" onclick="DeleteMajor(@Model.Id)"
+               style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 10px;" id="delete_@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+        </div>
+    </td>
+
+</tr>
+
+<tr class="gradeX" id="replyCom_@Model.Id"></tr>
+
+
+
+
+
+

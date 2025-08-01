@@ -1,0 +1,69 @@
+﻿@using Core.Services.Interfaces
+@using Core.ViewModel
+@inject IProductService _productService
+
+@model ShippingMethodesViewModel
+
+@{
+    foreach (var ship in _productService.GetAllShippingMethods())
+    {
+        string shipPrice = "رایگان";
+
+        if (ship.ShipPrice > 0)
+        {
+            shipPrice = ship.ShipPrice.ToString("#,0") + " تومان";
+        }
+        else if (ship.ShipPrice == 0)
+        {
+            shipPrice = "رایگان";
+        }
+        else if (ship.ShipPrice == -1)
+        {
+            shipPrice = "پس کرایه";
+
+        }
+        bool isShow = true;
+        if (Model.CityId == 360)
+        {
+            if (ship.IsTehran == false)
+            {
+                isShow = false;
+            }
+        }
+        if (Model.CityId != 360)
+        {
+            if (ship.IsTehran == true)
+            {
+                isShow = false;
+            }
+        }
+        if (ship.MaxPrice != 0)
+        {
+            if (Model.TotalPrice > ship.MaxPrice)
+            {
+                isShow = false;
+            }
+        }
+        if (ship.MinPrice != 0)
+        {
+            if (Model.TotalPrice < ship.MinPrice)
+            {
+                isShow = false;
+            }
+        }
+
+        if (isShow)
+        {
+            <div class="ShippingItem" data-shippMethod="@ship.Id" onclick="SelectShippMethode(this)">
+                <p style="float:right;">
+                    @ship.Title
+                    <br />
+                    <span>@ship.Description</span>
+                </p>
+                <p style="float:left; margin-top:12px;">@shipPrice</p>
+                <div class="clear"></div>
+            </div>
+        }
+
+    }
+}

@@ -1,0 +1,47 @@
+﻿
+@using Core.Services.Interfaces 
+@using Core.ViewModel;
+@using Datalayer.Entities
+@model Product
+
+@inject IProductService _productService
+
+
+@{
+    var MainVariable = _productService.GetMainVariable(Model.Id);
+}
+
+@{
+    if(Model.Photo != null)
+    {
+        <td style="vertical-align: middle;text-align: center;"><div style="background:url('/@Model.Photo.Url'); width: 50px;height:50px; background-position: center !important; background-size: cover !important; margin:0 auto;"></div></td>
+    }
+    else
+    {
+        <td style="vertical-align: middle;text-align: center;"></td>
+    }
+}
+<td style="vertical-align: middle;text-align: center;">@Model.Title</td>
+<td style="vertical-align: middle;text-align: center;">
+    @_productService.GetPriceText(MainVariable)
+</td>
+<td style="vertical-align: middle;text-align: center;">@_productService.GetProductVariables(Model.Id).Sum(x=>x.NumberInStock) عدد</td>
+<td style="vertical-align: middle;text-align: center;">@Model.NumberSale</td>
+
+<td style="vertical-align: middle;">
+    <div class="center-block" style="width:122px;">
+
+
+        <a class="btn btn-primary confirmbtn" asp-controller="Product"  asp-action="Edit" asp-route-id="@Model.Id"
+           id="@Model.Id" style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 10px;"><i style="font-size: 18px;" class="fa fa-pen"></i></a>
+
+        <a class="btn btn-danger TableDeletebtn" onclick="DeleteProduct(@Model.Id)"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;height: 34px;padding-right: 10px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+    </div>
+</td>
+
+
+
+
+
+

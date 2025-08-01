@@ -1,0 +1,34 @@
+﻿@using Core.Services.Interfaces;
+@using Datalayer.Entities
+@model Coupon
+@inject IProductService _productService
+
+<td style="vertical-align: middle;text-align: center;">@Model.Code</td>
+<td style="vertical-align: middle;text-align: center;">@Model.Percent%</td>
+<td style="vertical-align: middle;text-align: center;">@((Model.MaxValue.HasValue) ? Model.MaxValue.Value.ToString("#,0") : "بدون محدودیت")</td>
+<td style="vertical-align: middle;text-align: center;">@((Model.MinTotalOrder.HasValue) ? Model.MinTotalOrder.Value.ToString("#,0") : "بدون محدودیت")</td>
+<td style="vertical-align: middle;text-align: center;">@((Model.StartDate.HasValue)?Model.StartDate.Value.ToString("yyyy/MM/dd"):"بدون محدودیت")</td>
+<td style="vertical-align: middle;text-align: center;">@((Model.EndDate.HasValue) ? Model.EndDate.Value.ToString("yyyy/MM/dd") : "بدون محدودیت")</td>
+<td style="vertical-align: middle;text-align: center;">@((Model.OnlyFirstOrder) ? "بله" : "خیر")</td>
+<td style="vertical-align: middle;text-align: center;">@((Model.AnyUserOneTime) ? "بله" : "خیر")</td>
+<td style="vertical-align: middle;text-align: center;">@_productService.GetTotalCouponUsed(Model.Id)</td>
+<td style="vertical-align: middle;">
+    <div class="center-block" style="width:122px;">
+
+        <a class="btn btn-primary deletebtn" href="~/Admin/Product/EditCoupon/@Model.Id"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;"><i style="font-size: 18px;" class="fa fa-pen"></i></a>
+
+        <a class="btn btn-danger deletebtn" onclick="DeleteCouponCode(@Model.Id)"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+
+
+    </div>
+
+
+</td>
+
+
+
+
+
+

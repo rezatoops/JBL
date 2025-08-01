@@ -1,0 +1,120 @@
+﻿@using Core.ViewModel;
+@using Datalayer.Entities;
+@using Core.Services.Interfaces
+
+@{
+    ViewBag.Title = "پیشخوان | برندها";
+}
+
+@model List<Brand>
+
+@inject IProductService _productService
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>لیست برندها</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Admin" asp-action="index">مدیریت</a>
+            </li>
+            <li class="active">
+                <strong>برندها</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+@{
+    int numberItemInPage = 10;
+
+    int allPage = (Model.Count() % numberItemInPage == 0) ? (Model.Count() / numberItemInPage) : (Model.Count() / numberItemInPage) + 1;
+
+    BrandViewModel brandTable = new BrandViewModel
+            {
+                Brands = _productService.GetSpecificBrands(1, numberItemInPage),
+                CurrentPage = 1,
+                CountPerPage = numberItemInPage,
+                AllPage = allPage
+            };
+}
+
+@{
+    if (ViewBag.Message != null)
+    {
+        <div class="@ViewBag.Style" style="padding: 10px;margin-top: 10px;">
+            @ViewBag.Message
+        </div>
+    }
+}
+
+<div id="BrandTable" class="wrapper animated fadeInRight">
+    @await Html.PartialAsync("_brandTable",brandTable)
+</div>
+
+
+<div class="modal" id="BrandModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated fadeIn">
+            <div class="modal-header" style="background-color:#18a689;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="color: white;">اضافه / ویرایش برند</h4>
+            </div>
+            <div id="BrandForm" class="modal-body">
+                <Partial name="_BrandEditForm" model="new Brand()" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/admin/plugin/sweetalert/sweetalert2.all.min.js"></script>
+    <script>
+        function DeleteBrand(id) {
+            Swal.fire({
+                title: "آیا مطمئنید؟",
+                text: "با این کار این برند حذف می شود و قابل بازیافت نخواهد بود!",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonText: "پاک کن",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Admin/Home/DeleteBrand',
+                        type: "POST",
+                        data: { id: id },
+                        success: function (result) {
+                            Swal.fire("حذف شد!", "اطلاعات با موفقیت حذف شد", "success");
+                            $("#brand_" + id).remove();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            Swal.fire("خطا", "عملیات با خطا مواجه شد!", "error");
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('انجام نشد!', '', 'info')
+                }
+            })
+
+
+
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        function OpenBrandForm(id) {
+            $.ajax({
+                type: "Get",
+                url: '@Url.Action("LoadBrandEditForm", "Home")',
+                data: { id: id },
+                success: function (data) {
+                    $('#BrandForm').html(data);
+                    $('#BrandModal').modal('show');
+                }
+            })
+        }
+    </script>
+
+}

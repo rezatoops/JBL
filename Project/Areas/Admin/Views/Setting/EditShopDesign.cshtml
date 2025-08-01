@@ -1,0 +1,202 @@
+﻿@using Core.Helper
+@using Core.Services.Interfaces;
+@using Core.ViewModel;
+@using Datalayer.Entities
+@using Datalayer.Enums
+
+@model ShopDesign
+
+@inject IMediaService _mediaService
+@inject ICategoryService _categoryService;
+
+
+@{
+    ViewBag.Title = "ویرایش ردیف محصول";
+
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    @using (Html.BeginForm("EditShopDesign", "Setting", FormMethod.Post, new { @class = "form-horizontal MainForm" }))
+    {
+        <input type="hidden" name="ShopDesignId" value="@Model.Id" />
+
+        <div class="row">
+            <div class="col-sm-9 no-padding">
+                <div class="col-sm-12">
+                    @Html.ValidationSummary(true, "لطفا خطاهای زیر را برطرف نمایید:", new { @class = "text-danger alert alert-danger" })
+                </div>
+                <div class="col-sm-12">
+                    @{
+                        if (ViewBag.Message != null)
+                        {
+                            <div class="col-sm-12 alert alert-success">
+                                <span>@ViewBag.Message</span>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>محتوای اصلی</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">عنوان بخش</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">نوع بخش</label>
+
+                                <div class="col-sm-10">
+                                    <select id="TypeSelect" asp-for="Type" asp-items="@EnumHelper.ToSelectList<ShopRawEnum>()" class="select2_Type form-control" style="width: 100%; height:40px;">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">رتبه نمایش بخش</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Sort, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Sort, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12" id="RawTypeForm">
+                    @{
+                        string partialViewName = "";
+                        switch (Model.Type)
+                        {
+                            case ShopRawEnum.ProductSliderByNewst:
+                                partialViewName = "ShopRawLayouts/_rowByNewest";
+                                break;
+                            case ShopRawEnum.ProductSliderByCategory:
+                                partialViewName = "ShopRawLayouts/_rowByCategory";
+                                break;
+                            case ShopRawEnum.ProductSliderByWonder:
+                                partialViewName = "ShopRawLayouts/_rowByWonder";
+                                break;
+                            case ShopRawEnum.Wonderfull:
+                                partialViewName = "ShopRawLayouts/_rowByWonderWithTimer";
+                                break;
+                            case ShopRawEnum.SortingProduct:
+                                partialViewName = "ShopRawLayouts/_rowBySortingProduct";
+                                break;
+                            case ShopRawEnum.Ads:
+                                partialViewName = "ShopRawLayouts/_rowByAds";
+                                break;
+                            default:
+                                partialViewName = "ShopRawLayouts/_rowByNewest";
+                                break;
+                        }
+                    }
+
+                    <partial name="@partialViewName" model="@Model" />
+                </div>
+
+
+            </div>
+            <div class="col-sm-3 no-padding">
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>عملیات</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content" style="padding:15px 10px 20px 10px;">
+                            <button class="btn btn-primary" style="width:145px;display: block;margin: 0px auto 5px;" type="submit"><i class="fa fa-check"></i>&nbsp;ذخیره</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
+
+<partial name="_GalleryModal" />
+
+
+@section Styles {
+
+    <link href="~/plugin/select2/select2.min.css" rel="stylesheet" />
+
+
+}
+@section scripts {
+
+    <script src="~/plugin/select2/select2.full.min.js"></script>
+
+    <script>
+        $(".select2_Type").select2({
+            dir: "rtl",
+            minimumResultsForSearch: -1
+        });
+        $(".select2_Cat").select2({
+            dir: "rtl",
+        });
+    </script>
+    <script>
+        function RemoveBanner(number) {
+            $("#Show_banner" + number + "Img img").attr('src', '');
+            $("#Show_banner" + number + "Img").css('background-image', '');
+            $("#banner" + number + "Img_url").val("")
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#TypeSelect').change(function () {
+                var typeId = $(this).val();
+
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/Admin/Setting/LoadRawTypeView",
+                        data: { 'typeId': typeId, ShopRawId : @Model.Id},
+                        success:
+
+                            function (result) {
+                                $("#RawTypeForm").html(result);
+                                $(".select2_Cat").select2({
+                                    dir: "rtl",
+                                });
+                            },
+                        error: function (req, status, error) {
+                            window.alert("Error!");
+                        }
+                    });
+            });
+        });
+    </script>
+}
+

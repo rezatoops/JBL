@@ -1,0 +1,25 @@
+﻿@using Datalayer.Entities
+@using System.Globalization
+
+@model Page
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="Waypart section">
+    <a href="/">صفحه اصلی</a>
+    <label>/</label>
+    <span>@Model.Title</span>
+</div>
+
+<div class="ArticleText section">
+    <h1 class="title">@Model.Title</h1>
+    @Html.Raw(Model.Content)
+</div>
+
+<div class="ArticleMeta section">
+    <span style="float:right;">نویسنده: @Model.User.FirstName @Model.User.LastName</span>
+    <span style="float:left;">تاریخ انتشار: @Model.CreationDate.ToString("dddd dd MMMM yyyy HH:mm", new CultureInfo("fa-IR"))</span>
+    <div class="clear"></div>
+</div>

@@ -1,0 +1,88 @@
+﻿@using Core.Extensions
+@using Core.Services.Interfaces
+@using Datalayer.Entities
+@using Datalayer.Enums
+@using System.ComponentModel.DataAnnotations
+
+@model ShopDesign
+
+@inject ICategoryService _categoryService
+
+<div class="ibox float-e-margins">
+    <div class="ibox-title">
+        <h5>تنظیمات</h5>
+        <div class="ibox-tools">
+            <a class="collapse-link">
+                <i class="fa fa-chevron-up"></i>
+            </a>
+            <a class="close-link">
+                <i class="fa fa-times"></i>
+            </a>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <span class="col-sm-12" style="text-align:center; margin-top:10px; color:#a00;">شما میتوانید فقط یک بنر، دو بنر و یا سه بنر قرار دهید، اجباری به قرار دادن 4 بنر نیست</span>
+        <span class="col-sm-12" style="text-align:center; margin-top:10px; color:#a00; margin-bottom:30px;">برای نمایش بهتر بنر ها را در یک سایز یکسان قرار دهید</span>
+
+        <div class="form-group">
+            <label style="text-align:left" class="col-sm-2 control-label">لینک بنر اول</label>
+
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.Banner1Link, new { htmlAttributes = new { @class = "form-control", style = "direction:ltr;" } })
+            </div>
+        </div>
+
+        <div id="Show_banner1Img" style="width:100%;text-align:center; position:relative">
+            <img src="/@Model?.Banner1?.Url" alt="" style="max-height:300px;max-width:100%;" />
+            <button onclick="RemoveBanner(1)" class="btn btn-danger" style="position:absolute; top:0px; left:0px; display: block;float:left;" type="button">&nbsp; حذف بنر</button>
+        </div>
+        <button class="btn btn-primary" id="btn_Gallery_banner1Img" onclick="OpenGallery('انتخاب عکس',3)" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر بنر اول</button>
+        <input type="hidden" name="banner1ImgUrl" id="banner1Img_url" value="@((Model?.Banner1ImgId != null)?"image_"+Model.Banner1ImgId:null)" />
+        <div class="seperate"></div>
+        <div class="form-group">
+            <label style="text-align:left" class="col-sm-2 control-label">لینک بنر دوم</label>
+
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.Banner2Link, new { htmlAttributes = new { @class = "form-control", style = "direction:ltr;" } })
+            </div>
+        </div>
+
+        <div id="Show_banner2Img" style="width:100%;text-align:center; position:relative">
+            <img src="/@Model?.Banner2?.Url" alt="" style="max-height:300px;max-width:100%;" />
+            <button onclick="RemoveBanner(2)" class="btn btn-danger" style="position:absolute; top:0px; left:0px; display: block;float:left;" type="button">&nbsp; حذف بنر</button>
+        </div>
+        <button class="btn btn-primary" id="btn_Gallery_banner2Img" onclick="OpenGallery('انتخاب عکس',4)" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر بنر دوم</button>
+        <input type="hidden" name="banner2ImgUrl" id="banner2Img_url" value="@((Model?.Banner2ImgId != null)?"image_"+Model.Banner2ImgId:null)" />
+        <div class="seperate"></div>
+        <div class="form-group">
+            <label style="text-align:left" class="col-sm-2 control-label">لینک بنر سوم</label>
+
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.Banner3Link, new { htmlAttributes = new { @class = "form-control", style = "direction:ltr;" } })
+            </div>
+        </div>
+
+        <div id="Show_banner3Img" style="width:100%;text-align:center; position:relative">
+            <img src="/@Model?.Banner3?.Url" alt="" style="max-height:300px;max-width:100%;" />
+            <button onclick="RemoveBanner(3)" class="btn btn-danger" style="position:absolute; top:0px; left:0px; display: block;float:left;" type="button">&nbsp; حذف بنر</button>
+        </div>
+        <button class="btn btn-primary" id="btn_Gallery_banner3Img" onclick="OpenGallery('انتخاب عکس',5)" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر بنر سوم</button>
+        <input type="hidden" name="banner3ImgUrl" id="banner3Img_url" value="@((Model?.Banner3ImgId != null)?"image_"+Model.Banner3ImgId:null)" />
+
+        <div class="seperate"></div>
+        <div class="form-group">
+            <label style="text-align:left" class="col-sm-2 control-label">لینک بنر چهارم</label>
+
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.Banner4Link, new { htmlAttributes = new { @class = "form-control", style = "direction:ltr;" } })
+            </div>
+        </div>
+
+        <div id="Show_banner4Img" style="width:100%;text-align:center; position:relative">
+            <img src="/@Model?.Banner4?.Url" alt="" style="max-height:300px;max-width:100%;" />
+            <button onclick="RemoveBanner(4)" class="btn btn-danger" style="position:absolute; top:0px; left:0px; display: block;float:left;" type="button">&nbsp; حذف بنر</button>
+        </div>
+        <button class="btn btn-primary" id="btn_Gallery_banner4Img" onclick="OpenGallery('انتخاب عکس',6)" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر بنر چهارم</button>
+        <input type="hidden" name="banner4ImgUrl" id="banner4Img_url" value="@((Model?.Banner4ImgId != null)?"image_"+Model.Banner4ImgId:null)" />
+    </div>
+</div>

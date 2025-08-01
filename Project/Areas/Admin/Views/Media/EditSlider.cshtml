@@ -1,0 +1,189 @@
+﻿@using Core.Services.Interfaces;
+@using Core.ViewModel;
+@using Datalayer.Entities
+
+@model Slider
+
+@inject IMediaService _mediaService
+
+@{
+    ViewBag.Title = "ویرایش اسلایدر";
+
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    @using (Html.BeginForm("EditSlider", "Media", FormMethod.Post, new { @class = "form-horizontal MainForm" }))
+    {
+        <input type="hidden" name="SliderId" value="@Model.Id" />
+
+        <div class="row">
+            <div class="col-sm-9 no-padding">
+                <div class="col-sm-12">
+                    @Html.ValidationSummary(true, "لطفا خطاهای زیر را برطرف نمایید:", new { @class = "text-danger alert alert-danger" })
+                </div>
+                <div class="col-sm-12">
+                    @{
+                        if (ViewBag.Message != null)
+                        {
+                            <div class="col-sm-12 alert alert-success">
+                                <span>@ViewBag.Message</span>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>محتوای اصلی</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">تیتر</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">لینک اسلایدر</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Link, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Link, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                           
+
+                        </div>
+                    </div>
+                </div>
+
+               
+            </div>
+            <div class="col-sm-3 no-padding">
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>تصویر شاخص دسکتاپ</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+
+                            @{
+                                if (!string.IsNullOrEmpty(ViewBag.Thumb))
+                                {
+                                    string background = _mediaService.GetMediaByID(int.Parse(ViewBag.Thumb.Replace("image_", string.Empty))).Url;
+                                    <div id="Show_Thmub" style="border:1px solid #efefef; width:100%; background-image:url('/@background'); padding-top:100%;background-position: center !important; background-size: cover !important;">
+                                    </div>
+                                    <button class="btn btn-primary" id="btn_Gallery_thumb" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر شاخص</button>
+                                    <input type="hidden" name="thumbUrl" id="thumb_url" value="@ViewBag.Thumb" />
+                                }
+                                else if (Model.Media != null)
+                                {
+                                    <div id="Show_Thmub" style="border:1px solid #efefef; width:100%; background-image:url('/@Model.Media.Url'); padding-top:100%;background-position: center !important; background-size: cover !important;">
+                                    </div>
+                                    <button class="btn btn-primary" id="btn_Gallery_thumb" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر شاخص</button>
+                                    <input type="hidden" name="thumbUrl" id="thumb_url" value="image_@Model.MediaId" />
+                                }
+                                else
+                                {
+                                    <div id="Show_Thmub" style="border:1px solid #efefef; width:100%; padding-top:100%;background-position: center !important; background-size: cover !important;">
+                                    </div>
+                                    <button class="btn btn-primary" id="btn_Gallery_thumb" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر شاخص</button>
+                                    <input type="hidden" name="thumbUrl" id="thumb_url" value="" />
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>تصویر شاخص موبایل</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+
+                            @{
+                                if (!string.IsNullOrEmpty(ViewBag.MobileThumb))
+                                {
+                                    string background = _mediaService.GetMediaByID(int.Parse(ViewBag.MobileThumb.Replace("image_", string.Empty))).Url;
+                                    <div id="Show_MobileThmub" style="border:1px solid #efefef; width:100%; background-image:url('/@background'); padding-top:100%;background-position: center !important; background-size: cover !important;">
+                                    </div>
+                                    <button class="btn btn-primary" id="btn_Gallery_mobileThumb" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر شاخص</button>
+                                    <input type="hidden" name="mobileThumbUrl" id="mobileThumb_url" value="@ViewBag.MobileThumb" />
+                                }
+                                else if (Model.MobileMedia != null)
+                                {
+                                    <div id="Show_MobileThmub" style="border:1px solid #efefef; width:100%; background-image:url('/@Model.MobileMedia.Url'); padding-top:100%;background-position: center !important; background-size: cover !important;">
+                                    </div>
+                                    <button class="btn btn-primary" id="btn_Gallery_mobileThumb" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر شاخص</button>
+                                    <input type="hidden" name="mobileThumbUrl" id="mobileThumb_url" value="image_@Model.MediaId" />
+                                }
+                                else
+                                {
+                                    <div id="Show_MobileThmub" style="border:1px solid #efefef; width:100%; padding-top:100%;background-position: center !important; background-size: cover !important;">
+                                    </div>
+                                    <button class="btn btn-primary" id="btn_Gallery_mobileThumb" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر شاخص</button>
+                                    <input type="hidden" name="mobileThumbUrl" id="mobileThumb_url" value="" />
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>عملیات</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content" style="padding:15px 10px 20px 10px;">
+                            <button class="btn btn-primary" style="width:145px;display: block;margin: 0px auto 5px;" type="submit"><i class="fa fa-check"></i>&nbsp;ذخیره اسلایدر</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+    <partial name="_GalleryModal" />
+
+</div>

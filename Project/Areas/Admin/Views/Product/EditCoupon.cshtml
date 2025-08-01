@@ -1,0 +1,187 @@
+﻿@using Core.Services.Interfaces;
+@using Core.ViewModel;
+@using Datalayer.Entities
+
+@model Coupon
+
+@inject IProductService _productService;
+
+
+@{
+    ViewBag.Title = "انتشار کد تخفیف جدید";
+
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <form class="form-horizontal MainForm" asp-controller="Product" asp-action="EditCoupon" asp-area="Admin">
+        <input type="hidden" name="CouponId" value="@Model.Id" />
+        <div class="row">
+            <div class="col-sm-9 no-padding">
+                <div class="col-sm-12">
+                    @Html.ValidationSummary(true, "لطفا خطاهای زیر را برطرف نمایید:", new { @class = "text-danger alert alert-danger" })
+                </div>
+                <div class="col-sm-12">
+                    @{
+                        if (ViewBag.Message != null)
+                        {
+                            <div class="col-sm-12 alert alert-success">
+                                <span>@ViewBag.Message</span>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>محتوای اصلی</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">کد تخفیف</label>
+
+                                <div class="col-sm-10">
+                                    <span>@Model.Code</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">درصد تخفیف</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Percent, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Percent, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">حداکثر تخفیف</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.MaxValue, new { htmlAttributes = new { @class = "form-control", placeholder = "اختیاری" } })
+                                    @Html.ValidationMessageFor(model => model.MaxValue, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">حداقل مبلغ سفارش</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.MinTotalOrder, new { htmlAttributes = new { @class = "form-control", placeholder = "اختیاری" } })
+                                    @Html.ValidationMessageFor(model => model.MinTotalOrder, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">تاریخ شروع</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" placeholder="اختیاری" name="StartDate" value="@(Model?.StartDate?.ToString("yyyy/MM/dd"))" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">تاریخ پایان</label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" placeholder="اختیاری" name="EndDate" value="@(Model?.EndDate?.ToString("yyyy/MM/dd"))" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right;padding-top: 13px;" class="col-sm-4 control-label">برای فقط اولین سفارش؟</label>
+                                <div class="col-sm-2">
+                                    @{
+                                        if (Model != null && Model.OnlyFirstOrder)
+                                        {
+                                            <input class="form-control" type="checkbox" checked id="only" value="only" name="OnlyFirstOrder" />
+
+                                        }
+                                        else
+                                        {
+                                            <input class="form-control" type="checkbox" id="only" value="only" name="OnlyFirstOrder" />
+
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group" id="anyArea"> 
+                                <label style="text-align:right;padding-top: 13px;" class="col-sm-4 control-label">هر کاربر فقط یک بار؟</label>
+                                <div class="col-sm-2">
+                                    @{
+                                        if (Model != null && Model.AnyUserOneTime)
+                                        {
+                                            <input class="form-control" type="checkbox" checked id="any" value="any" name="AnyUserOneTime" />
+
+                                        }
+                                        else
+                                        {
+                                            <input class="form-control" type="checkbox" id="any" value="any" name="AnyUserOneTime" />
+
+                                        }
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-sm-3 no-padding">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>عملیات</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content" style="padding:15px 10px 20px 10px;">
+
+                            <button class="btn btn-primary" style="width:145px;display: block;margin: 0px auto 5px;" type="submit"><i class="fa fa-check"></i>&nbsp;ذخیره</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </form>
+
+</div>
+@section Styles {
+
+    <link href="~/admin/plugin/icheck/custom.css" rel="stylesheet" />
+}
+@section Scripts {
+
+
+    <script src="~/admin/plugin/icheck/icheck.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+        });
+    </script>
+
+
+}
+

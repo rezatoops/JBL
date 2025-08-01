@@ -1,0 +1,11 @@
+﻿@using Datalayer.Entities
+
+@model List<Comment>
+
+<p class="numberComment">@Model.Count دیدگاه برای این محصول ثبت شده است</p>
+@{
+    foreach (var comment in Model)
+    {
+        <partial name="_comment" model="comment" />
+    }
+}

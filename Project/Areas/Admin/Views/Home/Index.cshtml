@@ -1,0 +1,72 @@
+﻿@using Core.Services.Interfaces
+
+@inject IProductService _productService
+@inject IToolsService _toolsService
+@inject IUserService _userService
+
+@{
+    ViewBag.Title = "پیشخوان";
+    string MonthName = _toolsService.GetShamsiMotnName();
+    var CurrentMonthOrders = _productService.GetOrderNumberForCurrentMonth();
+    int IncomeCurrentMonth = 0;
+    foreach (var order in CurrentMonthOrders)
+    {
+        IncomeCurrentMonth += _productService.GetTotalPriceInOrder(order.Id);
+    }
+}
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-right">@MonthName</span>
+                    <h5>تعداد سفارش ها</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">@CurrentMonthOrders.Count()</h1>
+                    @* <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div> *@
+                    <small>سفارش</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">@MonthName</span>
+                    <h5>مبلغ فروش</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">@IncomeCurrentMonth.ToString("#,0")</h1>
+                    @* <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div> *@
+                    <small>تومان</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">کل محصولات</span>
+                    <h5>تعداد محصولات</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">@_productService.GetAllProduct().Count().ToString("#,0")</h1>
+                    @* <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div> *@
+                    <small>محصول</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">کل کاربران</span>
+                    <h5>تعداد کاربران</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 class="no-margins">@_userService.GetAllUsers().Count().ToString("#,0")</h1>
+                    @* <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div> *@
+                    <small>کاربر</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

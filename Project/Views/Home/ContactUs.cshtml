@@ -1,0 +1,44 @@
+﻿@using Core.Services.Interfaces
+
+@inject ISettingService _settingService
+
+@{
+    ViewData["Title"] = "تماس با ما";
+}
+
+<div class="Waypart section">
+    <a href="/">صفحه اصلی</a>
+    <label>/</label>
+    <span>تماس با ما</span>
+</div>
+
+<div class="PageContent section displayFlex">
+    <div class="rightSection">
+        <div class="PATitle">
+            تماس با ما
+        </div>
+
+        <div class="ContactLines">
+            <div class="ContactLine">
+                <img src="/assets/location.png" />
+                <span>آدرس: @_settingService.GetSettingValue("ContactAddress")</span>
+            </div>
+            <div class="ContactLine">
+                <img src="/assets/phone2.png" />
+                <span>تلفن تماس: @_settingService.GetSettingValue("ContactusPhone")</span>
+            </div>
+            <div class="ContactLine">
+                <img src="/assets/fax2.png" />
+                <span>فکس: @_settingService.GetSettingValue("fax")</span>
+            </div>
+            <div class="ContactLine">
+                <img src="/assets/email2.png" />
+                <span>ایمیل: @_settingService.GetSettingValue("ContactusEmail")</span>
+            </div>
+        </div>
+    </div>
+    <div class="leftSection">
+        @Html.Raw(_settingService.GetSettingValue("GoogleMap"))
+    </div>
+
+</div>

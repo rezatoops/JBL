@@ -1,0 +1,42 @@
+﻿@using Core.Services.Interfaces
+@using Datalayer.Entities
+@using System.Globalization
+
+@model Comment
+
+@inject IProductService _productService
+@inject ICommentService _commentService
+
+@{
+    var replayComments = _commentService.GetRepliedComment(Model.Id);
+    PersianCalendar pc = new PersianCalendar();
+    string PDate = pc.GetYear(Model.CreationDate).ToString() + "/" + pc.GetMonth(Model.CreationDate).ToString() + "/" + pc.GetDayOfMonth(Model.CreationDate).ToString();
+}
+
+<div class="comment">
+    <span class="commentName">@Model.Name</span>
+    <span class="commentMeta">@PDate</span>
+    <div class="clear"></div>
+    <p>
+        @Model.Message
+    </p>
+    @* <a class="reply" href="#">پاسخ <img src="/assets/reply.png" /></a> *@
+    <div class="clear"></div>
+    @{
+        if (replayComments.Count > 0)
+        {
+            <div class="replyComment">
+                @{
+                    foreach (var replyComment in replayComments)
+                    {
+                        <partial name="_comment" model="replyComment"  />
+                    }
+                }
+                <div class="clear"></div>
+
+            </div>
+        }
+    }
+
+    <div class="clear"></div>
+</div>

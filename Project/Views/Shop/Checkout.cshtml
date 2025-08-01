@@ -1,0 +1,292 @@
+﻿@using Core.Services.Interfaces
+@using Core.ViewModel;
+
+@inject IUserService _userService
+@inject IProductService _productService
+
+@{
+    ViewData["Title"] = "سبد خرید";
+    var openPackage = _userService.IsOpenOrder(User.Identity.Name);
+    var order = _productService.GetOrderById(openPackage);
+
+    var ProductsInOrder = _productService.GetProductsInOrder(openPackage).Where(o => o.Variable != null);
+
+    var totalPrice = _productService.GetTotalPriceInOrder(openPackage);
+
+    var offValue = _productService.CalculateOffValue(order, totalPrice);
+
+    int cityId = 360;
+}
+
+
+<div id="loadingCircleShop" class="loadingio-spinner-ball-rd8liqklqbg">
+    <div class="ldio-c3e11cu2eq9">
+        <div></div>
+    </div>
+</div>
+<div class="errorMsg">
+    @Html.ValidationSummary(true)
+</div>
+
+<div class="shop_cart section">
+    <div class="cartTitle">
+        <i class="fal fa-shopping-basket"></i>
+        <span>آدرس</span>
+    </div>
+    <form asp-controller="Shop" asp-action="Checkout" method="Post" id="checkoutForm">
+        <div class="shopCartTable CheckoutTable">
+            <div class="cartRow">
+
+                <div class="customerDetail" style="margin-left:1%">
+                    <input class="form-control" name="UserDeliverName" placeholder="نام و نام خانوادگی تحویل گیرنده" value="@ViewBag.UserDeliverName" />
+                </div>
+                <div class="customerDetail">
+                    <input class="form-control" name="UserDeliverKodeMelli" placeholder="کد ملی تحویل گیرنده (اختیاری)" value="@ViewBag.UserDeliverKodeMelli" />
+                </div>
+                <div class="customerDetail" style="margin-left:1%">
+                    <input class="form-control" name="UserPhoneNumber" type="text" placeholder="شماره موبایل" value="@ViewBag.UserPhoneNumber" />
+                </div>
+                <div class="customerDetail">
+                    <input class="form-control" name="UserHomePhone" type="text" placeholder="تلفن ثابت همراه با کد (اختیاری)" value="@ViewBag.UserHomePhone" />
+                </div>
+                @{
+
+                    if (ViewBag.City != null)
+                    {
+                        cityId = ViewBag.City;
+                    }
+                    var state = _productService.GetStateOfCity(cityId);
+                }
+                <div class="customerDetail" style="margin-left:1%">
+                    <select id="StateSelect2" class="select2_State form-control" name="State" style="height:50px">
+                        <option></option>
+                        @{
+                            foreach (var item in _productService.getStates())
+                            {
+                                if (item.Id == state)
+                                {
+                                    <option value="@item.Id" selected>@item.Name</option>
+
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+
+                                }
+
+                            }
+                        }
+
+                    </select>
+                </div>
+                <div class="customerDetail" id="CitySelectWrapper">
+                    @{
+                        var cityViewModel = new CityViewModel()
+            {
+                Cities = _productService.getCityOfState(state),
+                SelectedCity = cityId
+            };
+                    }
+                    <partial name="_CitySelect" model="cityViewModel" />
+                </div>
+
+                <div class="customerDetail" style="width:100%;">
+                    <input class="form-control" name="Address" placeholder="آدرس دقیق" value="@ViewBag.Address" />
+                </div>
+                <div class="customerDetail" style="width:100%;">
+                    <input class="form-control" name="PostalCode" style="width:49.5%; float:right;" placeholder="کد پستی" value="@ViewBag.PostalCode" />
+                </div>
+
+                <div class="customerDetail" style="width:100%;">
+                    <textarea class="form-control" name="Description" style="width:100%; float:right;" placeholder="اگر توضیحاتی درباره سفارش دارید اینجا بنویسید">@ViewBag.Description</textarea>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="clear"></div>
+
+            <div class="cartTitle">
+                <i class="fa-solid fa-truck-fast"></i>
+                <span>روش ارسال</span>
+            </div>
+
+            <div class="cartRow ShippingArea" id="ShippingMethodes">
+                @{
+                    ShippingMethodesViewModel ShVM = new ShippingMethodesViewModel()
+            {
+                CityId = cityId,
+                TotalPrice = totalPrice,
+            };
+
+                    <partial name="_ShippingMethode" model="ShVM" />
+                }
+
+
+            </div>
+
+            <input id="ShippMethod" type="hidden" name="ShippMethod" />
+
+        </div>
+
+
+        <div class="shopCartDetails">
+            <div id="shopCartDetails">
+                <partial name="_ShopCartDetails" model="new CheckoutWidgetViewModel(){ totalPrice = totalPrice, totalRegularPrice = _productService.GetTotalRegularPriceInOrder(openPackage) , totalNumber = _productService.GetTotalNumberInOrder(openPackage),shippingPrice=(order.ShippingId != null)?order.Shipping.ShipPrice:-2, coupnPrice=offValue }" />
+            </div>
+            <button type="submit" class="btn ProgressCartBtn" name="submittype" value="Submit">پرداخت آنلاین</button>
+        </div>
+        @{
+            var currentUser = _userService.isExistUser(User.Identity.Name);
+            if(currentUser?.Role == 1)
+            {
+                <div class="shopCartDetails">
+                    <div class="title">
+                        <p>ثبت سفارش توسط مدیریت</p>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="customerDetail" style="width:100%;">
+                        <input class="form-control" name="OtherUserMobile" placeholder="شماره موبایل کاربر (اختیاری)" style="width:90%; margin:10px 5% 10px 0px;" />
+                    </div>
+
+                    <span style="padding:0px 10px; font-size:14px; display:block;">اگر میخواهید سفارش در پروفایل کاربر ثبت شود شماره موبایل آن را وارد کنید. کاربر با این شماره موبایل باید در سایت ثبت نام کرده باشد</span>
+                    <button type="submit" class="btn ProgressCartBtn" name="submittype" value="SubmitForUser">ثبت سفارش برای کاربر</button>
+                </div>
+            }
+        }
+
+
+    </form>
+
+    <div class="shopCartDetails" style="float:left;">
+        <form asp-controller="Shop" asp-action="SubmitCoupon"
+              data-ajax="true" data-ajax-method="post" data-ajax-mode="replace" data-ajax-update="#Coupon" data-ajax-loading="#loadingCircleShop"
+              data-ajax-success="UpdateCheckoutWidget(@openPackage)">
+            <div id="Coupon">
+                <partial name="_couponForm" model="openPackage" />
+            </div>
+        </form>
+    </div>
+
+    <div class="clear"></div>
+
+</div>
+
+
+
+@section Styles {
+    <link href="~/Plugin/select2/select2.min.css" rel="stylesheet" />
+}
+
+@section Scripts {
+
+    <script src="~/Plugin/select2/select2.full.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            $(".select2_State").select2({
+                dir: "rtl",
+            });
+
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".select2_City").select2({
+                dir: "rtl",
+            });
+        });
+    </script>
+    <script>
+        $('#StateSelect2').on('select2:select', function (e) {
+            var data = e.params.data;
+
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Shop/LoadCityForState",
+                    data: { 'stateId': data.id },
+                    success:
+
+                        function (result) {
+                            $("#CitySelectWrapper").html(result);
+                            $(".select2_City").select2({ dir: "rtl" });
+                            RefreshShippingMethodes();
+                        },
+                    error: function (req, status, error) {
+                        window.alert("Error!");
+                    }
+                });
+        });
+    </script>
+    <script>
+        $('#varCitySelect2').on('select2:select', function (e) {
+            RefreshShippingMethodes();
+        });
+    </script>
+
+    <script>
+        function SelectShippMethode(elem) {
+            $(".ShippingItem").removeClass("active");
+            $(elem).addClass("active");
+
+            var shipId = $(elem).data("shippmethod");
+
+            $("#ShippMethod").val(shipId);
+
+            $("#loadingCircleShop").show();
+
+            $.ajax({
+                type: "POST",
+                url: "/Shop/SetShippingMethod",
+                data: { OrderId: @order.Id, shipMethodId: shipId },
+                success:
+                    function (result) {
+                        UpdateCheckoutWidget(@order.Id);
+                        $("#loadingCircleShop").hide();
+                    },
+                error: function (req, status, error) {
+                    window.alert("Error!");
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function UpdateCheckoutWidget(orderId) {
+            $.ajax({
+                type: "POST",
+                url: "/Shop/RefreshShopCartWidget",
+                data: { OrderId: orderId },
+                success:
+                    function (result) {
+                        $("#shopCartDetails").html(result);
+                    },
+                error: function (req, status, error) {
+                    window.alert("Error!");
+                }
+            });
+        }
+    </script>
+    <script>
+        function RefreshShippingMethodes() {
+            $("#loadingCircleShop").show();
+            $("#ShippMethod").val('');
+            var city = $('#varCitySelect2').select2('data');
+            $.ajax({
+                type: "POST",
+                url: "/Shop/RefreshShippingMethodes",
+                data: { totalPrice: @totalPrice , cityId: city[0].id },
+                success:
+                    function (result) {
+                        $("#ShippingMethodes").html(result);
+                        $("#loadingCircleShop").hide();
+                    },
+                error: function (req, status, error) {
+                    window.alert("Error!");
+                }
+            });
+        }
+    </script>
+}

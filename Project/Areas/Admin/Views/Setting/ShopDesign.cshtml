@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "پیشخوان | ردیف محصولات صفحه اصلی";
+}
+
+@using Core.Services.Interfaces;
+@using Core.ViewModel;
+@using Datalayer.Entities
+
+@model List<ShopDesign>
+
+@inject ISettingService _SettingService
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>ردیف محصولات</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Admin" asp-action="index">مدیریت</a>
+            </li>
+            <li class="active">
+                <strong>ردیف محصولات</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+@{
+    int numberItemInPage = 10;
+
+    int allPage = (Model.Count() % numberItemInPage == 0) ? (Model.Count() / numberItemInPage) : (Model.Count() / numberItemInPage) + 1;
+
+    ShopDesignViewModel shopDesignTable = new ShopDesignViewModel
+    {
+        ShopDesigns = _SettingService.GetSpecificShopDesigns(1, numberItemInPage),
+        CurrentPage = 1,
+        CountPerPage = numberItemInPage,
+        AllPage = allPage
+    };
+}
+
+<div id="ShopDesignTable" class="wrapper animated fadeInRight">
+    @await Html.PartialAsync("_shopDesignTable", shopDesignTable)
+</div>
+
+@section scripts {
+    <script src="~/admin/plugin/sweetalert/sweetalert2.all.min.js"></script>
+
+    <script>
+        function DeleteShopDesign(id) {
+            Swal.fire({
+                title: "آیا مطمئنید؟",
+                text: "با این کار این ردیف محصول حذف می شود!",
+                icon: "error",
+                showCancelButton: true,
+                confirmButtonText: "پاک کن",
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Admin/Setting/DeleteShopDesign',
+                        type: "POST",
+                        data: { id: id },
+                        success: function (result) {
+                            $("#shopDesign_" + id).remove();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            Swal.fire("خطا", "عملیات با خطا مواجه شد!", "error");
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('انجام نشد! چرا؟', '', 'info')
+                }
+            })
+
+        }
+
+    </script>
+}

@@ -1,0 +1,63 @@
+﻿@using Datalayer.Entities
+@model Post
+
+@{
+    string status = "";
+    string style = "";
+
+
+    switch (Model.Status)
+    {
+        case "published":
+            {
+                status = "منتشر شده";
+                style = "background:#00C37A;";
+                break;
+            }
+        case "draft":
+            {
+                status = "پیش نویس";
+                style = "background:#FFC500;";
+                break;
+            }
+
+    }
+
+}
+@{
+    if(Model.Media != null)
+    {
+        <td style="vertical-align: middle;text-align: center;"><div style="background:url('/@Model.Media.Url'); width: 100px;height:50px; background-position: center !important; background-size: cover !important; margin:0 auto;"></div></td>
+
+    }
+    else
+    {
+        <td style="vertical-align: middle;text-align: center;"><div style="width: 100px;height:50px; background-position: center !important; background-size: cover !important; margin:0 auto;"></div></td>
+
+    }
+}
+<td style="vertical-align: middle;text-align: center;">@Model.Title</td>
+<td style="vertical-align: middle;text-align: center;"><span class="ActionTable" style="@style">@status</span></td>
+
+@*background-color: @(Model.IsRead == false ? "rgba(255,255,107,0.3) !important;" : "")*@
+
+<td style="vertical-align: middle;">
+    <div class="center-block" style="width:112px;">
+
+        <a class="btn btn-primary deletebtn" href="/Admin/Blog/Edit/@Model.Id"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;"><i style="font-size: 18px;" class="fa fa-pen"></i></a>
+
+        <a class="btn btn-danger deletebtn" onclick="DeletePost(@Model.Id)"
+           style="width: 38px;padding-top: 7px;padding-bottom: 3px;padding-right: 10px;height: 34px;" id="@Model.Id"><i style="font-size: 18px;" class="fa fa-trash"></i></a>
+
+
+    </div>
+
+
+</td>
+
+
+
+
+
+

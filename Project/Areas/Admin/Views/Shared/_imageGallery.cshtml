@@ -1,0 +1,135 @@
+﻿@using Datalayer.Entities
+@model IEnumerable<Media>
+
+@inject IWebHostEnvironment Environment;
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        try
+        {
+            if (item.Type == "Video")
+            {
+                <div class="img_postgallery" id="image_@item.Id" data-mediaType="video" data-mediaurl="@item.Url" onclick="img_postgallery_clicked(this)" style="padding: 20px 0px 10px 0px;">
+                    <video preload="metadata">
+                        <source src="/@item.Url">
+                        Your browser does not support the video tag.
+                    </video>
+                    <a class="delImgBtn" id="@item.Id">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </a>
+                    <span style="color:white;background:#3a9abf;position:absolute;top:2px;right:4px; border-radius:10px;text-align:center;display:block;padding: 0px 5px;font-size: 11px;">ویدیو</span>
+                </div>
+            }
+            else if (item.Type == "Audio")
+            {
+                <div class="img_postgallery" id="image_@item.Id" data-mediaType="audio" data-mediaurl="@item.Url" onclick="img_postgallery_clicked(this)" style="padding: 20px 0px 10px 0px;">
+                    <audio preload="metadata">
+                        <source src="/@item.Url">
+                        Your browser does not support the video tag.
+                    </audio>
+                    <a class="delImgBtn" id="@item.Id">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </a>
+                    <span style="text-align: center;display: block;margin-top: 52px;direction:rtl;">نام فایل: @item.Name</span>
+                    <span style="color:white;background:#3a9abf;position:absolute;top:2px;right:4px; border-radius:10px;text-align:center;display:block;padding: 0px 5px;font-size: 11px;">صدا</span>
+                </div>
+            }
+            else if (item.Type == "Photo")
+            {
+                <div class="img_postgallery" id="image_@item.Id" data-mediaType="photo" data-mediaurl="@item.Url" onclick="img_postgallery_clicked(this)" style="@Html.Raw("background:url('/" + item.Url + "');")">
+
+                    <span style="color:white;background:#3a9abf;position:absolute;top:2px;right:4px; border-radius:10px;text-align:center;display:block;padding: 0px 5px;font-size: 11px;">عکس</span>
+
+                    <a class="delImgBtn" id="@item.Id">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </a>
+                </div>
+            }
+            else if (item.Type == "File")
+            {
+                <div class="img_postgallery" id="image_@item.Id" data-mediaType="file" data-mediaurl="@item.Url" onclick="img_postgallery_clicked(this)" style="padding: 20px 0px 10px 0px;">
+                    <a class="delImgBtn" id="@item.Id">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </a>
+                    <span style="text-align: center;display: block;margin-top: 52px;direction:rtl;">نام فایل: @item.Name</span>
+                    <span style="color:white;background:#3a9abf;position:absolute;top:2px;right:4px; border-radius:10px;text-align:center;display:block;padding: 0px 5px;font-size: 11px;">فایل</span>
+                </div>
+            }
+            else
+            {
+
+                <div class="img_postgallery" id="image_@item.Id" data-mediaType="aparat" data-mediaurl="@item.Url" onclick="img_postgallery_clicked(this)" style="padding: 20px 0px 10px 0px;">
+                    <a class="delImgBtn" id="@item.Id">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </a>
+                    <div class="h_iframe-aparat_embed_frame"><span style="display: block;padding-top: 57%"></span><iframe src="https://www.aparat.com/video/video/embed/videohash/@item.Url/vt/frame" allowFullScreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"></iframe></div>
+                    <span style="color:white;background:#3a9abf;position:absolute;top:2px;right:4px; border-radius:10px;text-align:center;display:block;padding: 0px 5px;font-size: 11px;">آپارات</span>
+
+                </div>
+            }
+
+        }
+        catch (Exception)
+        {
+            <div class="col-sm-3 img_postgallery" onclick="img_postgallery_clicked(this)" style="@Html.Raw("position:relative;width:23%;margin-left:1%; margin-right:1%;margin-bottom:10px;background-size: cover !important;background-position:center !important;box-sizing:border-box;padding-top:25%; ")">
+                <div class="imgInfo">
+                    <span>تصویر نا درست است</span>
+                </div>
+
+                <a class="delImgBtn" id="@item.Id">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </a>
+            </div>
+        }
+    }
+}
+
+<script>
+    $('.delImgBtn').click(function (e) {
+        e.preventDefault();
+
+        var elem = $(this).attr('id');
+
+        Swal.fire({
+            title: 'آیا مطمئنید؟',
+            text: "با پاک کردن این عکس، دیگر قابل بازیافت نخواهد بود",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'بله! پاک کن',
+            cancelButtonText: "خیر"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: "/Admin/Media/DeleteMedia",
+                    data: { id: elem },
+                    type: "GET",
+                    success: function (result) {
+                        if (result == true) {
+                            $("#image_" + elem).fadeOut('slow');
+
+                            RefreshImages();
+
+                        } else {
+                            Swal.fire("پاک نشد!", "این عکس، استفاده شده است و نمی توانید آن را پاک کنید", "error");
+                        }
+                    },
+                })
+            }
+        })
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,17 @@
+﻿@using Core.Services.Interfaces
+@model int
+
+@inject ICategoryService _categoryService
+
+@{
+    var cats = _categoryService.GetCategoriesByParentId(true, Model);
+}
+<img class="BackMenuBtn" onclick="OpenCategoryMenu()" src="/assets/leftarrow.png" />
+<ul>
+    @{
+        foreach (var cat in cats)
+        {
+            <li><a href="~/Category/@cat.Slug">@cat.Title</a></li>
+        }
+    }
+</ul>

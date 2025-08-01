@@ -1,0 +1,431 @@
+﻿@using Core.Services.Interfaces
+
+@inject IProductService _productService
+@inject ISettingService _settingService
+@inject IMediaService _mediaService
+
+@{
+    ViewData["Title"] = "صفحه اصلی";
+    var allSettings = _settingService.GetAllSettings();
+}
+
+@* <a href="~/shop" class="ActionLink ActionFloat">ورود به فروشگاه</a> *@
+
+
+<svg class="FloatButtonSvg" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <defs>
+        <filter id="gooey">
+            <!-- in="sourceGraphic" -->
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+            <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="highContrastGraphic" />
+            <feComposite in="SourceGraphic" in2="highContrastGraphic" operator="atop" />
+        </filter>
+    </defs>
+</svg>
+<div class="FloatButtonV2">
+    <a id="gooey-button" asp-controller="Shop" asp-action="Index">
+        فروشگاه <img src="~/assets/shopping-cart.png" />
+        <span class="bubbles">
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+            <span class="bubble"></span>
+        </span>
+    </a>
+</div>
+
+
+
+<div class="IHeader">
+    <div class="ISliderWrapper">
+        <div class="IMenu">
+            <a class="IMenuItem" href="~/Shop">فروشگاه</a>
+            <a class="IMenuItem" href="~/Blog">وبلاگ</a>
+            <a href="/" class="ILogo"><img src="/assets/logo white.png" /></a>
+            <a class="IMenuItem" href="~/AboutUs">درباره ما</a>
+            <a class="IMenuItem" href="~/ContactUs">تماس با ما</a>
+        </div>
+        <div class="ISlider desktopSliderItem">
+            <div class="ISliderCarousel owl-carousel owl-theme">
+                @{
+                    foreach (var slider in _mediaService.GetAllSliders("Main"))
+                    {
+                        <a href="@slider.Link">
+                            <div class="ISliderItem" style="background-image: url('/@slider.Media.Url');"></div>
+
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+        <div class="ISlider mobileSliderItem">
+            <div class="ISliderCarousel owl-carousel owl-theme">
+                @{
+                    foreach (var slider in _mediaService.GetAllSliders("Main"))
+                    {
+                        <a href="@slider.Link">
+                            <div class="ISliderItem" style="background-image: url('/@slider.MobileMedia.Url');"></div>
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="IAboutUs">
+        <div class="ITitle">
+            <h3>درباره ما</h3>
+            <img src="/assets/title-separator.png" />
+        </div>
+
+        <p>
+            @allSettings.FirstOrDefault(s => s.Key == "MainPageAboutText")?.Value
+        </p>
+    </div>
+</div>
+<div class="IProductCategories">
+    <div class="ITitle">
+        <h3>قهوه نیش</h3>
+        <img src="/assets/title-separator.png" />
+    </div>
+    @*
+    <div class="IProductHeads">
+    <div class="IProductHeadCarousel owl-carousel owl-theme">
+    <div class="IProductHead active" id="head_1">@allSettings.FirstOrDefault(s => s.Key == "Part1Title")?.Value</div>
+    <div class="IProductHead" id="head_2">@allSettings.FirstOrDefault(s => s.Key == "Part2Title")?.Value</div>
+    <div class="IProductHead" id="head_3">@allSettings.FirstOrDefault(s => s.Key == "Part3Title")?.Value</div>
+    <div class="IProductHead" id="head_4">@allSettings.FirstOrDefault(s => s.Key == "Part4Title")?.Value</div>
+    <div class="IProductHead" id="head_5">@allSettings.FirstOrDefault(s => s.Key == "Part5Title")?.Value</div>
+    <div class="IProductHead" id="head_6">@allSettings.FirstOrDefault(s => s.Key == "Part6Title")?.Value</div>
+    <div class="IProductHead" id="head_7">@allSettings.FirstOrDefault(s => s.Key == "Part7Title")?.Value</div>
+    </div>
+    </div> *@
+
+
+    <div class="IProductHeads">
+        <section class="splide" aria-label="Splide Basic HTML Example">
+            <div class="splide__track">
+                <ul class="splide__list">
+                    <li class="splide__slide">
+                        <div class="IProductHead active head_1" data-id="1">@allSettings.FirstOrDefault(s => s.Key == "Part1Title")?.Value</div>
+                    </li>
+                    <li class="splide__slide">
+                        <div class="IProductHead head_2" data-id="2">@allSettings.FirstOrDefault(s => s.Key == "Part2Title")?.Value</div>
+                    </li>
+                    <li class="splide__slide">
+                        <div class="IProductHead head_3" data-id="3">@allSettings.FirstOrDefault(s => s.Key == "Part3Title")?.Value</div>
+                    </li>
+                    <li class="splide__slide">
+                        <div class="IProductHead head_4" data-id="4">@allSettings.FirstOrDefault(s => s.Key == "Part4Title")?.Value</div>
+                    </li>
+                    <li class="splide__slide">
+                        <div class="IProductHead head_5" data-id="5">@allSettings.FirstOrDefault(s => s.Key == "Part5Title")?.Value</div>
+                    </li>
+                    <li class="splide__slide">
+                        <div class="IProductHead head_6" data-id="6">@allSettings.FirstOrDefault(s => s.Key == "Part6Title")?.Value</div>
+                    </li>
+                    <li class="splide__slide">
+                        <div class="IProductHead head_7" data-id="7">@allSettings.FirstOrDefault(s => s.Key == "Part7Title")?.Value</div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </div>
+
+    <div class="ICategoryDetail section" id="ICat_1" style="display:flex;">
+        <div class="ICategoryImg" style="background-image: url('/assets/CatImg1.jpg');"></div>
+        <div class="ICategoryDescription">
+            <p>
+                @allSettings.FirstOrDefault(s => s.Key == "Part1Text")?.Value
+            </p>
+            <a href="@allSettings.FirstOrDefault(s => s.Key == "Part1Link")?.Value" class="ActionLink">@allSettings.FirstOrDefault(s => s.Key == "Part1BtnText")?.Value</a>
+        </div>
+    </div>
+    <div class="ICategoryDetail section" id="ICat_2">
+        <div class="ICategoryImg" style="background-image: url('/assets/CatImg2.jpg');"></div>
+        <div class="ICategoryDescription">
+            <p>
+                @allSettings.FirstOrDefault(s => s.Key == "Part2Text")?.Value
+            </p>
+            <a href="@allSettings.FirstOrDefault(s => s.Key == "Part2Link")?.Value" class="ActionLink">@allSettings.FirstOrDefault(s => s.Key == "Part2BtnText")?.Value</a>
+        </div>
+    </div>
+    <div class="ICategoryDetail section" id="ICat_3">
+        <div class="ICategoryImg" style="background-image: url('/assets/CatImg3.jpg');"></div>
+        <div class="ICategoryDescription">
+            <p>
+                @allSettings.FirstOrDefault(s => s.Key == "Part3Text")?.Value
+            </p>
+            <a href="@allSettings.FirstOrDefault(s => s.Key == "Part3Link")?.Value" class="ActionLink">@allSettings.FirstOrDefault(s => s.Key == "Part3BtnText")?.Value</a>
+        </div>
+    </div>
+    <div class="ICategoryDetail section" id="ICat_4">
+        <div class="ICategoryImg" style="background-image: url('/assets/CatImg4.jpg');"></div>
+        <div class="ICategoryDescription">
+            <p>
+                @allSettings.FirstOrDefault(s => s.Key == "Part4Text")?.Value
+            </p>
+            <a href="@allSettings.FirstOrDefault(s => s.Key == "Part4Link")?.Value" class="ActionLink">@allSettings.FirstOrDefault(s => s.Key == "Part4BtnText")?.Value</a>
+        </div>
+    </div>
+    <div class="ICategoryDetail section" id="ICat_5">
+        <div class="ICategoryImg" style="background-image: url('/assets/CatImg5.jpg');"></div>
+        <div class="ICategoryDescription">
+            <p>
+                @allSettings.FirstOrDefault(s => s.Key == "Part5Text")?.Value
+            </p>
+            <a href="@allSettings.FirstOrDefault(s => s.Key == "Part5Link")?.Value" class="ActionLink">@allSettings.FirstOrDefault(s => s.Key == "Part5BtnText")?.Value</a>
+        </div>
+    </div>
+    <div class="ICategoryDetail section" id="ICat_6">
+        <div class="ICategoryImg" style="background-image: url('/assets/CatImg6.jpg');"></div>
+        <div class="ICategoryDescription">
+            <p>
+                @allSettings.FirstOrDefault(s => s.Key == "Part6Text")?.Value
+            </p>
+            <a href="@allSettings.FirstOrDefault(s => s.Key == "Part6Link")?.Value" class="ActionLink">@allSettings.FirstOrDefault(s => s.Key == "Part6BtnText")?.Value</a>
+        </div>
+    </div>
+    <div class="ICategoryDetail section" id="ICat_7">
+        <div class="ICategoryImg" style="background-image: url('/assets/CatImg7.jpg');"></div>
+        <div class="ICategoryDescription">
+            <p>
+                @allSettings.FirstOrDefault(s => s.Key == "Part7Text")?.Value
+            </p>
+            <a href="@allSettings.FirstOrDefault(s => s.Key == "Part7Link")?.Value" class="ActionLink">@allSettings.FirstOrDefault(s => s.Key == "Part7BtnText")?.Value</a>
+        </div>
+    </div>
+</div>
+
+<div class="Section4" style="background-image: url('/assets/MainPageBlog.jpg');">
+    <video src="~/assets/video.mp4" autoplay="true" loop muted playsinline></video>
+    <div class="blackFilter"></div>
+    <h3>@allSettings.FirstOrDefault(s => s.Key == "MainPageBlogTitle")?.Value</h3>
+    <p>
+        @allSettings.FirstOrDefault(s => s.Key == "MainPageBlogText")?.Value
+    </p>
+    @* <a href="@allSettings.FirstOrDefault(s => s.Key == "MainPageBlogLink")?.Value">@allSettings.FirstOrDefault(s => s.Key == "MainPageBlogBtnText")?.Value</a> *@
+</div>
+
+<div class="Section5 section">
+    <div class="ITitle">
+        <h3>پر فروش ترین ها</h3>
+        <img src="/assets/title-separator.png" />
+    </div>
+    <div class="IProducts">
+        @{
+            Random rnd = new Random();
+            foreach (var product in _productService.GetAllPublishedProduct().OrderBy(x => rnd.Next()).Take(6))
+            {
+                <partial name="_product" model="product" />
+            }
+        }
+    </div>
+    <a href="~/Shop" class="ActionLink">ورود به فروشگاه</a>
+</div>
+
+<div class="customBanner">
+    <a href="~/MajorShopping"><img src="~/assets/banner5.jpg" /></a>
+</div>
+
+<svg width="0" height="0">
+    <defs>
+        <clipPath id="SliderPath" clipPathUnits="objectBoundingBox">
+            <path d="M0.999,1 V0 H-0.001 V1 L0.391,1 L0.455,0.943 H0.543 L0.607,1 H0.999">
+            </path>
+        </clipPath>
+    </defs>
+</svg>
+
+<div class="IFooter">
+    <div class="IMainFooter section">
+        <div class="rightSection">
+            <div class="IFooterLogo">
+                <a href="/"><img src="~/assets/logo white.png" /></a>
+            </div>
+            <p>
+                @_settingService.GetSettingValue("footerText")
+            </p>
+            <img class="Iso" src="~/assets/iso-white.png" />
+        </div>
+        <div class="leftSection">
+            <div class="IContactUs">
+                <h4>تماس با ما</h4>
+                <div class="ContactLines">
+                    <div class="ContactLine">
+                        <img src="/assets/location3.svg" />
+                        <span>آدرس: @_settingService.GetSettingValue("ContactAddress")</span>
+                    </div>
+                    <div class="ContactLine">
+                        <img src="/assets/phone3.svg" />
+                        <span>تلفن تماس: @_settingService.GetSettingValue("ContactusPhone")</span>
+                    </div>
+                    <div class="ContactLine">
+                        <img src="/assets/email3.svg" />
+                        <span>ایمیل: @_settingService.GetSettingValue("ContactusEmail")</span>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="IEnamd">
+                <div class="certificateItem">
+                    @Html.Raw(_settingService.GetSettingValue("Enamad"))
+                </div>
+                <div class="certificateItem">
+                    <img referrerpolicy='origin' id='rgvjjzpergvjfukzjxlzoeuk' style='cursor:pointer' onclick='window.open("https://logo.samandehi.ir/Verify.aspx?id=373618&p=xlaojyoexlaogvkarfthmcsi", "Popup","toolbar=no, scrollbars=no, location=no, statusbar=no, menubar=no, resizable=0, width=450, height=630, top=30")' alt='logo-samandehi' src='https://logo.samandehi.ir/logo.aspx?id=373618&p=qftiyndtqftiwlbqnbpdaqgw' />
+                </div>
+            </div>
+            <div class="socials">
+                <a href="@_settingService.GetSettingValue("instagram")">
+                    <div class="social">
+                        <img src="/assets/instagram.png" />
+                    </div>
+                </a>
+                <a href="https://wa.me/+98@_settingService.GetSettingValue("whatsup").Substring(1)">
+                    <div class="social">
+                        <img src="/assets/whatsapp.png" />
+                    </div>
+                </a>
+                <a href="@_settingService.GetSettingValue("linkedin")">
+                    <div class="social">
+                        <img src="/assets/linkedin.png" />
+                    </div>
+                </a>
+                <a href="@_settingService.GetSettingValue("youtube")">
+                    <div class="social">
+                        <img src="/assets/youtube.png" />
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="copyRight section">
+        <p style="float:right;">© کلیه حقوق سایت متعلق به این فروشگاه می باشد.</p>
+        <p style="float:left;">ساخته شده با <span style="color:red;">❤</span> توسط تیم <a href="https://siteliner.ir">سایت لاینر</a></p>
+        <div class="clear"></div>
+    </div>
+</div>
+
+
+
+
+@section styles {
+    <link href="~/plugin/owlcarousel/owl.carousel.min.css" rel="stylesheet" />
+    <link href="~/plugin/owlcarousel/owl.theme.default.min.css" rel="stylesheet" />
+    <link href="~/plugin/splide/splide.min.css" rel="stylesheet" />
+}
+
+@section scripts {
+    <script src="~/plugin/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/plugin/splide/splide.min.js"></script>
+
+
+    <script>
+        var IntervalId = null;
+        $(document).ready(function () {
+            $(".ISliderCarousel").owlCarousel({
+                rtl: true,
+                items: 1,
+                responsiveClass: true,
+                nav: false,
+                dots: true,
+                autoplay: true,
+                loop: true,
+                margin: 5,
+            });
+
+
+
+        });
+    </script>
+
+
+    <script>
+        const splide = new Splide('.splide', {
+            direction: 'rtl',
+            mediaQuery: 'min',
+            perPage: 7,
+            pagination: false,
+            type: 'loop',
+            autoplay: 'play',
+            interval: 10000,
+            pauseOnHover: false,
+            pauseOnFocus: false,
+            breakpoints: {
+                1300: {
+                    perPage: 7,
+
+                },
+                1200: {
+                    perPage: 6,
+                },
+                900: {
+                    perPage: 5,
+                },
+                750: {
+                    perPage: 4,
+                },
+                600: {
+                    perPage: 3,
+                },
+                0: {
+                    perPage: 2,
+                },
+
+            },
+            perMove: 1,
+        }).mount();
+
+        splide.on('move', function () {
+            // IntervalId = setInterval(NextHead, 2000);
+            if (isMoving) {
+                NextHead();
+                console.log(headIndex);
+            }
+        });
+
+    </script>
+
+    <script>
+        var headIndex = 1;
+        $(".IProductHead").click(function () {
+            headIndex = $(this).data("id");
+            SelectHead(headIndex);
+        })
+
+        function SelectHead(id) {
+            $(".ICategoryDetail").hide();
+
+            $("#ICat_" + id).css("display", "flex");
+
+            $(".IProductHead").removeClass("active");
+            $(".head_" + id).addClass("active");
+        }
+
+        function NextHead() {
+            headIndex++;
+            if (headIndex == 8) {
+                headIndex = 1;
+            }
+
+            SelectHead(headIndex);
+        }
+
+        var isMoving = true;
+
+        splide.on("click", function (slide) { // listen for "click" event: fired when the user clicks any slide
+            isMoving = false;
+            splide.go(slide.index); // apply "go" method: slide to the index of the clicked slide (component)
+            isMoving = true;
+        });
+
+    </script>
+
+
+}

@@ -1,0 +1,36 @@
+﻿@model string
+
+<h2>ورود با کد یک بار مصرف</h2>
+<form asp-controller="User" asp-action="LoginWithCode" method="post" data-ajax=true data-ajax-mode="replace" data-ajax-update="#authenticationForm" data-ajax-loading="#loadingCircle" data-ajax-success="LoginCompleted(data)">
+
+    <input type="hidden" name="phoneNumber" value="@Model" />
+    <a class="ActionLinkInLogin" style="margin-top: 5px;margin-bottom: 10px;" asp-controller="User" asp-action="ShowLoginForm"
+       data-ajax="true" data-ajax-method="Post" data-ajax-mode="replace" data-ajax-update="#authenticationForm">تغییر شماره موبایل</a>
+    <div class="infoText">
+        <span>کد تایید برای موبایل شما پیامک شد</span>
+        <a asp-controller="User" asp-action="ShowLoginWithCode" asp-route-phoneNumber="@Model" asp-route-isAgain="true"  method="post" data-ajax=true data-ajax-mode="replace" data-ajax-update="#authenticationForm" data-ajax-loading="#loadingCircle">ارسال مجدد</a>
+        <div class="timer">
+            <input id="minutesInput" name="minutes" type="hidden" readonly="readonly" />
+            <span id="minutes"></span>
+            <span style="margin:0px 8px;">:</span>
+            <input id="secondsInput" name="seconds" type="hidden" readonly="readonly" />
+            <span id="seconds"></span>
+
+        </div>
+        <div class="clear"></div>
+    </div>
+    <input type="text" name="ActiveCode" placeholder="کد تایید" />
+    <div class="errorMsg">
+        @Html.ValidationSummary(true)
+    </div>
+    <a class="ActionLinkInLogin" asp-controller="User" asp-action="ShowLoginOrRegister" asp-route-phoneNumber="@Model" asp-route-MustSendSms="false"
+       data-ajax="true" data-ajax-method="Post" data-ajax-mode="replace" data-ajax-update="#authenticationForm">ورود با رمز عبور</a>
+    <button type="submit">ورود</button>
+</form>
+
+<script>
+    var newMinute = @ViewBag.minute;
+    var newSecond = @ViewBag.second;
+    clearInterval(set_inteval);
+    startTimer(newMinute, newSecond);
+</script>

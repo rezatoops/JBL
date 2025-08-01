@@ -1,0 +1,237 @@
+﻿@using Core.Services.Interfaces
+@inject ICommentService _commentService
+@inject IPageService _pageService
+@inject IProductService _productService
+@{
+    var numberComment = _commentService.GetUnreadCommentNumber();
+    var numberMajor = _pageService.GetUnreadMajorNumber();
+    var numberUncompletedOreders = _productService.GetUncompletedOrders();
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/x-icon" href="/assets/fav.png">
+
+    <title>@ViewBag.Title</title>
+
+    @if (IsSectionDefined("Styles"))
+    {
+        @RenderSection("Styles", required: false)
+    }
+
+    <link href="~/Admin/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Admin/css/style.css" rel="stylesheet">
+
+    <link href="~/fonts/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="~/fonts/font-awesome/css/sharp-solid.css" rel="stylesheet" />
+    <!-- Toastr style -->
+    <link href="~/admin/plugin/toastr/toastr.min.css" rel="stylesheet" />
+    <!-- Gritter -->
+    @* <link href="/Admin/plugin/gritter/jquery.gritter.css" rel="stylesheet"> *@
+
+    <link href="~/Admin/css/animate.css" rel="stylesheet">
+    <link href="~/Admin/css/bootstrap-rtl.min.css" rel="stylesheet" />
+    <link href="~/admin/plugin/summernote/summernote.min.css" rel="stylesheet" />
+    <link href="~/admin/plugin/dropzone/dropzone.min.css" rel="stylesheet" />
+    <link href="~/Admin/plugin/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+
+</head>
+
+<body class="rtls">
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header" style="padding: 10px 0px 0px 0px;">
+                        <div class="dropdown profile-element">
+                            <span>
+                                <img alt="image" style="width: 80%;margin: 10px auto 10px auto;display: block;max-width: 100%;" src="/assets/logo white.png" />
+                            </span>
+
+                        </div>
+                        <div class="logo-element">
+                            SL
+                        </div>
+                    </li>
+                    <li>
+                        <a asp-controller="Product" asp-action="Orders" asp-area="Admin">
+                            <i class="fa-sharp fa-light fa-basket-shopping"></i> <span class="nav-label">سفارش ها</span>
+                            <span id="newOrderElement" style="background:red;border-radius:100px;text-align:center;color:white;font-size:11px;width: 20px;height: 20px;display: flex;justify-content: center;align-items: center;float:left;">@numberUncompletedOreders</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Product" asp-action="index" asp-area="Admin"><i class="fa-duotone fa-laptop-mobile"></i> <span class="nav-label">محصولات</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a asp-controller="Product" asp-action="Index">همه محصولات</a></li>
+                            <li><a asp-controller="Product" asp-action="Publish">محصول جدید</a></li>
+                            <li><a asp-controller="Category" asp-action="Index" asp-route-ParentId="null" asp-area="Admin">دسته بندی</a></li>
+                            <li><a asp-controller="Product" asp-action="Shipping" asp-area="Admin">شیوه های ارسال</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a asp-controller="Blog" asp-action="index" asp-area="Admin"><i class="fa-solid fa-newspaper"></i> <span class="nav-label">مقالات</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a asp-controller="Blog" asp-action="Index">همه مقالات</a></li>
+                            <li><a asp-controller="Blog" asp-action="Publish">مقاله جدید</a></li>
+                            <li><a asp-controller="Blog" asp-action="BlogCategories" asp-area="Admin">دسته بندی</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a asp-controller="Page" asp-action="Index" asp-area="Admin"><i class="fa-light fa-newspaper"></i> <span class="nav-label">برگه ها</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a asp-controller="Page" asp-action="Index">همه برگه ها</a></li>
+                            <li><a asp-controller="Page" asp-action="Publish">برگه جدید</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a asp-controller="Comment" asp-action="Index" asp-area="Admin">
+                            <i class="fa-solid fa-comment"></i> <span class="nav-label">نظرات</span>
+                            <span id="unreadCommentElement" style="background:red;border-radius:100px;text-align:center;color:white;font-size:11px;width: 20px;height: 20px;display: flex;justify-content: center;align-items: center;float:left;">@numberComment</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="User" asp-action="Index" asp-area="Admin"><i class="fa-solid fa-user"></i> <span class="nav-label">کاربران</span>  </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Product" asp-action="CouponCodes" asp-area="Admin"><i class="fa-regular fa-calendar-circle-user"></i> <span class="nav-label">کدهای تخفیف</span></a>
+                    </li>
+@*                     <li>
+                        <a asp-controller="Page" asp-action="MajorShoppings" asp-area="Admin">
+                            <i class="fa-duotone fa-solid fa-bags-shopping"></i> <span class="nav-label">خرید عمده</span>
+                            <span id="unreadMajorElement" style="background:red;border-radius:100px;text-align:center;color:white;font-size:11px;width: 20px;height: 20px;display: flex;justify-content: center;align-items: center;float:left;">@numberMajor</span>
+                        </a>
+                    </li> *@
+                    <li>
+                        <a asp-controller="Media" asp-action="Sliders" asp-route-Type="Shop" asp-area="Admin"><i class="fa-light fa-photo"></i> <span class="nav-label">اسلایدر فروشگاه</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a asp-controller="Media" asp-action="Sliders" asp-route-Type="Shop" asp-area="Admin">همه اسلایدرها</a></li>
+                            <li><a asp-controller="Media" asp-action="PublishSlider" asp-route-Type="Shop" asp-area="Admin">اسلایدر جدید</a></li>
+                        </ul>
+                    </li>
+@*                     <li>
+                        <a asp-controller="Media" asp-action="Sliders" asp-route-Type="Main" asp-area="Admin"><i class="fa-light fa-photo"></i> <span class="nav-label">اسلایدر صفحه اصلی</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a asp-controller="Media" asp-action="Sliders" asp-route-Type="Main" asp-area="Admin">همه اسلایدرها</a></li>
+                            <li><a asp-controller="Media" asp-action="PublishSlider" asp-route-Type="Main" asp-area="Admin">اسلایدر جدید</a></li>
+                        </ul>
+                    </li> *@
+                    <li>
+                        <a asp-controller="Home" asp-action="Brands"><i class="fa-brands fa-slack"></i> <span class="nav-label">برندها</span></a>
+                    </li>
+                    <li>
+                        <a asp-controller="Setting" asp-action="Index" asp-area="Admin"><i class="fa-duotone fa-gear"></i> <span class="nav-label">تنظیمات</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a asp-controller="Setting" asp-action="HeaderSettings">سربرگ و پابرگ</a></li>
+                            @* <li><a asp-controller="Setting" asp-action="MainPageSetting">صفحه اصلی</a></li> *@
+                            <li><a asp-controller="Setting" asp-action="WonderSettings">صفحه اصلی</a></li>
+                            <li><a asp-controller="Setting" asp-action="ShopDesign">ردیف محصولات</a></li>
+                            <li><a asp-controller="Setting" asp-action="AboutAndContact">برگه های اختصاصی</a></li>
+                        </ul>
+                    </li>
+
+                </ul>
+
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                        <a class="btn btn-primary" style="margin: 14px 20px 5px 5px;height: 30px;" href="/">مشاهده سایت</a>
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li>
+                            <a href="~/Logout">
+                                <i class="fa fa-sign-out"></i> خروج
+                            </a>
+                        </li>
+                    </ul>
+
+                </nav>
+            </div>
+            @RenderBody()
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- Mainly scripts -->
+    <script src="~/Admin/js/jquery-3.1.1.min.js"></script>
+    @*<script src="~/admin/js/jquery-3.6.4.min.js"></script>*@
+    @* <script src="~/admin/js/jquery-2.1.1.min.js"></script> *@
+    <script src="~/Admin/js/bootstrap.min.js"></script>
+    @* <script src="~/js/signalr/dist/browser/signalr.min.js"></script> *@
+    <script src="~/Admin/plugin/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/Admin/plugin/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/admin/js/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Admin/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/admin/js/jquery.validate.min.js"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="~/Admin/js/inspinia.js"></script>
+    <script src="~/Admin/plugin/pace/pace.min.js"></script>
+    <script src="~/admin/plugin/dropzone/dropzone.min.js"></script>
+    <script src="~/Admin/js/site.js"></script>
+    <script src="~/Admin/plugin/sweetalert2/sweetalert2.all.min.js"></script>
+
+    <!-- jQuery UI -->
+    @*<script src="~/Admin/plugin/jquery-ui/jquery-ui.min.js"></script>*@
+
+    <!-- GITTER -->
+    @* <script src="~/Admin/plugin/gritter/jquery.gritter.min.js"></script>*@
+
+    <!-- Toastr -->
+    <script src="~/Admin/plugin/toastr/toastr.min.js"></script>
+
+    @RenderSection("scripts", required: false)
+
+    @*    <script>
+    $(document).ready(
+    function () {
+    setTimeout(
+    function () {
+    toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    showMethod: 'slideDown',
+    timeOut: 4000
+    };
+    toastr.success('سایت لاینر', 'خوش آمدید به');
+
+    }, 1300)
+    });
+    </script>*@
+    @*
+    <script>
+    Object.defineProperty(WebSocket, 'OPEN', { value: 1, });
+    var connection = new signalR.HubConnectionBuilder().withUrl("/orderHub").withAutomaticReconnect().build();
+    connection.start();
+
+    connection.on("NewOrder", function () {
+
+    toastr.options = {
+    closeButton: true,
+    progressBar: false,
+    showMethod: 'slideDown',
+    timeOut: 0,
+    };
+    toastr.warning('موسوی کباب', 'یک سفارش جدید دارید');
+    var audio = new Audio('/assets/notif.mp3');
+    audio.play();
+
+    });
+    </script> *@
+
+</body>
+</html>

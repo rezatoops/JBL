@@ -1,0 +1,35 @@
+﻿@using Core.ViewModel
+@using Core.Services.Interfaces
+@using Datalayer.Entities
+
+@model List<Product>
+
+@inject ICategoryService _categoryService
+@inject IToolsService _toolsService
+
+@{
+    ViewData["Title"] = "تخفیفات شگفت انگیز";
+}
+
+<div class="Waypart section">
+    <a href="/Shop">فروشگاه</a>
+    <span>تخفیفات شگفت انگیز</span>
+    <label>/</label>
+</div>
+
+<div class="HlineTitle section">
+    <h1>تخفیفات شگفت انگیز</h1>
+    <div class="HLine"></div>
+</div>
+
+<div class="ArchiveProducts section">
+    @{
+        foreach (var product in Model)
+        {
+            <partial name="_product" model="product" />
+        }
+    }
+
+
+    <div class="clear"></div>
+</div>

@@ -1,0 +1,315 @@
+﻿@using Core.Services.Interfaces;
+@using Core.ViewModel;
+@using Datalayer.Entities
+
+@model Post
+
+@inject IUserService _userService;
+@inject IMediaService _photoService;
+@inject IPostService _postService;
+
+
+@{
+    ViewBag.Title = "انتشار مقاله جدید";
+
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    @using (Html.BeginForm("Publish", "Blog", FormMethod.Post, new { @class = "form-horizontal MainForm" }))
+    {
+
+        <div class="row">
+            <div class="col-sm-9 no-padding">
+                <div class="col-sm-12">
+                    @Html.ValidationSummary(true, "لطفا خطاهای زیر را برطرف نمایید:", new { @class = "text-danger alert alert-danger" })
+                </div>
+                <div class="col-sm-12">
+                    @{
+                        if (ViewBag.Message != null)
+                        {
+                            <div class="col-sm-12 alert alert-success">
+                                <span>@ViewBag.Message</span>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>محتوای اصلی</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">تیتر</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">پیوند یکتا</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.Slug, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Slug, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-2 control-label">متا (Description)</label>
+
+                                <div class="col-sm-10">
+                                    @Html.EditorFor(model => model.MetaDescription, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.MetaDescription, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label style="text-align:right; padding:18px;" class="col-sm-10 control-label">متن کامل</label>
+                                <button data-target="#Gallery" id="btn_Gallery" data-toggle="modal" style="width:138px;" class="btn btn-primary col-sm-2" type="button"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;<span class="bold">گالری</span></button>
+                                <div class="col-sm-12">
+                                    @Html.TextAreaFor(model => model.Content,new { @class = "form-control", id = "mainText" })
+                                    @Html.ValidationMessageFor(model => model.Content, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>برچسب</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p>با خط تیره جدا کنید</p>
+                                    <input name="tags" class="form-control" value="@ViewBag.Tags" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-sm-3 no-padding">
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>دسته بندی</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content" style="padding:10px 5px;">
+                            <div class="scroll_content_cat">
+                                <div class="form-group">
+                                    <ul>
+                                        @{
+                                            string[] selectedCategory = null;
+                                            if (ViewBag.SelectedCategory != null)
+                                            {
+                                                selectedCategory = (string[])ViewBag.SelectedCategory;
+                                            }
+                                            var CategoryItems = _postService.GetAllCategories();
+                                            foreach (var category in CategoryItems)
+                                            {
+                                                if (selectedCategory == null)
+                                                {
+                                                    <li class="checkbox i-checks Category">
+                                                        <label class="checkboxLabel"> <input type="checkbox" style="float:right;" name="SelectedCategory" value="@category.Id"> <i></i><span>@category.Title</span></label>
+                                                    </li>
+                                                }
+                                                else
+                                                {
+                                                    <li class="checkbox i-checks Category">
+                                                        <label class="checkboxLabel"> <input type="checkbox" @((selectedCategory.Any(a => a == category.Id.ToString())) ? "checked" : "") style="float:right;" name="SelectedCategory" value="@category.Id"> <i></i><span>@category.Title</span></label>
+                                                    </li>
+                                                }
+                                            }
+                                        }
+                                    </ul>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>تصویر شاخص</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+
+                            @{
+                                string background = null;
+                                if (!string.IsNullOrEmpty(ViewBag.Thumb))
+                                {
+                                    background = _photoService.GetMediaByID(int.Parse(ViewBag.Thumb.Replace("image_", string.Empty))).Url;
+                                }
+                            }
+
+                            <div id="Show_Thmub" style="border:1px solid #efefef; width:100%; background-image:url('/@if (background != null) {
+                        @background
+}'); padding-top:100%;background-position: center !important; background-size: cover !important;">
+                            </div>
+                            <button class="btn btn-primary" id="btn_Gallery_thumb" data-target="#Gallery" data-toggle="modal" style="display: block;margin: 30px auto 5px;" type="button"><i class="fa fa-picture-o"></i>&nbsp;انتخاب تصویر شاخص</button>
+                            <input type="hidden" name="thumbUrl" id="thumb_url" value="@if (ViewBag.Thumb != null) {
+                        @ViewBag.Thumb
+}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>عملیات</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content" style="padding:15px 10px 20px 10px;">
+
+                            <button class="btn btn-primary" style="width:145px;display: block;margin: 0px auto 5px;" type="submit"><i class="fa fa-check"></i>&nbsp;انتشار مقاله</button>
+                            @*<button class="btn btn-primary" style="width:145px;display: block;margin: 0px auto 5px;background:#0984e3;border-color:#0984e3;font-size:13px;" type="submit" formaction="SaveDraft"><i class="fal fa-save" style="font-size: 18px;float: right;margin-left: 5px;"></i>&nbsp;ذخیره پیش نویس</button>*@
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+    <partial name="_GalleryModal" />
+
+</div>
+@section Styles{
+    <link href="~/Admin/plugin/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/Admin/plugin/dropzone/dropzone.css" rel="stylesheet" />
+    <link href="~/plugin/select2/select2.min.css" rel="stylesheet" />
+    <link href="~/admin/plugin/icheck/custom.css" rel="stylesheet" />
+    }
+@section Scripts{
+
+    <script src="~/Admin/plugin/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/Admin/plugin/dropzone/dropzone.js"></script>
+    <script src="~/plugin/select2/select2.full.min.js"></script>
+    <script src="~/admin/plugin/summernote/summernote.min.js"></script>
+    <script src="~/admin/plugin/summernote/summernote-image-title.js"></script>
+    <script src="~/admin/plugin/summernote/summernote-fa-ir.min.js"></script>
+    <script src="~/admin/plugin/icheck/icheck.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#mainText').summernote({
+                lang: 'fa-ir',
+                height: 500,
+                imageTitle: {
+                    specificAltField: true,
+                },
+                popover: {
+                    image: [
+                        ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone']],
+                        ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                        ['remove', ['removeMedia']],
+                        ['custom', ['imageTitle']],
+                    ],
+                },
+                callbacks: {
+                    onImageUpload: function (files) {
+                        for (let i = 0; i < files.length; i++) {
+                            UploadImage(files[i]);
+                        }
+                    }
+                },
+            });
+
+
+        });
+
+
+    </script>
+
+    <script>
+        function UploadImage(file) {
+            var url = "@Url.Action("UploadFile", "Home")";
+
+            formData = new FormData();
+            formData.append("aUploadedFile", file);
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (FileUrl) {
+                    // alert(FileUrl);
+                    var imgNode = document.createElement("img");
+                    imgNode.src = FileUrl;
+                    $("#Content").summernote("insertNode", imgNode);
+                },
+                error: function (data) {
+                    alert(data.responseText);
+                }
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+        });
+    </script>
+
+
+    }
+

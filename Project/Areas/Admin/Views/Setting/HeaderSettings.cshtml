@@ -1,0 +1,389 @@
+﻿@using Core.Services.Interfaces
+
+@inject ISettingService _settingService
+
+@{
+    ViewBag.Title = "پیشخوان | تنظیمات سربرگ و پابرگ";
+}
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>تنظیمات سربرگ و پابرگ</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a asp-controller="Home" asp-action="index" asp-area="Admin">مدیریت</a>
+            </li>
+            <li class="active">
+                <strong>تنظیمات سربرگ و پابرگ</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight settingWrapper">
+    @using (Html.BeginForm("HeaderSettings", "Setting", FormMethod.Post, new { @class = "form-horizontal MainForm", enctype = "multipart/form-data" }))
+    {
+
+        <div class="row">
+            <div class="col-sm-12 no-padding">
+                <div class="col-sm-12">
+                    @Html.ValidationSummary(true, "لطفا خطاهای زیر را برطرف نمایید:", new { @class = "text-danger alert alert-danger" })
+                </div>
+                <div class="col-sm-12">
+                    @{
+                        if (ViewBag.Message != null)
+                        {
+                            <div class="col-sm-12 alert alert-success">
+                                <span>@ViewBag.Message</span>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="col-sm-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>تنظیمات سربرگ و پابرگ</h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                                <a class="close-link">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">سربرگ</h2>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">عنوان سایت</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("SiteTitle")" name="SiteTitle" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">لوگو <span style="color:red;">فقط پسوند png</span></label>
+
+                                <div class="col-sm-3">
+                                    <input type="file" id="LogoInput" name="Logo" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="LogoImg">
+                                        @{
+                                            var random = new Random();
+                                        }
+                                        <img style="width: 200px;" id="LogoShower" src="/assets/logo.png?xxx=@random.Next(10000,20000)" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">آیکون Fav <span style="color:red;">فقط پسوند png</span></label>
+
+                                <div class="col-sm-3">
+                                    <input type="file" id="FavInput" name="Fav" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="LogoImg">
+                                        <img style="width: 200px;" id="FavShower" src="/assets/fav.png?xxx=@random.Next(10000,20000)" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="seperate"></div>
+
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">پابرگ</h2>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">توضیحات</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="footerText" class="form-control">@_settingService.GetSettingValue("footerText")</textarea>
+                                </div>
+                            </div>
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">لینک های مهم</h2>
+
+                            <div class="form-group" style="width:50%;float:right;">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن آیتم اول</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLinkText1")" name="FLinkText1" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:50%;float:left;">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک آیتم اول</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLink1")" name="FLink1" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="width:50%;float:right;">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن آیتم دوم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLinkText2")" name="FLinkText2" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:50%;float:left;">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک آیتم دوم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLink2")" name="FLink2" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="width:50%;float:right;">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن آیتم سوم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLinkText3")" name="FLinkText3" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:50%;float:left;">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک آیتم سوم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLink3")" name="FLink3" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="width:50%;float:right;">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن آیتم چهارم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLinkText4")" name="FLinkText4" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:50%;float:left;">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک آیتم چهارم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLink4")" name="FLink4" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="width:50%;float:right;">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن آیتم پنجم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLinkText5")" name="FLinkText5" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:50%;float:left;">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک آیتم پنجم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLink5")" name="FLink5" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="width:50%;float:right;">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن آیتم ششم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLinkText6")" name="FLinkText6" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:50%;float:left;">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک آیتم ششم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLink6")" name="FLink6" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="width:50%;float:right;">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن آیتم هفتم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLinkText7")" name="FLinkText7" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:50%;float:left;">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک آیتم هفتم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLink7")" name="FLink7" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="width:50%;float:right;">
+                                <label style="text-align:right" class="col-sm-3 control-label">متن آیتم هشتم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLinkText8")" name="FLinkText8" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:50%;float:left;">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینک آیتم هشتم</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FLink8")" name="FLink8" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+
+                            <div class="clear"></div>
+                            <div class="seperate"></div>
+                            <h2 style="text-align: center;font-weight: bold;margin-bottom: 30px;">شبکه های اجتماعی</h2>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">اینستاگرام</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("instagram")" name="instagram" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">شماره تلفن واتس اپ</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("whatsup")" name="whatsup" class="form-control" placeholder="به این صورت: 989124567891">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">یوتیوب</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("youtube")" name="youtube" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">لینکدین</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("linkedin")" name="linkedin" class="form-control" placeholder="بدون www و http">
+                                </div>
+                            </div>
+                            <div class="seperate"></div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">آدرس</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("Address")" name="Address" class="form-control" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">تلفن</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FooterPhone")" name="FooterPhone" class="form-control" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">ایمیل</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("FooterEmail")" name="FooterEmail" class="form-control" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">زمان بندی فروشگاه 1</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("StoreTime1")" name="StoreTime1" class="form-control" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">زمان بندی فروشگاه 2</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("StoreTime2")" name="StoreTime2" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">شماره تماس در حالت موبایل</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" value="@_settingService.GetSettingValue("PhoneInMobile")" name="PhoneInMobile" class="form-control">
+                                </div>
+                            </div>
+                            <div class="seperate"></div>
+
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">کد گوگل آنالیتیک</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="Analytics" class="form-control">@_settingService.GetSettingValue("Analytics")</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">کد ای نماد</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="Enamad" class="form-control">@_settingService.GetSettingValue("Enamad")</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label style="text-align:right" class="col-sm-3 control-label">کد گفتینو</label>
+
+                                <div class="col-sm-9">
+                                    <textarea type="text" name="Goftino" class="form-control">@_settingService.GetSettingValue("Goftino")</textarea>
+                                </div>
+                            </div>
+                          
+                            <button class="btn btn-primary" style="width:145px;display: block;margin: 0px auto 5px;" type="submit"><i class="fa fa-check"></i>ذخیره</button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+
+</div>
+
+@section scripts{
+    <script>
+        var myReader = new FileReader();
+        $("#LogoInput").on('change', function () {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#LogoShower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#LogoShower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        });
+
+        $("#FavInput").on('change', function () {
+
+            if (typeof (FileReader) != "undefined") {
+
+                var image_holder = $("#FavShower");
+                image_holder.empty();
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+
+                    //e.target.result
+                    $("#FavShower").attr('src', e.target.result);
+
+                }
+                image_holder.show();
+                reader.readAsDataURL($(this)[0].files[0]);
+            } else {
+                alert("This browser does not support FileReader.");
+            }
+        });
+
+    </script>
+
+                                    }

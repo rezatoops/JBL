@@ -1,0 +1,128 @@
+﻿@using Core.Services.Interfaces;
+@using Datalayer.Entities;
+@using System.Globalization;
+@inject IUserService _userService
+@inject IProductService _productService
+@model User
+@{
+    ViewData["Title"] = "سفارش های من";
+    //var idenCode = _userService.GetIdentificationCode(Model.IdentificationCode);
+}
+@* <partial name="_topMenu2" model="0" /> *@
+
+<div class="ProfileSection">
+    @{
+        if (User.Identity.IsAuthenticated)
+        {
+            <div class="rightSection">
+                <partial name="_profileMenu" model="Model" />
+            </div>
+            <div class="leftSection">
+                <h2>سفارش های من</h2>
+                <div class="MyProgramTitle">
+                    <div class="TitleSection">
+                        <span>کد سفارش</span>
+                    </div>
+                    <div class="TitleSection">
+                        <span>مجموع قیمت</span>
+                    </div>
+                    <div class="TitleSection">
+                        <span>تاریخ سفارش</span>
+                    </div>
+                    <div class="TitleSection">
+                        <span>وضعیت سفارش</span>
+                    </div>
+                    <div class="TitleSection">
+                        <span>جزییات</span>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                @{
+                    var MyOrders = _userService.GetUserOrders(User.Identity.Name);
+                    if (MyOrders.Count == 0)
+                    {
+                        <p style="text-align:center; margin-top:50px;">شما هنوز سفارشی نداشته اید :(</p>
+                        <a class="ActionButton" href="/" style="width:160px; margin:20px auto; text-align:center;">ورود به فروشگاه</a>
+                    }
+                    else
+                    {
+                        foreach (var item in MyOrders)
+                        {
+                            if (_productService.GetProductsInOrder(item.Id).Count > 0)
+                            {
+                                <div class="MyProgram ">
+                                    <div class="programDetail">
+                                        <span>@item.Id</span>
+                                    </div>
+                                    <div class="programDetail StartDate">
+                                        <span>@(_productService.GetTotalPriceInOrder(item.Id).ToString("#,0"))</span>
+                                    </div>
+                                    <div class="programDetail">
+                                        @{
+                                            if (item.PaymentDate.HasValue)
+                                            {
+                                                <span>@item.PaymentDate.Value.ToString("yyyy/MM/dd", new CultureInfo("fa-IR"))</span>
+                                            }
+                                        }
+                                    </div>
+                                    <div class="programDetail programDetail">
+                                        @{
+                                            if (!item.IsFinal)
+                                            {
+                                                <span class="ActionButton pendingButton">پرداخت نشده</span>
+                                            }
+                                            else
+                                            {
+                                                if(item.Status == "Completed")
+                                                {
+                                                    <span class="ActionButton completeButton">تکمیل شده</span>
+                                                }
+                                                else if (item.Status == "NoShipping")
+                                                {
+                                                    <span class="ActionButton completeButton">در حال انجام</span>
+                                                }
+                                                else if (item.Status == "Canceled")
+                                                {
+                                                    <span class="ActionButton completeButton">لغو شده</span>
+                                                }
+                                                else if (item.Status == "Refund")
+                                                {
+                                                    <span class="ActionButton completeButton">مرجوعی</span>
+                                                }
+
+                                            }
+                                        }
+                                    </div>
+                                    <div class="ProgramActions programDetail">
+                                        @{
+                                            if (item.IsFinal)
+                                            {
+                                                <a href="/MyOrderDetails/@item.Id" class="ActionButton pendingButton">جزییات</a>
+                                            }
+                                            else
+                                            {
+                                                <a href="/Cart" class="ActionButton completeButton">پرداخت کنید</a>
+
+                                            }
+                                        }
+                                    </div>
+                                    <div class="clear"></div>
+
+                                </div>
+                            }
+
+                        }
+                    }
+                }
+
+            </div>
+            <div class="clear"></div>
+        }
+        else
+        {
+            <p>برای دیدن پروفایل باید ابتدا در سایت وارد شوید </p>
+            <a onclick="OpenLoginModal()" class="ActionButton">ورود به سایت</a>
+        }
+    }
+
+</div>

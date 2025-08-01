@@ -1,0 +1,190 @@
+﻿@using Core.Services.Interfaces
+@using Core.ViewModel;
+
+@inject IUserService _userService
+@inject IProductService _productService
+@{
+    ViewData["Title"] = "سبد خرید";
+}
+@{
+    if (ViewBag.NOK != null)
+    {
+        <div class="errorMsg">
+            <ul>
+                @ViewBag.NOK
+            </ul>
+        </div>
+    }
+}
+<div id="loadingCircleShop" class="loadingio-spinner-ball-rd8liqklqbg">
+    <div class="ldio-c3e11cu2eq9">
+        <div></div>
+    </div>
+</div>
+<div class="shop_cart section">
+    <div class="cartTitle">
+        <i class="fal fa-shopping-basket"></i>
+        <span>سبد خرید</span>
+    </div>
+    @{
+        if (User.Identity.IsAuthenticated)
+        {
+            var openPackage = _userService.IsOpenOrder(User.Identity.Name);
+            if (openPackage < 0)
+            {
+                <p class="massage errorMSG">سبد خرید شما خالی است</p>
+            }
+            else
+            {
+                var order = _productService.GetOrderById(openPackage);
+                var allProductOrders = _productService.GetProductsInOrder(openPackage);
+
+                var ProductsInOrder = allProductOrders.Where(o => o.Variable != null);
+                var deletedVariables = allProductOrders.Where(o => o.Variable == null);
+
+                var totalPrice = _productService.GetTotalPriceInOrder(openPackage);
+
+
+
+                if (order.CouponId != null)
+                {
+                    var result = _productService.VerifyCouponInCart(openPackage);
+                    if (result != "OK")
+                    {
+                        <div class="notifyMsg">
+                            @result
+                        </div>
+                    }
+                }
+
+                if (ViewBag.CouponError != null)
+                {
+                    <div class="notifyMsg">
+                        @ViewBag.CouponError
+                    </div>
+                }
+
+                if (deletedVariables.Count() > 0)
+                {
+                    foreach (var deletedVar in deletedVariables)
+                    {
+                        <div class="notifyMsg">
+                            محصول @deletedVar.Product.Title ناموجود شده است و یا قیمت آن تغییر کرده است، این محصول از سبد شما حذف شد. در صورت تمایل مجددا آن را به سبد خرید اضافه کنید
+                        </div>
+                        _productService.DeleteProductFromOrder(deletedVar.Id);
+                    }
+                }
+
+                if (ViewBag.DeleteError != null)
+                {
+                    foreach (var error in (string[])ViewBag.DeleteError)
+                    {
+                        <div class="notifyMsg">
+                            @error
+                        </div>
+                    }
+
+                }
+
+                if (ProductsInOrder.Count() > 0)
+                {
+
+                    foreach (var orderProduct in ProductsInOrder)
+                    {
+                        var result = _productService.VerifyProductCountInCart(orderProduct);
+                        if (result != "1")
+                        {
+                            <div class="notifyMsg">
+                                @result
+                            </div>
+                        }
+                    }
+
+
+                    if (ViewBag.StackError != null)
+                    {
+                        foreach (var error in (string[])ViewBag.StackError)
+                        {
+                            <div class="notifyMsg">
+                                @error
+                            </div>
+                        }
+
+                    }
+
+
+
+                    var NewProductsInOrder = _productService.GetProductsInOrder(openPackage).Where(o => o.Variable != null);
+
+                    if (NewProductsInOrder.Count() > 0)
+                    {
+                        <div class="shopCartTable">
+
+                            @{
+                                foreach (var item in NewProductsInOrder)
+                                {
+                                    <div class="cartRow" id="cart_@item.Id">
+                                        <partial name="_CartItem" model="item" />
+                                    </div>
+                                }
+                            }
+
+                        </div>
+
+                        <div class="shopCartDetails">
+                            <div id="shopCartDetails">
+                                @{
+                                    var offValue = _productService.CalculateOffValue(order, totalPrice);
+                                }
+                                <partial name="_ShopCartDetails" model="new CheckoutWidgetViewModel(){ totalPrice = totalPrice, totalRegularPrice = _productService.GetTotalRegularPriceInOrder(openPackage) , totalNumber = _productService.GetTotalNumberInOrder(openPackage),shippingPrice=(order.ShippingId != null)?order.Shipping.ShipPrice:-2, coupnPrice = offValue}" />
+                            </div>
+                            <a href="~/Checkout" class="btn ProgressCartBtn">ادامه فرایند خرید</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="massage errorMSG">سبد خرید شما خالی است</p>
+
+                    }
+
+                }
+                else
+                {
+
+                    _productService.DeleteEmptyOrder(order.Id);
+
+                    <p class="massage errorMSG">سبد خرید شما خالی است</p>
+                }
+            }
+        }
+        else
+        {
+            <p class="massage errorMSG">برای دیدن سبد خرید باید ابتدا در سایت وارد شوید </p>
+            <a onclick="OpenLoginModal()" class="ActionButton">ورود به سایت</a>
+        }
+    }
+
+
+    <div class="clear"></div>
+</div>
+
+@section scripts {
+    <script>
+        function UpdateCheckoutWidget(orderId) {
+            $.ajax({
+                type: "POST",
+                url: "/Shop/RefreshShopCartWidget",
+                data: { OrderId: orderId },
+                success:
+                    function (result) {
+                        $("#shopCartDetails").html(result);
+                        UpdateNumberOrderCard();
+                    },
+                error: function (req, status, error) {
+                    window.alert("Error!");
+                }
+            });
+        }
+    </script>
+}
+
